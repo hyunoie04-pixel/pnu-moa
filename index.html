@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>모아, 부산대의 기회</title>
+<meta name="description" content="부산대학교 단과대학·학과·학생지원 공지에서 지금 신청할 수 있는 장학·공모전·취업·프로그램 공고를 소속과 학년에 맞춰 보여주는 비공식 정보 서비스입니다.">
+<meta name="theme-color" content="#102d59">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23124eaa'/%3E%3Ctext x='32' y='45' font-size='36' font-family='sans-serif' font-weight='800' text-anchor='middle' fill='white'%3EM%3C/text%3E%3C/svg%3E">
+<style>
+:root{--blue:#124eaa;--blue-d:#0d3a82;--navy:#102d59;--ink:#17263b;--muted:#56677d;--bg:#f5f7fb;--line:#dce4ee;--card:#fff;--soft:#e7f0ff;--warn:#b4400a;--ok:#0b6b3a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 'Noto Sans KR','Malgun Gothic',system-ui,sans-serif}
+a{color:inherit}button,input,select{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid #508be5;outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+header{background:#fff}
+.bar{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:24px;color:var(--blue);letter-spacing:-1px;text-decoration:none}
+.brand i{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--blue);color:#fff;font-style:normal;font-size:18px}
+.brand small{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:0;border-left:1px solid var(--line);padding-left:10px}
+.hero{background:var(--navy);color:#fff}
+.hero .wrap{padding-top:34px;padding-bottom:30px}
+.hero h1{margin:0 0 8px;font-size:34px;line-height:1.3;letter-spacing:-1.5px}
+.hero p{margin:0;color:#d9e6fa;font-size:15px}
+.tabs{display:flex;gap:6px;margin-top:22px}
+.tab{border:0;background:#ffffff1c;color:#fff;padding:12px 20px;border-radius:10px 10px 0 0;font-weight:700;font-size:15px}
+.tab[aria-selected=true]{background:var(--bg);color:var(--ink)}
+main{padding:26px 0 70px}
+.panel{display:none}.panel.on{display:block}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:14px;align-items:end}
+.field label,.field legend{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px;padding:0}
+fieldset.field{border:0;margin:0;padding:0;min-width:0}
+.seg{display:flex;border:1px solid #cdd8e7;border-radius:8px;overflow:hidden;height:48px}
+.seg label{flex:1;margin:0;display:grid;place-items:center;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;background:#fff}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg input:checked+span{background:var(--blue);color:#fff}
+.seg span{display:grid;place-items:center;width:100%;height:100%}
+.seg input:focus-visible+span{outline:3px solid #508be5;outline-offset:-3px}
+select,input[type=search]{width:100%;height:48px;border:1px solid #cdd8e7;border-radius:8px;padding:0 12px;background:#fff}
+.go{height:48px;border:0;border-radius:8px;background:var(--blue);color:#fff;font-weight:700;padding:0 24px}
+.go:hover{background:var(--blue-d)}
+.hint{margin:12px 0 0;font-size:13px;color:var(--muted)}
+.summary{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:26px 0 12px}
+.summary h2{margin:0;font-size:21px;letter-spacing:-.5px}
+.summary p{margin:0;color:var(--muted);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
+.chip{border:1px solid #cdd8e7;background:#fff;border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600}
+.chip[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+.chip b{font-weight:600;opacity:.75;margin-left:4px}
+.tools{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.tools .grow{flex:1;min-width:220px}.tools select{width:auto;min-width:150px}
+.status{font-size:12px;color:#254c7d;background:#eef5ff;border:1px solid #ccddf6;padding:6px 12px;border-radius:999px}
+.sec-title{margin:26px 0 12px;font-size:17px;display:flex;align-items:center;gap:8px}
+.sec-title span{font-size:13px;font-weight:600;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+.card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;text-decoration:none}
+.card:hover{border-color:#9bb8e0}
+.poster{position:relative;aspect-ratio:3/4;background:#e8eef7;overflow:hidden}
+.poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+.ph{height:100%;padding:18px;display:flex;flex-direction:column;justify-content:space-between;background:#dbe6f5;color:#25466d}
+.poster:has(img) .nop{visibility:hidden}
+.ph span{font-size:12px;font-weight:800}.ph strong{font-size:21px;line-height:1.3;letter-spacing:-.5px}.ph small{font-size:12px}
+.cbody{padding:16px 16px 14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.tag{align-self:flex-start;background:var(--soft);color:#174d94;border-radius:5px;padding:4px 9px;font-size:12px;font-weight:700}
+.card h3{margin:0;font-size:16px;line-height:1.45;letter-spacing:-.4px}
+.org{margin:0;font-size:13px;color:var(--muted)}
+.meta{margin-top:auto;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+.dday{align-self:flex-start;font-weight:800;font-size:13px;border-radius:6px;padding:3px 9px;background:#eef2f8;color:#2a3f5e}
+.dday.soon{background:#fde8e1;color:var(--warn)}.dday.week{background:#fff1d6;color:#8a5a00}.dday.unk{background:#f1f1f1;color:#555}
+.why{font-size:12px;color:var(--ok);font-weight:600}
+.empty{background:#fff;border:1px dashed #b9c8dd;border-radius:12px;padding:34px;text-align:center;color:var(--muted)}
+.detail{display:none}.back{border:0;background:none;padding:0;min-height:44px;color:#3b557a;font-weight:600;margin-bottom:12px}
+.dl{display:grid;grid-template-columns:1fr 300px;gap:22px}
+.dmain,.dside{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px}
+.dside{height:max-content}
+.dmain h1{font-size:28px;line-height:1.4;margin:14px 0 6px;letter-spacing:-.8px}
+.dmain dt{font-weight:700;font-size:14px;margin-top:22px;color:#183d72}
+.dmain dd{margin:6px 0 0;color:#40536b;white-space:pre-wrap;line-height:1.75;overflow-wrap:anywhere}
+.zoom{display:block;max-width:440px;margin:0 auto 20px}
+.zoom .poster{border-radius:8px}.zoom .poster img{object-fit:contain;background:#f2f5f9}
+.cta{display:block;text-align:center;background:var(--blue);color:#fff;text-decoration:none;padding:14px;border-radius:8px;font-weight:700;margin:14px 0}
+.notice{font-size:13px;color:#6c7b90;line-height:1.7}
+.who{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.who span{background:#eef2f8;border-radius:6px;padding:3px 9px;font-size:13px;color:#2a3f5e}
+footer{color:#8794a7;font-size:12px;padding-bottom:40px}
+.bar{gap:10px}.brand{flex:none}
+.status{min-width:0;max-width:62%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tab{min-height:44px}.chip{min-height:40px}
+.fb h2{margin:0 0 6px;font-size:22px;letter-spacing:-.6px}
+.fb .field{margin-top:18px}
+.kinds{display:flex;flex-wrap:wrap;gap:8px}
+.kinds label{margin:0;position:relative}
+.kinds input{position:absolute;opacity:0;pointer-events:none}
+.kinds span{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1px solid #cdd8e7;border-radius:999px;background:#fff;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer}
+.kinds input:checked+span{background:var(--blue);border-color:var(--blue);color:#fff}
+.kinds input:focus-visible+span{outline:3px solid #508be5;outline-offset:2px}
+textarea,input[type=text]{font:inherit;color:inherit;width:100%;border:1px solid #cdd8e7;border-radius:8px;padding:12px;background:#fff;line-height:1.6}
+textarea{min-height:150px;resize:vertical}
+input[type=text]{height:48px;padding:0 12px}
+.field label small,#fb-count{font-weight:500;color:#7a889c;margin-left:6px}
+.rel{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:8px;padding:8px 8px 8px 12px;font-size:14px;color:#174d94}
+.rel span{flex:1;min-width:0;overflow-wrap:anywhere}
+.rel button{flex:none;border:0;background:#fff;border-radius:6px;min-height:36px;padding:0 12px;font-weight:600;color:#3b557a}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.fb .go{margin-top:18px;min-width:160px}
+.fb .go:disabled{opacity:.6;cursor:default}
+#fb-msgout{min-height:24px;margin:12px 0 0;font-size:14px;font-weight:600}
+#fb-msgout.ok{color:var(--ok)}#fb-msgout.err{color:#b3261e}
+.report{display:block;width:100%;min-height:44px;margin:0 0 10px;border:1px solid #cdd8e7;border-radius:8px;background:#fff;font-weight:600;color:#3b557a}
+.report:hover{border-color:#9bb8e0}
+.flink{background:none;border:0;padding:0;color:#3b557a;font:inherit;text-decoration:underline;cursor:pointer;min-height:32px}
+@media(max-width:900px){.form{grid-template-columns:1fr 1fr}.go{grid-column:1/-1}.dl{grid-template-columns:1fr}.hero h1{font-size:28px}}
+@media(max-width:520px){.wrap{padding:0 14px}.form{grid-template-columns:1fr}.brand small{display:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.cbody{padding:12px}.card h3{font-size:14px}.ph strong{font-size:17px}.dmain,.dside{padding:20px}.dmain h1{font-size:23px}.tab{padding:11px 14px;font-size:14px}.hero .wrap{padding-top:26px}.hero h1{font-size:25px}.fb .go{width:100%}.box{padding:16px}}
+@media(max-width:380px){.tabs{gap:4px}.tab{padding:11px 9px;font-size:13px}.status{font-size:11px;padding:5px 9px}.brand{font-size:21px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap bar"><a class="brand" href="#mine"><i>M</i>모아<small>부산대학교 학생 기회 모음</small></a><span class="status" id="status" role="status">불러오는 중</span></div></header>
+<section class="hero" id="hero"><div class="wrap">
+<h1>나에게 맞는 기회,<br>부산대에서 모아보다</h1>
+<p>단과대학·학과·학년을 입력하면 지금 지원할 수 있는 공고만 골라 보여드려요.</p>
+<div class="tabs" role="tablist" aria-label="보기 방식">
+<button class="tab" role="tab" id="tab-mine" aria-controls="mine" aria-selected="true">내게 맞는 공고</button>
+<button class="tab" role="tab" id="tab-all" aria-controls="all" aria-selected="false">전체 공고</button>
+<button class="tab" role="tab" id="tab-feedback" aria-controls="feedback" aria-selected="false">의견 보내기</button>
+</div></div></section>
+<main class="wrap">
+<section id="mine" class="panel on" role="tabpanel" aria-labelledby="tab-mine">
+<form class="box form" id="form" autocomplete="off">
+<fieldset class="field"><legend>과정</legend><div class="seg"><label><input type="radio" name="course" value="학부" checked><span>학부</span></label><label><input type="radio" name="course" value="대학원"><span>대학원</span></label></div></fieldset>
+<div class="field"><label for="college">단과대학</label><select id="college" required></select></div>
+<div class="field"><label for="dept">학과·전공</label><select id="dept"></select></div>
+<div class="field"><label for="grade">학년</label><select id="grade"></select></div>
+<button class="go" type="submit">공고 찾기</button>
+</form>
+<p class="hint" id="hint">선택한 정보는 이 브라우저에만 저장되고 서버로 보내지 않아요. 대상 조건은 공고 원문을 바탕으로 정리한 것이라, 신청 전에 원문을 꼭 확인해 주세요.</p>
+<div id="mine-out"></div>
+</section>
+<section id="all" class="panel" role="tabpanel" aria-labelledby="tab-all">
+<div class="tools">
+<div class="grow"><label class="sr" for="q" style="position:absolute;left:-9999px">공고 검색</label><input id="q" type="search" placeholder="프로그램명, 기관, 키워드 검색"></div>
+<select id="sort" aria-label="정렬"><option value="end">마감 임박순</option><option value="new">최신 게시순</option></select>
+</div>
+<div class="chips" id="chips" role="group" aria-label="하위분류"></div>
+<div class="summary"><h2 id="all-count"></h2><p>마감일과 대상은 원문을 확인해 주세요</p></div>
+<div class="grid" id="all-grid"></div>
+</section>
+<section id="feedback" class="panel" role="tabpanel" aria-labelledby="tab-feedback">
+<div class="box fb">
+<h2>의견을 들려주세요</h2>
+<p class="hint" style="margin-top:0">틀린 정보, 빠진 공고, 있었으면 하는 기능까지 무엇이든 좋아요. 보내 주신 의견은 서비스를 고치는 데 쓰입니다.</p>
+<form id="fbform" autocomplete="off" novalidate>
+<fieldset class="field" style="margin-top:20px"><legend>어떤 의견인가요?</legend><div class="kinds" id="kinds">
+<label><input type="radio" name="kind" value="wrong-info"><span>정보가 틀렸어요</span></label>
+<label><input type="radio" name="kind" value="missing"><span>빠진 공고가 있어요</span></label>
+<label><input type="radio" name="kind" value="idea"><span>이런 기능이 있으면 좋겠어요</span></label>
+<label><input type="radio" name="kind" value="bug"><span>오류가 났어요</span></label>
+<label><input type="radio" name="kind" value="praise"><span>좋았어요</span></label>
+<label><input type="radio" name="kind" value="other"><span>기타</span></label>
+</div></fieldset>
+<div class="field" id="fb-notice-wrap" hidden><label>관련 공고</label><div class="rel"><span id="fb-notice"></span><button type="button" id="fb-notice-x">지우기</button></div></div>
+<div class="field"><label for="fb-msg">내용<span id="fb-count">0/1000</span></label><textarea id="fb-msg" maxlength="1000" placeholder="예) 'OO 장학금' 마감일이 원문에는 11월 20일인데 12월 20일로 나와요."></textarea></div>
+<div class="field"><label for="fb-contact">답장 받을 연락처<small>선택</small></label><input id="fb-contact" type="text" maxlength="100" inputmode="email" autocomplete="off" placeholder="이메일 등 (답장이 필요할 때만 적어 주세요)"></div>
+<div class="hp" aria-hidden="true"><label>홈페이지<input id="fb-hp" type="text" tabindex="-1" autocomplete="off"></label></div>
+<button class="go" type="submit" id="fb-send">의견 보내기</button>
+<p id="fb-msgout" role="status" aria-live="polite"></p>
+</form>
+<p class="notice">주민번호·전화번호 같은 개인정보는 적지 말아 주세요. 의견과 연락처는 서비스 운영자만 볼 수 있고 공개되지 않습니다. 선택한 단과대학·학과·학년은 함께 전송되지 않습니다.</p>
+</div>
+</section>
+<section id="detail" class="detail"><button class="back" id="back">‹ 목록으로 돌아가기</button><div id="dc"></div></section>
+<footer><p>모아는 부산대학교 학생을 위한 정보 탐색 서비스(비공식)입니다. 공고의 대상·마감은 자동·수동으로 정리한 값이므로 신청 전 반드시 원문을 확인해 주세요. 공고는 각 단과대학·학과·학생지원 공지에서 매일 모아 정리합니다. 틀린 곳을 발견하셨나요? <button type="button" class="flink" id="flink">의견 보내기</button></p></footer>
+</main>
+<script>
+const COLLEGES=[{"name": "인문대학", "depts": ["고고학과", "국어국문학과", "노어노문학과", "독어독문학과", "불어불문학과", "사학과", "언어정보학과", "영어영문학과", "일어일문학과", "중어중문학과", "철학과", "한문학과"]}, {"name": "사회과학대학", "depts": ["문헌정보학과", "미디어커뮤니케이션학과", "사회복지학과", "사회학과", "심리학과", "정치외교학과", "행정학과"]}, {"name": "자연과학대학", "depts": ["대기환경과학과", "물리학과", "미생물학과", "분자생물학과", "생명과학과", "수학과", "지질환경과학과", "통계학과", "해양학과", "화학과"]}, {"name": "공과대학", "depts": ["건설융합학부", "건축공학과", "건축학전공", "고분자공학과", "기계공학부", "도시공학과", "미래도시건축환경융합전공", "산업공학과", "유기소재시스템공학과", "재료공학부", "전기공학전공", "전기컴퓨터공학부", "전자공학과", "조선해양공학과", "첨단IT자율전공", "첨단모빌리티자율전공", "첨단소재자율전공", "토목공학전공", "항공우주공학과", "화공생명공학부", "환경공학전공"]}, {"name": "정보의생명공학대학", "depts": ["의생명융합공학부", "정보컴퓨터공학부"]}, {"name": "사범대학", "depts": ["교육학과", "국어교육과", "독어교육과", "물리교육과", "불어교육과", "생물교육과", "수학교육과", "역사교육과", "영어교육과", "유아교육과", "윤리교육과", "일반사회교육과", "지구과학교육과", "지리교육과", "체육교육과", "특수교육과", "화학교육과"]}, {"name": "경제통상대학", "depts": ["경제학부", "공공정책학부", "관광컨벤션학과", "국제학부", "무역학부"]}, {"name": "경영대학", "depts": ["경영학과", "핀테크융합전공"]}, {"name": "약학대학", "depts": ["약학과", "제약학과"]}, {"name": "생활환경대학", "depts": ["식품영양학과", "실내환경디자인학과", "아동가족학과", "의류학과"]}, {"name": "예술대학", "depts": ["디자인학과", "무용학과", "미술학과", "예술문화영상학과", "음악학과", "조형학과", "한국음악학과"]}, {"name": "나노과학기술대학", "depts": ["광메카트로닉스공학과", "나노메카트로닉스공학과", "나노에너지공학과"]}, {"name": "생명자원과학대학", "depts": ["IT응용공학과", "동물생명자원과학과", "바이오산업기계공학과", "바이오소재과학과", "바이오환경에너지학과", "생명환경화학과", "식물생명과학과", "식품공학과", "식품자원경제학과", "원예생명과학과", "조경학과"]}, {"name": "간호대학", "depts": ["간호학과"]}, {"name": "의과대학", "depts": ["의예과", "의학과"]}, {"name": "법과대학", "depts": []}, {"name": "스포츠과학부", "depts": ["스포츠과학과"]}, {"name": "학부대학", "depts": []}, {"name": "글로벌자유전공학부", "depts": []}, {"name": "치의학전문대학원", "depts": ["치의학과"]}, {"name": "한의학전문대학원", "depts": ["한의과학과", "한의학과"]}, {"name": "기타 학부·전공", "depts": ["BNK디지털금융학과", "EES융합전공", "나노반도체공정장비계약학과", "나노자율전공", "반도체공학전공", "발전공학과", "수소미래에너지융합전공", "응용생명융합학부 그린바이오전공", "응용생명융합학부 생명자원시스템공학전공", "자유전공학부", "첨단융합학부", "첨단융합학부 정보의생명공학자율전공"]}];
+const snapshot=[["2026-10-31", "제39기 PNU 산학협력 글로벌 사회공헌단 추가 모집(케이팝댄스)", "해외봉사", "부산대 학생과", "학부 재학생; 1석 추가 모집", "~2026-11-06 11:00", "라오스 2027-01-17~02-03", "1명", "사전준비 활동 100시간 이상 예상; 세부사항 원문 확인", "나눔포털 공지에 기재된 절차", "접수중", "https://nanum.pusan.ac.kr/page?menuCD=000000000000007&mode=DETAIL&seq=1364", "학생과 추가모집 공고를 대표 기록으로 등록", "2026-11-06", "", "전체", "전체", "전체", "학부", "봉사·사회공헌", "nanum"], ["2026-10-30", "국가근로장학금 동계방학 집중근로(교외) 희망근로지 신청", "근로·장학", "부산대 학생과 / 한국장학재단", "2026-2 국가근로장학 신청 완료자", "2026-10-30 09:00~11-12 18:00", "동계방학", "기관 3곳 필수, 최대 5곳", "희망근로기관 신청; 선발결과 12-14 공개", "한국장학재단 홈페이지 희망근로지 신청", "접수중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511848&mCode=MN095&mgr_seq=3&mode=view", "희망기관 선택은 별도 신청", "2026-11-12", "", "전체", "전체", "전체", "학부", "장학·지원금", "pnu_main"], ["2026-10-30", "PNU AI 테크클래스 (Gemini Notebook / Flow)", "교육·AI", "부산대 AI융합교육원", "학부·대학원 재학생, 전공 무관", "Notebook ~11-12 14:00; Flow ~11-19 14:00", "11-13 15:00~17:00; 11-20 15:00~17:00", "과정별 약 15명", "과목노트 RAG 실습 또는 AI 영상 제작·저작권 점검", "학생역량지원시스템 > 비교과 프로그램", "접수중", "https://cse.pusan.ac.kr/bbs/cse/2055/1469383/artclView.do", "두 과정은 같은 모집 공지에 묶어 1행 기록", "2026-11-19", "https://cse.pusan.ac.kr/editorFile/images/000179/20261030161104235_5GKVBCCT.png", "전체", "전체", "전체", "전체", "교육·특강·프로그램", "cse"], ["2026-10-30", "Oracle AI Startup Bootcamp 부산 1기", "교육·취업", "한국오라클 / 학부대학", "만 15~34세 미취업 청년; 졸업·졸업예정·휴학생 및 학점 이수완료 재학생 등", "얼리버드 ~11-09; 일반 ~11-15", "2026-11-16~2027-01-28", "정원 미공개", "AI 서비스 구현·배포, 사업화 프로젝트; 과정비/지원금 세부 공개 중", "모집 홈페이지 신청", "접수중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511854&mgr_seq=3&mode=view&page=1", "부산대 공지와 오라클 과정 페이지 확인", "2026-11-15", "https://www.pusan.ac.kr/kor/ajx_json/UploadMgr/downloadRun.do?qcode=Qm9hcmQsNDEyMDQxLFk=\nhttps://www.pusan.ac.kr/kor/ajx_json/UploadMgr/downloadRun.do?qcode=Qm9hcmQsNDEyMDQyLFk=", "전체", "전체", "전체", "전체", "교육·특강·프로그램", "pnu_main"], ["2026-10-29", "AI와 만난 인문학 수업(전공연계형 팀 프로그램)", "교육·공모전", "부산대 디지털인문학센터", "인문대 개설 전공·교양 수강 학부생 2~4인 팀", "2026-10-19~11-16", "발표 2026-12-04", "12팀 선착순", "대상 100만원, 최우수 60만원, 우수 40만원 팀별 장학금", "신청서 이메일 제출", "접수중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511831&mCode=MN095&mgr_seq=3&mode=view&page=2&searchKeyword=%EC%B0%BD%EC%97%85", "10-20 최초 공고 후 10-29 잔여석 안내; 최초 공고 링크를 대표로 사용", "2026-11-16", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/2026%ED%95%99%EB%85%84%EB%8F%84_%EB%94%94%EC%A7%80%ED%84%B8%EC%9D%B8%EB%AC%B8%ED%95%99%EC%84%BC%ED%84%B0_%EC%A0%84%EA%B3%B5_%EC%97%B0%EA%B3%84%ED%98%95_%EA%B5%90%EC%9C%A1_%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8_-_AI%EC%99%80_%EB%A7%8C%EB%82%9C_%EC%9D%B8%EB%AC%B8%ED%95%99_%EC%88%98%EC%97%85_%ED%99%8D%EB%B3%B4_%ED%8F%AC%EC%8A%A4%ED%84%B0_1.jpg", "인문대학", "전체", "전체", "학부", "공모전·경진대회", "pnu_main"], ["2026-10-29", "P&U Culture on DAY 8차 문화체험", "멘토링·문화행사", "부산대 지역사회기여센터", "부산대 다담다·학습튜터링·금정구 작은도서관 멘토링·커리어페이스메이커·AI/SW Step-up 참여 멘토 등", "2026-11-03~11-08", "2026-11-21 10:00~18:00; 롯데월드 어드벤처 부산", "원문 확인", "멘토링 참여자 대상 공동 문화체험", "공지 연결 Google Form 및 이메일", "접수예정", "https://nanum.pusan.ac.kr/page?menuCD=000000000000007&mode=DETAIL&seq=1361", "나눔포털 원문에 프로그램 참여자 제한이 있어 대상 확인 필요", "2026-11-08", "", "전체", "전체", "전체", "전체", "대외활동·행사", "nanum"], ["2026-10-28", "PNU AI Agent Challenge (Gemini Enterprise 활용)", "공모전·AI", "부산대 에듀테크센터", "부산대 학부·대학원 재학생; 개인 또는 팀", "참여 신청 10-28 16:00~11-27 18:00; 작품 제출 12-01~2027-01-08 18:00", "교육 선택 참여; 공모 발표일 별도 안내", "총 30개 작품 시상", "Gemini Enterprise 이용 신청; 총장상 대상 140만원 등", "참여 신청 Google Form; 작품 이메일 제출", "접수중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511804&mCode=MN095&mgr_seq=3&mode=view&page=2", "참여 신청과 작품 제출은 별도; 중복 게시 미반영", "2026-11-27", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/20261028155804740_CMLDD3EO.png", "전체", "전체", "전체", "전체", "공모전·경진대회", "pnu_main"], ["2026-10-28", "학생성공개발원 기관 슬로건 공모전", "공모전", "부산대 학생성공개발원", "부산대 재적생·졸업생", "공식 본문 게시종료 2026-11-13; 세부 접수기한 상충 가능", "해당 없음", "1인 최대 2개", "한글 20자 이내+영문 6단어 이내; 수상금 있음", "이메일 접수 jobmail@pusan.ac.kr", "기한 확인 필요", "https://www.pusan.ac.kr/kor/CMS/Board/PopupBoard.do?board_seq=1511814&mgr_seq=3&mode=view", "다른 미러본에 11-09 마감 표시가 있어 원문 담당자 확인 필요", "", "", "전체", "전체", "전체", "전체", "공모전·경진대회", "pnu_main"], ["2026-10-28", "2027년도 한국지도자육성장학재단 장학생 추천", "장학금", "부산대 학생과 / 한국지도자육성장학재단", "2027-1학기 3학년 1학기 등록 예정; 학기당 12학점 이상; 직전·전체 평점 3.5 이상; 징계·학사경고 없음", "학교 추천기한 2026-11-02; 학과별 기한 상이", "2027-1부터 최대 4학기", "부산대 추천 3명", "등록금 전액 또는 생활비 학기당 350만원", "소속 학과 사무실에 신청서류 제출", "접수중·학과기한 확인", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511805&mCode=MN095&mgr_seq=3&mode=view&page=2", "여러 학과 게시본 중 중앙 공지를 대표 링크로 사용", "2026-11-02", "", "전체", "전체", "2학년", "학부", "장학·지원금", "pnu_main"], ["2026-10-27", "2026 PNU Dream Beats 창업 경진대회", "창업·경진대회", "부산대 창업지원부", "학생(예비)창업자 2~5인 팀", "공고일~2026-11-08", "본선 2026-11-24", "팀 4팀 시상", "시상 120만원/80만원/각 50만원 2팀; 사전 멘토링", "공고문 신청서류 이메일 제출", "접수중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511781&mCode=MN095&mgr_seq=3&mode=view&page=2", "학과 미러 공고는 중복 저장하지 않음", "2026-11-08", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/20261029095840625_DWSWSGX1.png", "전체", "전체", "전체", "전체", "창업", "pnu_main"], ["2026-10-27", "AI분야 첨단산업 인재양성 부트캠프 겨울 PBL (생성형AI·온디바이스AI)", "교육·AI", "부산대 AI융합교육원", "정보컴퓨터공학부 3~4학년 재학생, PCC Lv.1 이상 등; 세부 자격 트랙별 확인", "~2026-11-08", "2026-12-22~2027-01-22", "트랙별 30명", "AWS 기업과제 기반 실습, PBL·멘토 피드백", "트랙별 신청서류 제출; 세부 안내문 확인", "접수중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511776&mCode=MN095&mgr_seq=3&mode=view&page=1&searchID=title", "두 게시물은 서로 다른 트랙이므로 한 행에서 같이 안내", "2026-11-08", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/260917_AI%EB%B6%84%EC%95%BC_%EC%B2%A8%EB%8B%A8%EC%82%B0%EC%97%85_%EC%9D%B8%EC%9E%AC%EC%96%91%EC%84%B1_%EB%B6%80%ED%8A%B8%EC%BA%A0%ED%94%84_%EC%83%9D%EC%84%B1%ED%98%95_AI_PBL_%ED%82%A4%EC%98%A4%EC%8A%A4%ED%81%AC_%ED%8F%AC%EC%8A%A4%ED%84%B0_0.7.png\nhttps://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/260917_AI%EB%B6%84%EC%95%BC_%EC%B2%A8%EB%8B%A8%EC%82%B0%EC%97%85_%EC%9D%B8%EC%9E%AC%EC%96%91%EC%84%B1_%EB%B6%80%ED%8A%B8%EC%BA%A0%ED%94%84_%EC%98%A8%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4_AI_PBL_%ED%82%A4%EC%98%A4%EC%8A%A4%ED%81%AC_%ED%8F%AC%EC%8A%A4%ED%84%B0_0.6.png", "정보의생명공학대학", "정보컴퓨터공학부", "3학년,4학년", "학부", "교육·특강·프로그램", "pnu_main"], ["2026-10-26", "2026 Lab-Venture Launchpad 참가팀 모집", "창업·교육", "부산대 창업지원부", "실험실 기반 기술창업 팀; 세부 자격·운영안은 첨부 HWP 확인", "~2026-11-04 23:59", "첨부 공고문 확인", "공고문 확인", "Lab-Venture Launchpad 단계별 운영 지원", "첨부 참가신청서 이메일 제출", "접수중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511756&mgr_seq=3&mode=view&page=1", "공개 본문은 요약 중심이라 자격/혜택은 첨부문서 확인 필요", "2026-11-04", "", "전체", "전체", "전체", "전체", "창업", "pnu_main"], ["2026-10-25", "동계 너의 재능이 보여", "교육·봉사", "부산대 학생과", "학부 재학생; 지도교수 1명+학생 최대 7명 팀", "신청 2026-11-06~11-13 14:00", "2026-12-22~2027-01-31 중 5일/30시간", "팀당 최대 8명", "팀 지원 300만~500만원", "나눔포털 신청 및 원본 서류 제출", "접수예정", "https://www.pusan.ac.kr/kor/CMS/Board/PopupBoard.do?board_seq=1511740&mgr_seq=3&mode=view&page=1", "학생과 원문 기준", "2026-11-13", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/%EB%8F%99%EA%B3%84_%EB%B6%80%EC%82%B0%EB%8C%80%EC%99%80_%ED%95%A8%EA%BB%98%ED%95%98%EB%8A%94_%EB%84%88%EC%9D%98_%EC%9E%AC%EB%8A%A5%EC%9D%B4_%EB%B3%B4%EC%97%AC_%EB%AA%A8%EC%A7%91_%ED%8F%AC%EC%8A%A4%ED%84%B0.png", "전체", "전체", "전체", "학부", "봉사·사회공헌", "pnu_main"], ["2026-10-23", "개교 80주년 부산시민 동행 걷기대회", "행사·참여", "부산대 학생과", "부산대 재학생·동문·교직원 및 부산시민", "온라인 신청 ~2026-11-10 또는 현장 신청", "2026-11-13 10:00~13:30", "미공개", "개교 80주년 기념 걷기행사", "공고문 신청 링크 또는 현장 접수", "접수중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511722&mCode=MN095&mgr_seq=3&mode=view&page=1&searchID=title", "중앙 공지 대표 기록", "2026-11-13", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/%EA%B2%8C%EC%8B%9C%ED%8C%90%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg", "전체", "전체", "전체", "전체", "대외활동·행사", "pnu_main"], ["2026-10-23", "Microsoft AI 실전 프로젝트 과정 in 부산", "교육·취업", "Microsoft K-뉴딜 아카데미 / 부산대 AI융합교육원", "27년 2월 졸업예정 4학년·졸업자·휴학생; 미취업 청년; 정보컴퓨터공학부 우대, 타 전공 가능", "~2026-11-27", "2026-12-14~2027-02-25; 주중 09~18시, 총 400시간", "최대 35명", "출석 80% 이상 월 훈련장려금 50만원, 노트북 대여, 수료증", "ms-academy.kr/knd-busan 신청", "접수중", "https://cse.pusan.ac.kr/bbs/cse/2055/1467926/artclView.do", "SW센터/학과 미러 공지는 한 건으로 통합", "2026-11-27", "https://cse.pusan.ac.kr/editorFile/images/000173/20261023122723650_V537RI59.jpg", "전체", "전체", "4학년", "전체", "교육·특강·프로그램", "cse"], ["2026-10-22", "동계 전공봉사단 모집", "봉사·전공활동", "부산대 학생과", "학부생 팀 및 지도교수; 인원·자격 상세 공고/첨부 확인", "2026-11-05~11-13 14:00", "2026-12-22~2027-01-31 중 5일/30시간", "팀당 학생 최대 10명", "팀별 200만~500만원 지원", "나눔포털 신청 후 원본 서류 제출", "접수예정", "https://www.pusan.ac.kr/kor/CMS/Board/PopupBoard.do?board_seq=1511716&mgr_seq=3&mode=view", "학생과 원문 기준", "2026-11-13", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/26%ED%95%99%EB%85%84%EB%8F%84_%EB%8F%99%EA%B3%84_%EC%A0%84%EA%B3%B5%EB%B4%89%EC%82%AC%EB%8B%A8_%EB%AA%A8%EC%A7%91_%ED%99%8D%EB%B3%B4_%ED%8F%AC%EC%8A%A4%ED%84%B0.png", "전체", "전체", "전체", "학부", "봉사·사회공헌", "pnu_main"], ["2026-10-22", "푸른등대 기부장학금(2026-2학기 2차) 신규 장학생", "장학금", "한국장학재단 / 부산대 학생과", "재학생; 세부 선발 기준은 한국장학재단 공고 확인", "2026-10-22~11-12", "2026-2학기", "35명", "생활비 장학 200만원/1학기", "한국장학재단 홈페이지·앱", "접수중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511712&mgr_seq=3&mode=view&page=3", "부서별 재게시 동일 건은 한 번만 저장", "2026-11-12", "https://www.pusan.ac.kr/kor/ajx_json/UploadMgr/downloadRun.do?qcode=Qm9hcmQsNDExNzk2LFk=", "전체", "전체", "전체", "전체", "장학·지원금", "pnu_main"], ["2026-10-22", "WDC 도시디자인 실험실 2기", "대외활동·디자인", "부산광역시 / 부산디자인진흥원", "지역 대학생·유학생·일반 청년", "공고 게시종료 2026-10-31; 정확한 신청 마감은 첨부 포스터 확인", "첨부 포스터 확인", "미공개", "도시문제 해결 디자인 프로젝트·전문가 멘토링·수료증", "공고/첨부 포스터 내 신청 링크", "마감·확인 필요", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511702&mgr_seq=3&mode=view", "공지 본문은 세부일정 대신 첨부 안내자료를 참조", "", "https://www.pusan.ac.kr/kor/ajx_json/UploadMgr/downloadRun.do?qcode=Qm9hcmQsNDExNzg0LFk=\nhttps://www.pusan.ac.kr/kor/ajx_json/UploadMgr/downloadRun.do?qcode=Qm9hcmQsNDExNzg1LFk=", "전체", "전체", "전체", "전체", "대외활동·행사", "pnu_main"], ["2026-10-21", "Sketch-Up 창업 해커톤", "창업·해커톤", "부산대 앵커사업단·창업지원부", "창업지원단/앵커사업단 프로그램 이력 보유 부산대 대학(원)생 2~4인 팀", "공고일~2026-11-05", "2026-11-12~13 1박2일", "약 10팀", "최우수 100만원, 우수 50만원씩 2팀", "신청서·사업계획서 등 이메일 제출", "접수중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511692&mgr_seq=3&mode=view&page=3", "", "2026-11-05", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/20261021141648598_4I3YKA4K.png", "전체", "전체", "전체", "전체", "창업", "pnu_main"], ["2026-10-19", "겨울계절학기 현장실습 참여학생 모집", "현장실습·취업", "부산대 현장실습지원센터", "재학생; 자격·기업별 실습 정보는 학생지원시스템 및 매뉴얼 확인", "신청 2026-11-20부터; 공지 제목상 세부 일정 순차 안내", "2026 겨울계절학기", "기업별 상이", "현장실습 및 학점 연계 가능; 배정조건은 시스템 공고 확인", "현장실습지원센터 시스템", "접수예정", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511646&mgr_seq=3&mode=view&page=1", "동일 날짜의 참여기업 모집 공고는 기업 대상이라 학생용 시트에서 제외", "", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000133/%ED%98%84%EC%9E%A5%EC%8B%A4%EC%8A%B5_%ED%95%99%EC%83%9D%EB%AA%A8%EC%A7%91.png", "전체", "전체", "전체", "학부", "취업·채용·현장실습", "pnu_main"], ["2026-10-19", "PNU 지역기업 발견·홍보 콘텐츠 공모전", "공모전·진로", "부산대 학생성공개발원", "세부 참가자격/팀 조건은 첨부 안내문 확인", "제목 ~11-01; 게시종료 11-09로 날짜 불일치", "첨부 안내문 확인", "공고문 확인", "지역기업 발굴·홍보 콘텐츠 제작", "첨부 참가신청서 안내에 따른 접수", "기한 확인 필요", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511638&mCode=MN095&mgr_seq=3&mode=view&page=1", "제목 마감일(11-01)과 시스템 게시 종료(11-09)가 다르므로 확인 표시", "", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000133/20261019151123401_JO2CE3UL.jpg", "전체", "전체", "전체", "전체", "공모전·경진대회", "pnu_main"], ["2026-10-19", "필전 2026 조선 백일장", "공모전·글쓰기", "조선일보", "전국 대학 학부생(재·휴학생; 국내 대학)", "~2026-11-03", "부산·울산·경남 예선 2026-11-07 부산대 기계관", "원문 확인", "글쓰기 대회 및 상금/시상", "조선일보 안내에 지정된 참가 접수", "접수중", "https://www.pusan.ac.kr/kor/CMS/Board/PopupBoard.do?board_seq=1511637&mgr_seq=3&mode=view", "학과별 미러 공지는 중복 제외", "2026-11-03", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000133/%ED%95%84%EC%A0%842026%ED%8F%AC%EC%8A%A4%ED%84%B02_%281%29.jpg", "전체", "전체", "전체", "학부", "공모전·경진대회", "pnu_main"], ["2026-10-19", "학습전략특강: 나만의 AI 학습 조교 설계하기", "교육·학습", "부산대 교수학습지원센터", "부산대 학생; 세부 참가대상/정원은 공고·포스터 확인", "신청 공고 게시종료 2026-11-02 15:24", "2026-11-17", "공고/포스터 확인", "AI를 활용한 학습 보조 도구 설계 특강", "공고/포스터 안내 경로 확인", "접수중·세부확인", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?board_seq=1511642&mCode=MN095&mgr_seq=3&mode=view&page=1&searchID=title", "검색 인덱스에서 상세 신청 방법 미확인", "2026-11-02", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000133/2026-2_%ED%95%99%EC%8A%B5%EC%A0%84%EB%9E%B5%ED%8A%B9%EA%B0%95_%ED%8F%AC%EC%8A%A4%ED%84%B0.png", "전체", "전체", "전체", "전체", "교육·특강·프로그램", "pnu_main"], ["2026-10-19", "동계 대학원생 대상 다문화 연구실 자문 워크숍", "학술·대학원", "부산대 국제처", "이공계 다문화 연구실 내국인 대학원생", "원문 신청기한 확인", "원문 확인", "원문 확인", "대학원 연구실 다문화 자문 워크숍", "국제처 원문 확인", "세부 확인 필요", "https://international.pusan.ac.kr/bbs/international/2080/artclList.do", "10-28 게시; 현재 검색 목록만 확인되어 세부내용 미확인", "2026-11-03", "", "자연과학대학,공과대학,정보의생명공학대학,나노과학기술대학,생명자원과학대학", "전체", "전체", "대학원", "대학원·연구", "international"], ["2026-10-30", "2026학년도 제5기 'Arise PNU 글로벌 사회공헌단' 참여자 모집", "해외봉사", "부산대 학생과 · 국립대학육성사업", "부산대 소속 교수·강사·직원 및 학부·대학원 재학생 (8인 이상 팀 구성)", "신청 2026-11-16 ~ 11-20 17:00", "파견 2026-12-24 ~ 2027-01-31 (아시아 지역)", "4개 팀 내외", "해외 봉사활동 활동비 지원", "원문·첨부 참조", "모집 중", "https://cse.pusan.ac.kr/bbs/cse/2055/1469389/artclView.do", "", "2026-11-20", "https://cse.pusan.ac.kr/editorFile/images/000179/20261030165158665_CUEBYLT2.png", "전체", "전체", "전체", "전체", "봉사·사회공헌", "cse"], ["2026-10-21", "2026 Arise Together: 문제해결 프로젝트 참여팀 모집", "교육·프로그램", "부산대 종합교원양성센터 (글로컬대학30)", "부산대·부산교대 재학생 3~5인 팀 (예비교원 대상 취지)", "접수 2026-10-19 ~ 11-06 18:00", "지역 교육현장의 실제 문제를 멘토와 팀 프로젝트로 해결", "", "현장전문가 멘토 매칭", "원문·첨부 참조", "모집 중", "https://geredu.pusan.ac.kr/bbs/geredu/86/1467667/artclView.do", "예비교원 대상 프로그램이나 원문상 참여대상은 재학생 팀으로 적혀 전체 대상으로 분류.", "2026-11-06", "", "전체", "전체", "전체", "전체", "교육·특강·프로그램", "geredu"], ["2026-10-26", "2026년도 연구실 안전문화 캠페인 공모전", "공모전", "연구실 안전문화 캠페인 주관 기관 (원문 확인)", "부산대학교 재학생 (학부생·대학원생)", "접수 2026-10-26 ~ 12-04", "분야: 카드뉴스·포스터·영상 / 주제: 연구실 안전사고·금속화재 예방 및 대응", "", "", "원문·첨부 참조", "모집 중", "https://bce.pusan.ac.kr/bbs/bce/220/1468067/artclView.do", "같은 공고가 다른 3곳에도 게시됨.", "2026-12-04", "https://bce.pusan.ac.kr/editorFile/images/000174/20261026095141559_B5AQP26V.jpg", "전체", "전체", "전체", "전체", "공모전·경진대회", "bce"], ["2026-10-28", "2026년 2학기 속기 체험 교실(2) 참가자 모집", "교육·체험", "부산대 장애학생지원센터", "비장애인 대학생", "신청 2026-10-28 ~ 11-04", "11/5, 11/12, 11/19(목) 12:00~13:00", "", "", "원문·첨부 참조", "모집 중", "https://humanities.pusan.ac.kr/bbs/humanities/178/1468624/artclView.do", "같은 공고가 다른 1곳에도 게시됨.", "2026-11-04", "https://humanities.pusan.ac.kr/editorFile/images/000177/20261028171047267_3Z90GVF0.bmp", "전체", "전체", "전체", "전체", "교육·특강·프로그램", "humanities"], ["2026-10-26", "2026년 권역 내 유관기관 견학 및 체험 (백양종합사회복지관)", "취업·진로", "부산대 장애학생지원센터 (장애학생 지원 권역별 선도대학 운영 사업)", "사회복지관 취업을 희망하는 부울경 권역 대학 장애대학생", "신청 ~ 2026-11-11", "2026-11-13(금) 10:30~15:00", "", "", "원문·첨부 참조", "모집 중", "https://uni.pusan.ac.kr/bbs/uni/897/1468259/artclView.do", "같은 공고가 다른 6곳에도 게시됨.", "2026-11-11", "https://uni.pusan.ac.kr/bbs/uni/897/1536237/download.do", "전체", "전체", "전체", "전체", "취업·채용·현장실습", "uni"], ["2026-10-30", "2026년 하반기 실험동물기술원 자격취득 교육과정", "교육·자격", "부산대 동물실험윤리위원회", "학부생·대학원생·직원 중 희망자 20명 선발", "신청 2026-10-26 ~ 11-02", "교육 2026-11-13(금) 09:00~17:00, 밀양캠퍼스 생명자원과학관 3612호", "20명", "무상 교육", "원문·첨부 참조", "모집 중", "https://biology.pusan.ac.kr/bbs/biology/638/1468910/artclView.do", "", "2026-11-02", "", "전체", "전체", "전체", "전체", "교육·특강·프로그램", "biology"], ["2026-10-30", "2026학년도 2학기 학·석사 연계과정·학석박사통합 연계과정 연구지원 장려금 신청", "장학·지원", "부산대 대학원 (학과별 제출)", "2026-10-01 기준 학·석사 연계과정 및 학·석박사통합 연계과정 재학 대학원생", "제출 ~ 2026-11-04 (학과별 11/3~11/4로 상이)", "사업기간 2026-11-02 ~ 2027-01-29", "", "1인당 50만원 (개인계좌 지급)", "원문·첨부 참조", "모집 중", "https://hid.pusan.ac.kr/bbs/hid/1267/1470621/artclView.do", "학과별 제출기한이 다름(문헌정보학과 11/3 10:00, 의생명융합공학부 11/4 등). 본인 학과 공지 확인.", "2026-11-04", "", "전체", "전체", "전체", "대학원", "장학·지원금", "hid"], ["2026-10-30", "2026학년도 우수대학원생 논문연구 지원 사업", "장학·지원", "부산대 국립대학육성사업", "우수 대학원생 (원문: 인문·사회·예·체능계열 연구장려 지원)", "지원신청 ~ 2026-11-06 (학과사무실 제출)", "연구기간 선정 통보 후 ~ 2027-02-05", "", "", "원문·첨부 참조", "모집 중", "https://biz.pusan.ac.kr/bbs/biz/1094/1468919/artclView.do", "학과별 제출기한이 다를 수 있음(국어국문학과 게시글은 11/12로 기재). 같은 공고가 다른 3곳에도 게시됨.", "2026-11-06", "", "인문대학,사회과학대학,경제통상대학,경영대학,사범대학,예술대학,생활환경대학,스포츠과학부", "전체", "전체", "대학원", "대학원·연구", "biz"], ["2026-10-19", "2026학년도 한의학연구과정 지도교수 선정 신청", "학사·연구", "부산대 한의학전문대학원", "한의학전문대학원 한의학연구과정 학생", "신청 ~ 2026-11-06 (교육실 이메일, 1·2·3지망)", "연구주제·지도교수 확정 결과는 한의전 홈페이지 공지", "", "", "원문·첨부 참조", "모집 중", "https://kmed.pusan.ac.kr/bbs/kmed/1514/1467455/artclView.do", "학사 절차 성격의 공지.", "2026-11-06", "", "한의학전문대학원", "전체", "전체", "대학원", "대학원·연구", "kmed"], ["2026-10-27", "2026년도 통일간호리더장학금 신청", "장학금", "대한간호협회 / 부산대 간호대학", "북한에서 이주하여 현재 간호대학에 재학 중인 학생", "제출기한 2026-12-04 18:00까지", "", "", "통일간호리더장학금", "신청서·자기소개서 및 학업계획서·교수추천서 제출 (제출처는 원문 참조)", "모집 중", "https://nursing.pusan.ac.kr/bbs/nursing/1342/1468295/artclView.do", "", "2026-12-04", "", "간호대학", "전체", "전체", "전체", "장학·지원금", "nursing"], ["2026-10-30", "2026 블루푸드 메뉴 개발 경진대회", "경진대회", "부산대 산학협력단 블루푸드테크 혁신센터(ICC)", "생활과학대학 식품영양학과 학부생 (팀당 2~4명, 총 24명 내외)", "최종 메뉴 기획서 제출 ~ 2026-11-26", "대회 2026-11-27(금) 13:00~16:00", "24명 내외", "대상 1팀 상금 50만원", "원문·첨부 참조", "모집 중", "https://fsn.pusan.ac.kr/bbs/fsn/445/1469387/artclView.do", "원문은 '생활과학대학'으로 표기 — 현 명칭 생활환경대학으로 분류.", "2026-11-26", "", "생활환경대학", "식품영양학과", "전체", "학부", "공모전·경진대회", "fsn"], ["2026-10-30", "제14회 생명자원과학대학 캡스톤디자인 경진대회", "경진대회", "부산대 생명자원과학대학", "생명자원과학대학 학부생 (휴학생 포함)", "신청서·수행보고서 ~ 2026-11-13 12:00", "포스터 PDF 11/20 18:00 / 심사·시상 11/25", "", "", "원문·첨부 참조", "모집 중", "https://horticulture.pusan.ac.kr/bbs/horticulture/719/1468954/artclView.do", "마감일은 신청서·수행보고서 기준(제목 ~11/13). 자동 추출값(11/25)은 심사일이라 정정.", "2026-11-13", "https://horticulture.pusan.ac.kr/editorFile/images/000179/%EC%BA%A1%EC%8A%A4%ED%86%A4%EB%94%94%EC%9E%90%EC%9D%B8_%ED%8F%AC%EC%8A%A4%ED%84%B0(%EC%99%84%EB%A3%8C)_1.jpeg", "생명자원과학대학", "전체", "전체", "학부", "공모전·경진대회", "horticulture"], ["2026-10-28", "LOTTE AX Challenge 2026 참가자 모집", "공모전", "롯데그룹 (외부)", "학력·전공 무관, AI에 관심 있는 누구나", "예선 접수 2026-10-28 ~ 11-04", "본선 2026-11-24~25 롯데인재개발원 오산캠퍼스", "", "", "원문·첨부 참조", "모집 중", "https://history.pusan.ac.kr/bbs/history/174/1468540/artclView.do", "", "2026-11-04", "https://history.pusan.ac.kr/editorFile/images/000176/26%ED%95%98_10__%EB%A1%AF%EB%8D%B0%EA%B7%B8%EB%A3%B9_%ED%95%B4%EC%BB%A4%ED%86%A4_%EC%9B%B9%ED%94%8C%EB%9D%BC%EC%9D%B4%EC%96%B4.png", "전체", "전체", "전체", "전체", "공모전·경진대회", "history"], ["2026-10-28", "IBK기업은행 2027년 동계 체험형 청년인턴 공개채용", "채용·인턴", "IBK기업은행 (외부)", "만 19세 이상 만 34세 이하 (군복무 기간에 따라 상한 연장)", "~ 2026-11-16 10:00", "", "금융일반 340명 / 디지털·IT 50명", "", "원문·첨부 참조", "모집 중", "https://history.pusan.ac.kr/bbs/history/174/1468537/artclView.do", "", "2026-11-16", "https://history.pusan.ac.kr/editorFile/images/000176/20261028113741930_CD37JRK1.png", "전체", "전체", "전체", "전체", "취업·채용·현장실습", "history"], ["2026-10-28", "2026 하반기 삼성전자 협력사 온라인 채용박람회", "채용", "삼성전자 협력사 (외부)", "신입·경력 구직자 (원문 확인)", "2026-10-28 ~ 11-15", "", "삼성전자 우수협력사 40여 개", "", "홈페이지 접수 (원문 링크 참조)", "모집 중", "https://history.pusan.ac.kr/bbs/history/174/1468541/artclView.do", "", "2026-11-15", "https://history.pusan.ac.kr/editorFile/images/000176/20261028114121567_T4YR0XGQ.png", "전체", "전체", "전체", "전체", "취업·채용·현장실습", "history"], ["2026-10-27", "CR그룹 26년 신입/경력 공개채용 (CR홀딩스·조선내화)", "채용", "CR그룹 (외부)", "신입·경력 지원자 (원문 확인)", "2026-10-26 ~ 11-08 23:59", "", "", "", "채용사이트 온라인 접수", "모집 중", "https://history.pusan.ac.kr/bbs/history/174/1468363/artclView.do", "", "2026-11-08", "https://history.pusan.ac.kr/editorFile/images/000176/24860_3669760_1793064997549955899.png", "전체", "전체", "전체", "전체", "취업·채용·현장실습", "history"], ["2026-10-26", "[부산대 추천채용] 키엔스코리아㈜ 추천채용", "추천채용", "키엔스코리아㈜ / 부산대", "추천학과 전공무관", "지원서 제출 ~ 2026-11-04 (지원서 피드백 요청 ~11/1)", "모집직무: 컨설팅 세일즈(기술영업)", "", "서류전형 면제, 연봉 4,700만원 (정규직)", "원문·첨부 참조", "모집 중", "https://history.pusan.ac.kr/bbs/history/174/1468096/artclView.do", "", "2026-11-04", "", "전체", "전체", "전체", "전체", "취업·채용·현장실습", "history"], ["2026-10-23", "현대백화점그룹 채용설명회 및 현장면접", "채용설명회", "현대백화점그룹 / 부산대 학생성공개발원", "현대백화점그룹 채용에 관심 있는 재학생 및 기졸업자", "현장면접 신청 2026-11-02 09:00 ~ 11-06 17:00", "채용설명회 10/30 (종료) / 현장면접 2026-11-10~11 문창회관", "", "", "원문·첨부 참조", "모집 중", "https://history.pusan.ac.kr/bbs/history/174/1468009/artclView.do", "", "2026-11-06", "https://history.pusan.ac.kr/editorFile/images/000173/20261023180554391_J0LWT2UF.png", "전체", "전체", "전체", "전체", "취업·채용·현장실습", "history"], ["2026-10-29", "2026 전국 예비교원 AI 융합교육 해커톤 대회", "공모전", "사범대학미래교육센터 (교원양성기관 교육과정 개발 지원 사업)", "AI 융합교육에 관심 있는 전국 중등 예비교원 팀 (3~4명, 비사범대 교직이수자 포함)", "접수 ~ 2026-11-10", "", "", "", "원문·첨부 참조", "모집 중", "https://philosophy.pusan.ac.kr/bbs/philosophy/1450/1468719/artclView.do", "", "2026-11-10", "https://philosophy.pusan.ac.kr/editorFile/images/000178/20261029133326849_MHAPKJK2.png", "전체", "전체", "전체", "전체", "공모전·경진대회", "philosophy"], ["2026-10-28", "서울대 대학연대 스마트·친환경 오션모빌리티 겨울캠프", "교육·캠프", "서울대학교 대학연대 지역인재양성사업단", "전국 거점국립대 학부생·대학원생 (과정별 약 20명 선발)", "신청 ~ 2026-12-11", "2027-01-07~08 서울대 관악캠퍼스", "", "참가비 무료, 왕복 교통비·숙박비 지원", "원문·첨부 참조", "모집 중", "https://aerospace.pusan.ac.kr/bbs/aerospace/96/1468530/artclView.do", "", "2026-12-11", "", "전체", "전체", "전체", "전체", "교육·특강·프로그램", "aerospace-ae"], ["2026-10-19", "삼성청년 SW·AI 아카데미(SSAFY) 17기 교육생 모집", "교육·취업", "삼성전자 SSAFY (외부)", "4년제 대학 졸업(예정)자 (학과 무관, 2027년 2월 이내 졸업 가능자)", "2026-10-26 ~ 11-09", "설명회 11/3(화) 14:00 기계관 지하1층 국제회의장", "", "전액 무료 교육, 교육지원금 월 100만원+α, 맞춤형 취업 지원", "원문·첨부 참조", "모집 중", "https://archaeology.pusan.ac.kr/bbs/archaeology/208/1467448/artclView.do", "", "2026-11-09", "https://archaeology.pusan.ac.kr/editorFile/images/000170/SSAFY_17%EA%B8%B0_%EB%AA%A8%EC%A7%91_%ED%8F%AC%EC%8A%A4%ED%84%B0.png", "전체", "전체", "4학년", "전체", "교육·특강·프로그램", "archaeology"], ["2026-10-27", "공공정책학부 PNU Major+ LEET 모의고사", "비교과", "부산대 공공정책학부", "LEET 시험에 관심 있는 공공정책학부 재학생", "신청 ~ 2026-11-10", "2026-11-13(금) 12:00~15:00 경제통상관 L-102", "", "", "학생역량지원시스템(my.pusan.ac.kr)에서 신청", "모집 중", "https://ppm.pusan.ac.kr/bbs/ppm/892/1468426/artclView.do", "", "2026-11-10", "", "경제통상대학", "공공정책학부", "전체", "학부", "교육·특강·프로그램", "ppm"], ["2026-10-28", "2026 겨울 학부생 연구 프로그램 (에너지신산업-연구보고서 작성 경진대회)", "연구", "부산대 첨단융합학부", "첨단융합학부 학사과정 재학생 (나노과학기술대학 재학생도 참여 가능)", "지원 ~ 2026-11-17 23:59", "겨울방학 중 운영", "", "", "원문·첨부 참조", "모집 중", "https://nanomecha.pusan.ac.kr/bbs/nanomecha/1324/1468506/artclView.do", "첨단융합학부 소속은 '기타 학부·전공'으로 분류. 같은 공고가 다른 2곳에도 게시됨.", "2026-11-17", "https://nanomecha.pusan.ac.kr/editorFile/images/000176/2026-%EA%B2%A8%EC%9A%B8-%EC%97%B0%EA%B5%AC%EB%B3%B4%EA%B3%A0%EC%84%9C-%EC%9E%91%EC%84%B1-%EA%B2%BD%EC%A7%84%EB%8C%80%ED%9A%8C-%ED%8F%AC%EC%8A%A4%ED%84%B0_1.png", "나노과학기술대학,기타 학부·전공", "전체", "전체", "학부", "교육·특강·프로그램", "nanomecha"], ["2026-10-26", "2026학년도 2학기 장학사정관 추천 학업지원장학생 선발", "장학금", "부산대 (장학사정관 추천)", "가계곤란 학부생(직전학기 성적 2.0 이상·12학점 이상) 및 일반대학원생(직전학기 성적 3.0 이상 등)", "신청 2026-10-19 ~ 11-13", "", "", "", "원문·첨부 참조", "모집 중", "https://bee.pusan.ac.kr/bbs/bee/1697/1468158/artclView.do", "세부 기준은 붙임 선발계획 참조.", "2026-11-13", "", "전체", "전체", "전체", "전체", "장학·지원금", "bee"], ["2026-10-20", "2026 에코니티(이산)-대한환경공학회 우수학생 장학금 포상 공모", "장학금", "㈜에코니티·㈜이산·대한환경공학회", "환경공학 분야 우수 학부생·대학원생 (학부 8명 / 대학원 2명 선발)", "서류접수 ~ 2026-11-20 18:00", "", "", "총 상금 1,200만원 (학부 1인 100만원)", "원문·첨부 참조", "모집 중", "https://pnuenv.pusan.ac.kr/bbs/pnuenv/525/1467539/artclView.do", "추정(게시 학과 기준).", "2026-11-20", "", "공과대학", "환경공학전공", "전체", "전체", "장학·지원금", "pnuenv"], ["2026-10-22", "2026학년도 연세대학교 교육대학원 총장배 수업시연대회", "공모전", "연세대학교 교육대학원 (외부)", "전국 교육대학원·사범대학 예비교원", "접수 2026-11-05 ~ 11-10 18:00", "", "", "", "원문·첨부 참조", "모집 중", "https://philosophy.pusan.ac.kr/bbs/philosophy/1450/1467765/artclView.do", "", "2026-11-10", "https://philosophy.pusan.ac.kr/editorFile/images/000172/20261022120403997_YTDR4T9O.png", "사범대학", "전체", "전체", "전체", "공모전·경진대회", "philosophy"], ["2026-10-20", "2026학년도 동계 해외도전과 체험 파견팀 모집", "봉사·해외", "부산대 (전공봉사활동 활성화)", "파견팀 (세부 조건은 원문 참조)", "신청 2026-10-27 ~ 11-02 11:00", "", "", "", "원문·첨부 참조", "모집 중", "https://nursing.pusan.ac.kr/bbs/nursing/1342/1467528/artclView.do", "간호대학 게시글에는 간호학과 사전 논의(10/23 13:00까지) 추가 안내가 포함됨.", "2026-11-02", "", "전체", "전체", "전체", "전체", "봉사·사회공헌", "nursing"], ["2026-10-31", "2026 한국정치학회 연례학술회의 논문·패널 공모 (Call for Papers)", "학술", "한국정치학회 (외부)", "한국정치학회 회원 (비회원은 회원가입 필요), 관심 있는 대학원생 대상 안내", "발표논문 제출 ~ 2026-12-02", "학술회의 2026-12-12 명지대 인문캠퍼스", "", "", "원문·첨부 참조", "모집 중", "https://polsci.pusan.ac.kr/bbs/polsci/1080/1470629/artclView.do", "추정(게시 학과 기준).", "2026-12-02", "", "사회과학대학", "정치외교학과", "전체", "대학원", "대학원·연구", "polsci"], ["2026-10-30", "[청년취업사관학교] 양천캠퍼스 AI 융합 3기 교육생 모집", "교육·취업", "서울시 청년취업사관학교 (외부)", "청년 (원문 확인)", "모집 2026-10-28 ~ 11-27", "서울 양천캠퍼스 (콘텐츠디자인·데이터분석·디지털마케팅)", "", "교육비 무료 (예치금 최대 10만원, 수료 후 반환)", "원문·첨부 참조", "모집 중", "https://history.pusan.ac.kr/bbs/history/174/1469341/artclView.do", "서울 소재 프로그램. 외부 공고.", "2026-11-27", "https://history.pusan.ac.kr/editorFile/images/000179/20261030112647960_12PPQ7SY.png", "전체", "전체", "전체", "전체", "교육·특강·프로그램", "history"], ["2026-10-20", "재학생 기업탐방 프로그램 「1일 오피스 라이프」 (캠코)", "취업·진로", "부산대 대학일자리플러스센터 (재학생맞춤형고용서비스)", "재학생", "신청 ~ 2026-11-03", "운영 2026-11-13(금) 09:00~15:00, 한국자산관리공사(캠코) 본사", "", "", "원문·첨부 참조", "모집 중", "https://humanities.pusan.ac.kr/bbs/humanities/178/1467500/artclView.do", "같은 공고가 다른 2곳에도 게시됨.", "2026-11-03", "https://humanities.pusan.ac.kr/editorFile/images/000171/1.png", "전체", "전체", "전체", "전체", "취업·채용·현장실습", "humanities"], ["2026-10-28", "2026「E²SODE」 공대생 에피소드 쇼츠 공모전", "공모전", "부산대 공학교육혁신센터", "공대생", "영상 제출 2026-10-26 ~ 11-08 23:59", "좋아요 집계 마감 2026-11-18 18:00", "", "", "원문·첨부 참조", "모집 중", "https://picee.pusan.ac.kr/bbs/picee/9933/1765572/artclView.do", "", "2026-11-08", "https://picee.pusan.ac.kr/dext5editordata/2026/10/20261028_130529111_95545.jpeg\nhttps://picee.pusan.ac.kr/bbs/picee/9933/987172/download.do", "공과대학,정보의생명공학대학", "전체", "전체", "학부", "공모전·경진대회", "picee"], ["2026-10-30", "2026학년도 겨울계절수업 교류 수학 안내 (타 대학 수강)", "학사·교류", "부산대 학사과", "교류 수학(타 대학 겨울계절수업 수강)을 희망하는 재학생", "신청 대학별 상이 (2026-11-02 ~ 11-26) · 소속 학과사무실로 신청", "", "", "", "신청서류(수학신청원·성적증명서 등)를 소속 학과사무실에 제출", "모집 중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN095&mgr_seq=3&mode=view&mgr_seq=3&board_seq=1511851", "대학별 신청기한: 동의대·동아대 11/2 · 동국대 WISE·경북대 11/3 · 서강대·부산외대·제주대·경성대·한국교원대·한양대·한양대 에너지신산업·고려대 에너지신산업 11/4 · 전남대 HUSS·영남대·중앙대 첨단소재·고려대·성균관대·서울시립대(2종) 11/9 · 울산대 11/12 · 인하대 11/16 · 고려대 국제동계대학 11/26. 개별 마감을 지킬 것(대학 공문의 기한은 소속대학 추천기한). 링크는 대표 1건(전남대 HUSS)이며 대학별 안내는 같은 게시판에 개별 게시됨.", "2026-11-26", "", "전체", "전체", "전체", "학부", "교육·특강·프로그램", "pnu_main"], ["2026-10-30", "효원상담원 심리기술훈련 7차 (신체감각·이완을 통한 심리안정화)", "교육·비교과", "부산대 효원상담원", "부산대 학생 (원문 확인)", "신청 2026-10-19 ~ 11-17", "2026-11-20(금) 10:30~11:30", "", "", "학생지원시스템 → 학생역량 → 비교과 프로그램에서 신청", "모집 중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN095&mgr_seq=3&mode=view&mgr_seq=3&board_seq=1511852", "", "2026-11-17", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/2026%ED%95%99%EB%85%84%EB%8F%84_%EC%8B%AC%EB%A6%AC%EA%B8%B0%EC%88%A0%ED%9B%88%EB%A0%A8_%ED%8F%AC%EC%8A%A4%ED%84%B0_yellow_2.jpg\nhttps://www.pusan.ac.kr/kor/ajx_json/UploadMgr/downloadRun.do?qcode=Qm9hcmQsNDEyMDQwLFk=", "전체", "전체", "전체", "전체", "교육·특강·프로그램", "pnu_main"], ["2026-10-29", "일자리첫걸음보장센터 「이번 생 주연은 나로 정했습니다만, 스토리는 아직 미정입니다」 참가자 모집", "취업·진로", "부산대 일자리첫걸음보장센터", "2027년 2월 졸업예정자 · 졸업 후 1년 이내 졸업생 · 취업 준비 중인 만 34세 이하 지역청년", "신청 2026-10-26 ~ 11-11", "자기 이해·강점 탐색, 베어브릭 페인팅 등", "", "", "원문·첨부 참조", "모집 중", "https://job.pusan.ac.kr/ko/notice/notice/view/204525?p=1", "", "2026-11-11", "https://job.pusan.ac.kr/attachment/view/1589508/1793234863421.png?ts=0\nhttps://job.pusan.ac.kr/attachment/view/1589509/1793234881588.png?ts=0", "전체", "전체", "4학년", "전체", "취업·채용·현장실습", "job"], ["2026-10-28", "일자리첫걸음보장센터 기업탐방 프로그램 (BNK·부산 신항만·보쉬렉스로스코리아·대한항공·한화오션)", "취업·진로", "부산대 일자리첫걸음보장센터", "2027년 2월 졸업예정자 및 졸업 후 1년 이내 졸업한 취업준비생", "기업별 신청마감 상이 (대한항공 ~11-16 18:00 등)", "BNK 11/13(금) 09:30~17:00 · 대한항공(부산) 11/20(금) 09:30~18:00 등", "", "", "원문·첨부 참조", "모집 중", "https://job.pusan.ac.kr/ko/notice/notice/view/204522?p=1", "기업별 신청마감이 다름. 원문에서 지원하려는 기업의 마감 확인.", "2026-11-16", "https://job.pusan.ac.kr/attachment/view/1589426/%EA%B8%B0%EC%97%85%ED%83%90%EB%B0%A9+%ED%8F%AC%EC%8A%A4%ED%84%B0+%EB%AA%A8%EC%9D%8C%EC%A7%91.png?ts=0", "전체", "전체", "4학년", "전체", "취업·채용·현장실습", "job"], ["2026-10-28", "SK하이닉스 & 삼성전자 합격 대비 면접전략 특강 참가자 모집", "취업·특강", "부산대 일자리첫걸음보장센터", "2027년 2월 졸업예정자", "신청 2026-10-27 ~ 11-02 16:00", "온라인(ZOOM) 실시간 특강, 강사 안정영", "", "", "원문·첨부 참조", "모집 중", "https://job.pusan.ac.kr/ko/notice/notice/view/204519?p=1", "같은 센터의 '기업 맞춤형 실전 면접 대비 프로그램'(11/3 SK하이닉스 등 회차별 일정)과 연계된 특강.", "2026-11-02", "https://job.pusan.ac.kr/attachment/view/1589375/1793146873448.png?ts=0", "전체", "전체", "4학년", "전체", "취업·채용·현장실습", "job"], ["2026-10-26", "심리회복 프로그램 「인생 배터리 1%, 절전 모드로 살아남기」 참가자 모집", "교육·비교과", "부산대 일자리첫걸음보장센터", "2027년 2월 졸업예정자 · 졸업 후 1년 이내 졸업생 · 취업 준비 중인 만 34세 이하 지역청년", "신청 2026-10-26 ~ 11-04", "무기력과 자존감 이해, 색소금 오브제 만들기", "", "", "원문·첨부 참조", "모집 중", "https://job.pusan.ac.kr/ko/notice/notice/view/204503?p=1", "", "2026-11-04", "https://job.pusan.ac.kr/attachment/view/1589110/1792987854479.png?ts=0\nhttps://job.pusan.ac.kr/attachment/view/1589111/1792987867275.png?ts=0", "전체", "전체", "4학년", "전체", "교육·특강·프로그램", "job"], ["2026-10-28", "2026 IQM 양자컴퓨터 기초 활용교육", "교육", "부산정보산업진흥원 (외부)", "부산시 소재 기업 재직자, 대학(원)생, 양자기술 알고리즘 개발·기술사업화 희망자", "신청 2026-10-27 ~ 11-02", "2026-11-04(수)~06(금) 12:00~18:00 (총 3일), 동서대 센텀캠퍼스 12층 교육장", "", "", "원문·첨부 참조", "모집 중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN095&page=2&mgr_seq=3&mode=view&mgr_seq=3&board_seq=1511795", "", "2026-11-02", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/IQM_%EC%96%91%EC%9E%90%EC%BB%B4%ED%93%A8%ED%84%B0_%EA%B8%B0%EC%B4%88_%ED%99%9C%EC%9A%A9%EA%B5%90%EC%9C%A1_%ED%8F%AC%EC%8A%A4%ED%84%B0.png\nhttps://www.pusan.ac.kr/kor/ajx_json/UploadMgr/downloadRun.do?qcode=Qm9hcmQsNDExOTIxLFk=", "전체", "전체", "전체", "전체", "교육·특강·프로그램", "pnu_main"], ["2026-10-24", "제22회 PNU 역사나들이 (여수) 참가자 모집", "문화·답사", "부산대 박물관 (국립대학육성사업)", "부산대 학부생 및 대학원 석사 재학생 (선착순 30명)", "접수 2026-10-22 ~ 11-08", "현장답사 2026-11-14(토), 인문관 오전 7시 집결", "30명", "참가비 1만원", "원문·첨부 참조", "모집 중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN095&page=3&mgr_seq=3&mode=view&mgr_seq=3&board_seq=1511739", "제22회 PNU 역사나들이 안내(여수시)' 게시글과 같은 행사.", "2026-11-08", "https://pnumuseum.pusan.ac.kr/dext5editordata/2026/10/20261021_103645708_82416.jpg", "전체", "전체", "전체", "전체", "대외활동·행사", "pnu_main"], ["2026-10-20", "2026년 2학기 국가근로장학금 일반유형 추가신청", "장학금", "한국장학재단 / 부산대", "2026-2학기 국가근로장학금 일반유형 근로를 희망하는 학생 (기존 신청 누락자 구제)", "희망근로지 신청 2026-10-30 ~ 11-12 (예정)", "동계방학 집중근로 프로그램 참여 가능", "", "", "원문·첨부 참조", "모집 중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN095&page=5&mgr_seq=3&mode=view&mgr_seq=3&board_seq=1511661", "기존 '동계방학 집중근로 희망근로지 신청' 행과 같은 기간의 추가신청 안내.", "2026-11-12", "", "전체", "전체", "전체", "전체", "장학·지원금", "pnu_main"], ["2026-10-20", "부산대자율상권 숏폼 및 네이밍 공모전", "공모전", "부산광역시 금정구 (부산대자율상권조합)", "부산대 상권에 관심 있는 누구나", "접수 2026-10-13 ~ 11-08", "", "", "총 21팀 시상 (대상 1, 최우수상 2, 우수상 4, 장려상 6, 입선 8)", "원문·첨부 참조", "모집 중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN095&page=5&mgr_seq=3&mode=view&mgr_seq=3&board_seq=1511659", "써머트리(조합 운영대행사)의 '숏폼 공모전' 홍보 게시글(10/26)과 관련된 같은 사업으로 보임.", "2026-11-08", "https://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/%EC%88%8F%ED%8F%BC%EA%B3%B5%EB%AA%A8%EC%A0%84%ED%86%B5%ED%95%A9.png\nhttps://www.pusan.ac.kr/_UPLOAD/IMAGE/Board/images/000134/%EB%B6%80%EC%82%B0%EB%8C%80_%EC%9E%90%EC%9C%A8%EC%83%81%EA%B6%8C_%EB%84%A4%EC%9D%B4%EB%B0%8D_%EA%B3%B5%EB%AA%A8%EC%A0%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg", "전체", "전체", "전체", "전체", "공모전·경진대회", "pnu_main"], ["2026-10-29", "디지털인문학센터 플랫폼 구축 자유공모형 인문 데이터 융합연구 용역과제 (학생 보조연구원 참여)", "공모·연구", "부산대 인문대학 디지털인문학센터 (글로컬대학30)", "부산 관련 인문학 연구수행이 가능한 교내 구성원. 책임·공동연구원은 박사학위 이상, 학생 보조연구원은 학부 재학생 또는 박사수료 이하 대학원생", "신청서·계획서 제출 ~ 2026-11-06 23:59", "사업기간 2026-10-26 ~ 2027-02-12", "총 4팀 (팀당 책임 1·공동 1·학생 보조연구원 최대 4명)", "학생 보조연구원 장학금 월 30만원 × 3개월, 책임·공동연구원 연구수당 지급 (총 예산 2,400만원)", "신청서([붙임2])를 디지털인문학센터 담당 교수 이메일로 제출 (주소는 원문 참조)", "모집 중", "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN095&mgr_seq=3&mode=view&board_seq=1511842", "연구자 중심 공모라 학생은 보조연구원으로 참여. 책임·공동연구원이 인문계열이 아닌 팀은 타 단과대학 학생 보조연구원을 최소 1인 포함해야 함.", "2026-11-06", "", "인문대학", "전체", "전체", "전체", "공모전·경진대회", "pnu_main"], ["2026-10-26", "AX 내러티브 아키텍트 양성 비교과 프로그램 (인문대학 학생 트랙)", "교육·비교과", "부산대 인문대학 (국립대학육성사업)", "인문대학 학생 (학생 트랙)", "각 분반 선착순 15명 · 포스터 QR 코드로 신청 (마감일 미표기)", "주 1회 8주 과정, 2026-11-02(월) 시작 · 분반: 월 15:30 / 수 15:30 / 금 10:00 / 금 15:00", "분반별 15명", "수료증 발급, 7회 이상 출석자 AX 내러티브 아키텍트 인증서, 우수 결과물 포상(대상 100만원 등)", "포스터의 QR 코드로 신청 (개인 노트북 지참 불필요)", "모집 중", "https://humanities.pusan.ac.kr/bbs/humanities/178/1468142/artclView.do", "신청 마감일이 원문에 없어 강의 시작일(11/2)을 자동종료일로 설정함. 선착순이라 분반별로 먼저 마감될 수 있음.", "2026-11-02", "https://humanities.pusan.ac.kr/editorFile/images/000170/AX_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg", "인문대학", "전체", "전체", "전체", "교육·특강·프로그램", "humanities"], ["2026-10-22", "환경 AX 인재양성 — AI 기업 현장 견학 프로그램", "현장견학", "부산대 국립대학육성사업 (환경공학과 안내)", "부산대 공과대학 재학생", "구글폼 신청 선착순 40명 (마감일 미표기)", "견학 2026-11-13(금) 09:00~17:00, 부산시 APEC 기후센터 및 부산환경공단 해운대사업소", "40명", "점심식사 제공, 출석인정", "원문의 구글폼 링크로 신청", "모집 중", "https://semi.pusan.ac.kr/bbs/semi/248/1467735/artclView.do", "신청 마감일이 원문에 없어 견학일(11/13)을 자동종료일로 설정함. 선착순이라 일찍 마감될 수 있음.", "2026-11-13", "https://semi.pusan.ac.kr/bbs/semi/248/1535417/download.do", "공과대학", "전체", "전체", "학부", "교육·특강·프로그램", "semi"]];
+/* Supabase publishable key: meant to be public. Access is limited by row-level security (notices: read only, feedback: insert only). */
+const SB_URL='https://ykpobrafcugzsjusuhny.supabase.co',SB_KEY='sb_publishable_5QCXyy75eYyc_DzNGcx9Og_hsqACKN5';
+const COLS=['posted_on','title','category','org','target','apply_period','schedule','scale','benefit','how_to_apply','status','url','memo','end_date','poster_urls','colleges','depts','grades','course','subcategory','source_id'];
+const SUBS=['장학·지원금','공모전·경진대회','취업·채용·현장실습','교육·특강·프로그램','봉사·사회공헌','창업','국제교류·해외','대외활동·행사','대학원·연구','기타'];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl=s=>{try{const u=new URL(s);return /^https?:$/.test(u.protocol)?u.href:''}catch{return ''}};
+const todayKST=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
+let raw=snapshot,live=false,A=[],profile=null,sub='',curTab='mine';
+
+/* ---------- data ---------- */
+const list=s=>{s=String(s||'').trim();if(!s||s==='전체')return null;return s.split(/[,，、;/]/).map(x=>x.trim()).filter(Boolean)};
+const grades=s=>{s=String(s||'').trim();if(!s||s==='전체')return null;const g=[...s.matchAll(/([1-5])\s*학년?/g)].map(m=>+m[1]);return g.length?[...new Set(g)]:null};
+const normDate=s=>{const m=String(s||'').match(/(20\d\d)\s*[.\-/년]\s*(\d{1,2})\s*[.\-/월]\s*(\d{1,2})/);return m?`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`:''};
+function pid(r){const d=normDate(r[0]);const s=d+'|'+String(r[1]||'').trim();let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return 'p'+(h>>>0).toString(36)}
+function build(){A=raw.filter(r=>r[1]).map(r=>({id:pid(r),date:normDate(r[0])||r[0],title:r[1],cat:r[2],org:r[3],target:r[4],period:r[5],sched:r[6],size:r[7],benefit:r[8],how:r[9],state:r[10],link:safeUrl(r[11]),note:r[12],end:normDate(r[13]),
+ posters:String(r[14]||'').split(/[\s|]+/).map(safeUrl).filter(Boolean),colleges:list(r[15]),depts:list(r[16]),grades:grades(r[17]),course:String(r[18]||'전체').trim()||'전체',sub:SUBS.includes(String(r[19]||'').trim())?String(r[19]).trim():'기타',src:r[20]}))}
+const active=a=>!a.end||a.end>=todayKST();
+const dleft=a=>{if(!a.end)return null;const t=new Date(todayKST()),e=new Date(a.end);return Math.round((e-t)/864e5)};
+function ddayBadge(a){const d=dleft(a);if(d===null)return '<span class="dday unk">마감일 원문 확인</span>';if(d===0)return '<span class="dday soon">오늘 마감</span>';if(d<=3)return `<span class="dday soon">D-${d}</span>`;if(d<=7)return `<span class="dday week">D-${d}</span>`;return `<span class="dday">D-${d} · ${a.end.slice(5).replace('-','/')} 마감</span>`}
+
+/* ---------- matching ---------- */
+/* score = how specifically the notice is aimed at this student: a department-only notice outranks a college-only one,
+   which outranks a grade-only one, which outranks a course-only one; "everyone" notices score 0. */
+function match(a,p){
+ const why=[];let check=false,score=0;
+ if(a.course!=='전체'){if(a.course!==p.course)return null;score+=1;why.push(p.course+' 대상')}
+ /* a chosen department decides on its own: the college grouping in our data can be wrong or differ from the student's idea of it */
+ const deptHit=!!(a.depts&&p.dept&&a.depts.includes(p.dept));
+ if(a.colleges&&!deptHit){if(!a.colleges.includes(p.college))return null;score+=4;why.push(p.college+' 대상')}
+ if(a.depts){if(p.dept){if(!deptHit)return null;score+=6;why.push(p.dept+' 대상')}else{check=true;why.push('학과 조건: '+a.depts.join(', '))}}
+ if(a.grades){if(p.course==='대학원')return null;if(p.grade&&!a.grades.includes(+p.grade))return null;if(p.grade){score+=2;why.push(p.grade+'학년 대상')}else check=true}
+ if(!why.length)why.push('전체 대상');
+ return {check,why,score}
+}
+const cmpEnd=(x,y)=>(x.end||'9999').localeCompare(y.end||'9999')||y.date.localeCompare(x.date);
+const cmpFit=(x,y)=>y.m.score-x.m.score||cmpEnd(x.a,y.a);
+
+/* ---------- rendering ---------- */
+function poster(a,u){u=u===undefined?a.posters[0]:u;return `<div class="poster"><div class="ph"><span>모아 · PNU</span><strong>${esc(a.sub)}</strong><small class="nop">포스터가 없는 공고입니다</small></div>${u?`<img src="${esc(u)}" alt="${esc(a.title)} 포스터" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</div>`}
+function card(a,why){return `<a class="card" href="#${a.id}">${poster(a)}<div class="cbody"><span class="tag">${esc(a.sub)}</span><h3>${esc(a.title)}</h3><p class="org">${esc(a.org)}</p><div class="meta">${why?`<span class="why">✓ ${esc(why)}</span>`:''}${ddayBadge(a)}<span>게시 ${esc(a.date)}</span></div></div></a>`}
+const hit=(h,t)=>/^[a-z0-9]+$/.test(t)?new RegExp('(^|[^a-z0-9])'+t).test(h):h.includes(t);
+
+function renderMine(){
+ const out=$('mine-out');
+ if(!profile){out.innerHTML='<div class="empty" style="margin-top:22px">위에서 과정·단과대학·학년을 선택하고 <b>공고 찾기</b>를 눌러 보세요.<br>학과는 선택하지 않아도 되지만, 고르면 더 정확해요.</div>';return}
+ const hits=[],maybe=[];
+ A.filter(active).forEach(a=>{const m=match(a,profile);if(!m)return;(m.check?maybe:hits).push({a,m})});
+ hits.sort(cmpFit);maybe.sort(cmpFit);
+ const fit=hits.filter(x=>x.m.score>=2),everyone=hits.filter(x=>x.m.score<2); /* >=2 means narrowed by college, department or grade */
+ const who=[profile.course,profile.college,profile.dept,profile.course==='학부'&&profile.grade?profile.grade+'학년':''].filter(Boolean).join(' · ');
+ const grid=l=>`<div class="grid">${l.map(({a,m})=>card(a,m.why.join(' · '))).join('')}</div>`;
+ out.innerHTML=`<div class="summary"><h2>${esc(who)}</h2><p>지금 지원할 수 있는 공고 ${hits.length}건</p></div>`+
+ (fit.length?`<h3 class="sec-title">내 소속·학년에 맞춘 공고 <span>${fit.length}건 · 조건이 잘 맞는 순서</span></h3>${grid(fit)}`:'')+
+ (everyone.length?`<h3 class="sec-title">누구나 지원할 수 있는 공고 <span>${everyone.length}건 · 과정 지정 공고 먼저, 이후 마감이 가까운 순서</span></h3>${grid(everyone)}`:'')+
+ (hits.length?'':'<div class="empty">조건에 맞는 진행 중인 공고가 아직 없어요. 전체 공고에서 둘러보세요.</div>')+
+ (maybe.length?`<h3 class="sec-title">조건 확인이 필요한 공고 <span>${maybe.length}건 · 학과나 학년 조건이 있어요</span></h3>${grid(maybe)}`:'')
+}
+function renderAll(){
+ const act=A.filter(active),terms=$('q').value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+ const counts={};act.forEach(a=>counts[a.sub]=(counts[a.sub]||0)+1);
+ $('chips').innerHTML=`<button class="chip" aria-pressed="${sub===''}" data-s="">전체<b>${act.length}</b></button>`+SUBS.filter(s=>counts[s]).map(s=>`<button class="chip" aria-pressed="${sub===s}" data-s="${esc(s)}">${esc(s)}<b>${counts[s]}</b></button>`).join('');
+ let f=act.filter(a=>(!sub||a.sub===sub)&&terms.every(t=>hit([a.title,a.cat,a.org,a.target,a.benefit,a.sub].join(' ').toLowerCase(),t)));
+ f.sort($('sort').value==='new'?(x,y)=>y.date.localeCompare(x.date):cmpEnd);
+ $('all-count').textContent=`${sub||'전체'} ${f.length}건`;
+ $('all-grid').innerHTML=f.length?f.map(a=>card(a)).join(''):'<div class="empty" style="grid-column:1/-1">조건에 맞는 공고가 없어요. 검색어나 분류를 바꿔 보세요.</div>'
+}
+function who(a){const b=[];b.push(a.course==='전체'?'학부·대학원':a.course);b.push(a.colleges?a.colleges.join(', '):'모든 단과대학');if(a.depts)b.push(a.depts.join(', '));b.push(a.grades?a.grades.map(g=>g+'학년').join(', '):'전 학년');return `<div class="who">${b.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`}
+function renderDetail(a){
+ $('dc').innerHTML=`<div class="dl"><article class="dmain">${a.posters.map(u=>`<a class="zoom" href="${esc(u)}" target="_blank" rel="noopener noreferrer" aria-label="포스터 원본 크게 보기">${poster(a,u)}</a>`).join('')}<span class="tag">${esc(a.sub)}</span><h1>${esc(a.title)}</h1><div class="org">${esc(a.org)} · 게시 ${esc(a.date)}</div>${ddayBadge(a)}
+ <dl><dt>지원 대상(정리 값)</dt><dd>${who(a)}</dd>${[['대상 원문 요약',a.target],['모집 기간·마감',a.period],['진행 일정',a.sched],['모집 규모',a.size],['혜택·주요 내용',a.benefit],['신청 방법',a.how]].map(([k,v])=>`<dt>${k}</dt><dd>${esc(v||'원문 확인 필요')}</dd>`).join('')}</dl></article>
+ <aside class="dside"><h3 style="margin-top:0">참여하기 전에</h3><p class="notice">대상과 일정은 변경될 수 있어요. 신청 전 원문에서 최신 내용을 확인해 주세요.</p>${a.link?`<a class="cta" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">원문 공고 확인</a>`:''}<button type="button" class="report" data-t="${esc(a.title)}">이 공고 정보가 틀렸나요? 알려주기</button><p class="notice">${esc(a.note||'세부 조건은 원문에서 확인해 주세요.')}</p></aside></div>`
+}
+
+/* ---------- routing & ui ---------- */
+const TABS=['mine','all','feedback'];
+function setTab(t){curTab=t;TABS.forEach(k=>{$(k).classList.toggle('on',k===t);$('tab-'+k).setAttribute('aria-selected',k===t)})}
+function route(){
+ const h=decodeURIComponent(location.hash.slice(1));const a=h&&A.find(x=>x.id===h);
+ if(a){$('hero').style.display='none';TABS.forEach(k=>$(k).classList.remove('on'));$('detail').style.display='block';renderDetail(a);window.scrollTo(0,0);return}
+ $('hero').style.display='block';$('detail').style.display='none';setTab(TABS.includes(h)?h:'mine');
+ if(h==='feedback')window.scrollTo(0,0);
+}
+function fillColleges(){$('college').innerHTML='<option value="">단과대학 선택</option>'+COLLEGES.map(c=>`<option>${esc(c.name)}</option>`).join('')}
+function fillDepts(){const c=COLLEGES.find(x=>x.name===$('college').value);$('dept').innerHTML='<option value="">학과 선택 안 함</option>'+((c&&c.depts)||[]).map(d=>`<option>${esc(d)}</option>`).join('');$('dept').disabled=!c||!(c.depts||[]).length}
+function fillGrades(){const g=document.querySelector('input[name=course]:checked').value==='학부';$('grade').innerHTML=g?'<option value="">학년 선택</option>'+[1,2,3,4].map(n=>`<option value="${n}">${n}학년</option>`).join('')+'<option value="5">5학년 이상</option>':'<option value="">해당 없음</option>';$('grade').disabled=!g;$('grade').required=g}
+function save(){try{localStorage.setItem('moa-profile',JSON.stringify(profile))}catch{}}
+function loadSaved(){try{const p=JSON.parse(localStorage.getItem('moa-profile')||'null');if(p&&COLLEGES.some(c=>c.name===p.college)){profile=p;document.querySelector(`input[name=course][value="${p.course}"]`).checked=true;fillGrades();$('college').value=p.college;fillDepts();$('dept').value=p.dept||'';$('grade').value=p.grade||''}}catch{}}
+/* notices come from Supabase (synced hourly from the Google sheet); the snapshot baked into this page is the fallback */
+async function loadNotices(){
+ $('status').textContent='불러오는 중';
+ const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),10000),opt={headers:{apikey:SB_KEY},signal:ctl.signal};
+ try{
+  const [rs,ms]=await Promise.all([
+   fetch(`${SB_URL}/rest/v1/notices?select=${COLS.join(',')}&order=sort_order.asc&limit=1000`,opt),
+   fetch(`${SB_URL}/rest/v1/site_meta?select=updated_at&key=eq.last_sync`,opt).catch(()=>null)]);
+  if(!rs.ok)throw new Error('http '+rs.status);
+  const data=await rs.json();
+  if(!Array.isArray(data)||!data.length)throw new Error('empty');
+  raw=data.map(o=>COLS.map(c=>o[c]==null?'':String(o[c])));live=true;
+  let when='';
+  try{const m=ms&&ms.ok?await ms.json():[];if(m[0]){const s=new Date(m[0].updated_at).toLocaleString('sv-SE',{timeZone:'Asia/Seoul'});when=` · ${+s.slice(5,7)}월 ${+s.slice(8,10)}일 ${s.slice(11,16)} 갱신`}}catch{}
+  $('status').textContent='최신 공고'+when;
+  build();renderMine();renderAll();route()
+ }catch(e){$('status').textContent='저장된 자료 표시 중'}
+ finally{clearTimeout(to)}
+}
+
+/* ---------- feedback ---------- */
+let fbNotice='';
+const deviceOf=()=>innerWidth<600?'mobile':innerWidth<1000?'tablet':'desktop';
+function setFbNotice(t){fbNotice=String(t||'').slice(0,200);$('fb-notice-wrap').hidden=!fbNotice;$('fb-notice').textContent=fbNotice}
+function fbSay(msg,cls){const o=$('fb-msgout');o.textContent=msg;o.className=cls||''}
+$('fb-msg').oninput=()=>{$('fb-count').textContent=$('fb-msg').value.length+'/1000'};
+$('fb-notice-x').onclick=()=>setFbNotice('');
+$('flink').onclick=()=>{location.hash='feedback'};
+$('dc').onclick=e=>{const b=e.target.closest('.report');if(!b)return;setFbNotice(b.dataset.t);const k=document.querySelector('input[name=kind][value="wrong-info"]');if(k)k.checked=true;fbSay('');location.hash='feedback'};
+$('fbform').onsubmit=async e=>{
+ e.preventDefault();
+ const kind=document.querySelector('input[name=kind]:checked'),msg=$('fb-msg').value.trim(),btn=$('fb-send');
+ if(!kind)return fbSay('의견 종류를 골라 주세요.','err');
+ if(msg.length<2)return fbSay('내용을 두 글자 이상 적어 주세요.','err');
+ if($('fb-hp').value)return fbSay('의견을 보냈어요. 고맙습니다!','ok'); /* hidden field filled in = bot: pretend success */
+ let last=0;try{last=+localStorage.getItem('moa-fb-at')||0}catch{}
+ if(Date.now()-last<30000)return fbSay('방금 의견을 보내셨어요. 잠시 후 다시 보내 주세요.','err');
+ btn.disabled=true;fbSay('보내는 중…');
+ try{
+  const r=await fetch(`${SB_URL}/rest/v1/feedback`,{method:'POST',headers:{apikey:SB_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},
+   body:JSON.stringify({kind:kind.value,message:msg,contact:$('fb-contact').value.trim()||null,notice_title:fbNotice||null,device:deviceOf()})});
+  if(!r.ok)throw new Error(r.status);
+  try{localStorage.setItem('moa-fb-at',String(Date.now()))}catch{}
+  $('fbform').reset();setFbNotice('');$('fb-count').textContent='0/1000';
+  fbSay('의견을 보냈어요. 고맙습니다! 확인해서 서비스에 반영할게요.','ok')
+ }catch(err){fbSay(String(err.message)==='400'?'내용을 다시 확인해 주세요. (너무 길거나 비어 있어요)':'지금은 보내지 못했어요. 잠시 후 다시 시도해 주세요.','err')}
+ finally{btn.disabled=false}
+};
+$('tab-mine').onclick=()=>{location.hash='mine'};$('tab-all').onclick=()=>{location.hash='all'};$('tab-feedback').onclick=()=>{location.hash='feedback'};
+$('back').onclick=()=>{location.hash=curTab};
+$('college').onchange=fillDepts;
+document.querySelectorAll('input[name=course]').forEach(r=>r.onchange=fillGrades);
+$('form').onsubmit=e=>{e.preventDefault();profile={course:document.querySelector('input[name=course]:checked').value,college:$('college').value,dept:$('dept').value,grade:$('grade').value};save();renderMine()};
+$('q').oninput=renderAll;$('sort').onchange=renderAll;
+$('chips').onclick=e=>{const b=e.target.closest('.chip');if(b){sub=b.dataset.s;renderAll()}};
+window.addEventListener('hashchange',route);
+fillColleges();fillDepts();fillGrades();loadSaved();build();renderMine();renderAll();route();loadNotices();
+</script>
+</body>
+</html>
