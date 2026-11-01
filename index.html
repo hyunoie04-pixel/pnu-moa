@@ -164,12 +164,11 @@ input[type=text]{height:48px;padding:0 12px}
 </div></fieldset>
 <div class="field" id="fb-notice-wrap" hidden><label>관련 공고</label><div class="rel"><span id="fb-notice"></span><button type="button" id="fb-notice-x">지우기</button></div></div>
 <div class="field"><label for="fb-msg">내용<span id="fb-count">0/1000</span></label><textarea id="fb-msg" maxlength="1000" placeholder="예) 'OO 장학금' 마감일이 원문에는 11월 20일인데 12월 20일로 나와요."></textarea></div>
-<div class="field"><label for="fb-contact">답장 받을 연락처<small>선택</small></label><input id="fb-contact" type="text" maxlength="100" inputmode="email" autocomplete="off" placeholder="이메일 등 (답장이 필요할 때만 적어 주세요)"></div>
 <div class="hp" aria-hidden="true"><label>홈페이지<input id="fb-hp" type="text" tabindex="-1" autocomplete="off"></label></div>
 <button class="go" type="submit" id="fb-send">의견 보내기</button>
 <p id="fb-msgout" role="status" aria-live="polite"></p>
 </form>
-<p class="notice">주민번호·전화번호 같은 개인정보는 적지 말아 주세요. 의견과 연락처는 서비스 운영자만 볼 수 있고 공개되지 않습니다. 선택한 단과대학·학과·학년은 함께 전송되지 않습니다.</p>
+<p class="notice">이름·연락처 같은 개인정보는 적지 말아 주세요. 의견은 서비스 운영자만 볼 수 있고 공개되지 않으며, 답장은 드리지 않습니다. 선택한 단과대학·학과·학년은 함께 전송되지 않습니다.</p>
 </div>
 </section>
 <section id="detail" class="detail"><button class="back" id="back">‹ 목록으로 돌아가기</button><div id="dc"></div></section>
@@ -306,7 +305,7 @@ $('fbform').onsubmit=async e=>{
  btn.disabled=true;fbSay('보내는 중…');
  try{
   const r=await fetch(`${SB_URL}/rest/v1/feedback`,{method:'POST',headers:{apikey:SB_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},
-   body:JSON.stringify({kind:kind.value,message:msg,contact:$('fb-contact').value.trim()||null,notice_title:fbNotice||null,device:deviceOf()})});
+   body:JSON.stringify({kind:kind.value,message:msg,notice_title:fbNotice||null,device:deviceOf()})});
   if(!r.ok)throw new Error(r.status);
   try{localStorage.setItem('moa-fb-at',String(Date.now()))}catch{}
   $('fbform').reset();setFbNotice('');$('fb-count').textContent='0/1000';
