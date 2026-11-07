@@ -1,0 +1,5 @@
+site/index.html
+site/snapshot.json
+site/snapshot.meta.json
+_site/
+__pycache__/

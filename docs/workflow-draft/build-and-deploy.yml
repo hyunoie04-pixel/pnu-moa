@@ -1,0 +1,64 @@
+name: Build and Deploy MOA Pages
+
+on:
+  schedule:
+    # UTC 기준 매시 25분 = 한국 시간(KST, UTC+9) 매시 25분경 실행
+    - cron: '25 * * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+# 최소 권한만 부여 (공개 시트 읽기만 수행하며 별도 시크릿/토큰을 사용하지 않음)
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 동시 실행 방지: 진행 중인 배포가 끝날 때까지 대기하여 배포 깨짐을 막음
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        # 적용 전 최신 권장 버전 확인
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        # 적용 전 최신 권장 버전 확인
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build site with live Google Sheet snapshot
+        # 시트 읽기가 실패하거나 행 수가 비정상(0건 또는 이전 대비 50% 미만)이면 여기서 실패하며,
+        # 아래 배포 단계로 진행하지 않아 기존 GitHub Pages 배포본이 그대로 유지됨
+        run: python site/build.py
+
+      - name: Prepare _site directory for Pages artifact
+        run: |
+          mkdir -p _site/admin
+          cp site/index.html _site/index.html
+          cp site/admin/index.html _site/admin/index.html
+
+      - name: Configure Pages
+        # 적용 전 최신 권장 버전 확인
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        # 적용 전 최신 권장 버전 확인
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        # 적용 전 최신 권장 버전 확인
+        uses: actions/deploy-pages@v4
