@@ -63,10 +63,3 @@
 
 1. `site/template.html`에서 `const SNAPSHOT_STALE_HOURS=6;`을 **`const SNAPSHOT_STALE_HOURS=0;`**으로 수정해 배포합니다. (`SNAPSHOT_STALE_HOURS=0`이면 항상 내장본을 오래된 것으로 판단해 서버에서 읽고, 서버 실패 시에만 내장본으로 대체합니다.)
 2. 또는 사이트 주소에 임시로 `?live=1` 쿼리를 붙여 서버 읽기 동작을 바로 확인할 수 있습니다.
-
-
----
-
-## 참고: 워크플로 파일 위치
-
-권한 문제로 워크플로 파일은 아직 `.github/workflows/`가 아니라 `docs/workflow-draft/build-and-deploy.yml` 에 초안으로 있습니다. 자동 빌드를 켜려면 이 파일을 `.github/workflows/build-and-deploy.yml` 로 옮기고(토큰에 `workflow` 권한 필요), 저장소 설정 → Pages → Source 를 `GitHub Actions` 로 바꿔야 합니다.

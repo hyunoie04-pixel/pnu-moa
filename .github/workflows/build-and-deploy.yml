@@ -28,12 +28,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        # 적용 전 최신 권장 버전 확인
-        uses: actions/checkout@v4
+        # 2026-11-08 기준 최신 메이저 버전
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        # 적용 전 최신 권장 버전 확인
-        uses: actions/setup-python@v5
+        # 2026-11-08 기준 최신 메이저 버전
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -49,16 +49,16 @@ jobs:
           cp site/admin/index.html _site/admin/index.html
 
       - name: Configure Pages
-        # 적용 전 최신 권장 버전 확인
-        uses: actions/configure-pages@v5
+        # 2026-11-08 기준 최신 메이저 버전
+        uses: actions/configure-pages@v6
 
       - name: Upload Pages artifact
-        # 적용 전 최신 권장 버전 확인
-        uses: actions/upload-pages-artifact@v3
+        # 2026-11-08 기준 최신 메이저 버전
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
-        # 적용 전 최신 권장 버전 확인
-        uses: actions/deploy-pages@v4
+        # 2026-11-08 기준 최신 메이저 버전
+        uses: actions/deploy-pages@v5
