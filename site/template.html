@@ -156,7 +156,8 @@ select{padding-right:28px}
 }
 .dark-surface select option{background:var(--dark-bg);color:var(--dark-ink)}
 .dark-surface .form .go{height:48px;min-height:48px}
-.fit-subs-field{grid-column:1/-1;margin-top:4px}
+.fit-subs-field{grid-column:1/-1;grid-row:2;margin-top:4px}
+@media(max-width:900px){.fit-subs-field{grid-row:auto}}
 .fit-subs-field legend span{font-weight:400;opacity:.75;margin-left:4px;font-size:12px}
 .fit-subs{display:flex;flex-wrap:wrap;gap:8px}
 .fit-sub-chip{position:relative;margin:0;cursor:pointer}
@@ -1793,11 +1794,11 @@ footer p{margin:0 0 10px;max-width:980px}
        <div class="field"><label for="college">단과대학</label><select id="college" required></select></div>
        <div class="field"><label for="dept">학과·전공</label><select id="dept"></select></div>
        <div class="field"><label for="grade">학년</label><select id="grade"></select></div>
-       <button class="go" type="submit">공고 찾기</button>
        <fieldset class="field fit-subs-field">
         <legend>관심 분야 <span>(선택 · 여러 개 고르면 위로 먼저 보여드려요)</span></legend>
         <div class="fit-subs" id="fit-subs"></div>
        </fieldset>
+       <button class="go" type="submit">공고 찾기</button>
       </form>
       <details class="privacy">
        <summary>선택한 정보는 이 브라우저에만 저장돼요. <span>자세히</span></summary>
