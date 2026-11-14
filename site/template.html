@@ -13,7 +13,7 @@
 <meta property="og:locale" content="ko_KR">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230F2A52'/%3E%3Crect x='10' y='20' width='44' height='24' rx='12' fill='%23124EAA'/%3E%3Ccircle cx='42' cy='32' r='8' fill='%23FFFFFF'/%3E%3Ctext x='24' y='35.5' font-size='10' font-family='sans-serif' font-weight='800' text-anchor='middle' fill='%23FFFFFF'%3EON%3C/text%3E%3C/svg%3E">
 <style>
-#mine,#all,#calendar,#promo,#saved,#feedback{scroll-margin-top:100000px}
+#mine,#all,#calendar,#weekly,#promo,#saved,#feedback{scroll-margin-top:100000px}
 /* 한글은 단어 중간에서 줄바꿈하지 않는다(긴 URL 등은 예외적으로 허용) */
 body{word-break:keep-all;overflow-wrap:break-word}
 :root{
@@ -1021,7 +1021,43 @@ select{padding-right:28px}
 .reveal.pending{opacity:0;transform:translateY(6px)}
 
 /* All & Saved Tabs */
-.all-wrap,.saved-wrap,.cal-wrap,.promo-wrap{padding-top:32px;padding-bottom:64px}
+.all-wrap,.saved-wrap,.cal-wrap,.promo-wrap,.weekly-wrap{padding-top:32px;padding-bottom:64px}
+/* 효온 주간 */
+.wk-issue{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.wk-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:22px}
+.wk-no{display:inline-flex;align-items:center;gap:8px;background:var(--dark-bg);color:#fff;border-radius:999px;padding:4px 6px 4px 14px;font-size:13px;font-weight:600}
+.wk-no::after{content:"";width:14px;height:14px;border-radius:50%;background:#fff}
+.wk-head h3{margin:0;font-size:22px;font-weight:600;letter-spacing:-.02em;flex:1 1 320px;min-width:0;text-wrap:balance}
+.wk-meta{font-size:13px;color:var(--sub);width:100%}
+.wk-body{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:32px;align-items:start}
+.wk-deck{position:sticky;top:96px}
+.wk-cards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:8px;background:var(--panel);scrollbar-width:none;aspect-ratio:4/5;max-width:100%}
+.wk-cards::-webkit-scrollbar{display:none}
+.wk-cards img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:start;display:block}
+.wk-ctrl{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px}
+.wk-ctrl button{width:44px;border:1px solid var(--line);border-radius:var(--btn-radius);background:var(--surface);font-size:20px;color:var(--ink)}
+.wk-count{font-size:13px;color:var(--sub);font-variant-numeric:tabular-nums}
+.wk-text{min-width:0}
+.wk-sec{padding:0 0 22px;margin:0 0 22px;border-bottom:1px solid var(--line)}
+.wk-sec h4{margin:0 0 10px;font-size:18px;font-weight:600;letter-spacing:-.01em;text-wrap:balance}
+.wk-tag{display:inline-block;font-size:12px;font-weight:600;color:#124EAA;background:#EAF2FC;border-radius:999px;padding:2px 9px;margin-right:8px;vertical-align:2px}
+.wk-sec ul{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15px;line-height:1.6}
+.wk-src{margin:10px 0 0;font-size:13px;color:var(--sub)}
+.wk-src a{color:#124EAA;text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}
+.wk-note{margin:0;padding:14px 16px;background:var(--bg);border-radius:8px;font-size:13px;color:var(--sub);line-height:1.6}
+.wk-past{margin-top:28px}
+.wk-past h3{margin:0 0 12px;font-size:16px;font-weight:600}
+.wk-past ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.wk-past button{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px}
+.wk-past button[aria-current="true"]{border-color:#124EAA}
+.wk-past img{width:56px;height:70px;object-fit:cover;border-radius:4px;flex:none}
+.wk-past b{display:block;font-size:14px;font-weight:600}
+.wk-past span span{font-size:12px;color:var(--sub)}
+@media (max-width:860px){
+ .wk-issue{padding:18px 16px}
+ .wk-body{grid-template-columns:minmax(0,1fr);gap:24px}
+ .wk-deck{position:static;max-width:440px;width:100%;margin:0 auto}
+}
 .page-head{
  display:flex;
  flex-wrap:wrap;
@@ -1839,6 +1875,7 @@ footer p{margin:0 0 10px;max-width:980px}
     <button class="tab" role="tab" id="tab-mine" aria-controls="mine" aria-selected="true" type="button">내게 맞는</button>
     <button class="tab" role="tab" id="tab-all" aria-controls="all" aria-selected="false" type="button">전체</button>
     <button class="tab" role="tab" id="tab-calendar" aria-controls="calendar" aria-selected="false" type="button">달력</button>
+    <button class="tab" role="tab" id="tab-weekly" aria-controls="weekly" aria-selected="false" type="button">주간</button>
     <button class="tab" role="tab" id="tab-promo" aria-controls="promo" aria-selected="false" type="button">홍보</button>
     <button class="tab" role="tab" id="tab-saved" aria-controls="saved" aria-selected="false" type="button">저장<span class="tab-badge" id="saved-badge" hidden>0</span></button>
     <button class="tab" role="tab" id="tab-feedback" aria-controls="feedback" aria-selected="false" type="button">의견</button>
@@ -2044,6 +2081,19 @@ footer p{margin:0 0 10px;max-width:980px}
    </div>
 
    <div class="cal-acad-month" id="cal-acad-month"></div>
+  </div>
+ </section>
+
+ <section id="weekly" class="panel" role="tabpanel" aria-labelledby="tab-weekly">
+  <div class="wrap weekly-wrap">
+   <div class="page-head">
+    <div>
+     <h2>효온 주간</h2>
+     <p>매주 부산대에서 바뀌는 것과 꼭 알아야 할 소식을 학교 공식 공지에서 골라 정리해요.</p>
+    </div>
+   </div>
+   <div id="wk-issue"></div>
+   <div id="wk-past"></div>
   </div>
  </section>
 
@@ -3586,9 +3636,40 @@ function renderDetail(a){
 }
 
 /* ---------- routing & ui ---------- */
-const TABS=['mine','all','calendar','promo','saved','feedback'];
-const TRACK_TABS=['mine','all','calendar','promo','saved','feedback'];
+const TABS=['mine','all','calendar','weekly','promo','saved','feedback'];
+const TRACK_TABS=['mine','all','calendar','weekly','promo','saved','feedback'];
 function setTab(t){curTab=t;TABS.forEach(k=>{$(k).classList.toggle('on',k===t);$('tab-'+k).setAttribute('aria-selected',k===t)})}
+/* 효온 주간: 새 호는 WEEKLY 맨 앞에 추가하고 site/weekly/<id>/01.webp… cover-s.webp 를 넣는다 */
+const WEEKLY=[{"id":"2026-11-16","no":1,"title":"도서관 자리 규칙, 11월 16일부터 바뀌어요","period":"2026.11.16(월) – 11.22(일)","posted":"2026.11.14","cards":["표지: 도서관 자리 규칙, 11월 16일부터 바뀌어요","열람실, 이렇게 바뀌어요: 퇴실 인증, 외출 최대 2시간, 연장은 도서관 안에서만, 직접 반납","이건 꼭 피하세요: 미반납 3회마다 좌석 배정 제한, 부정 출입 시 출입 제한","겨울 계절·도약수업 수강신청 11.17(화) 17:00 마감","새벽벌도서관 3층 2열람실 리모델링, 12.21 공사 시작 예정","2027 신입생부터 등록금 전액장학금, 국가장학금 1차 신청 11.24부터","한 줄 소식: 자유석 운영 11.15까지, 도서관 앱 업데이트 필수, 법학도서관 11.28 휴관","다음 주 소식도 이번 주 효온에서"],"sections":[{"tag":"도서관","t":"열람실 좌석 제도, 11.16(월)부터 시범운영","items":["나갈 때도 출입게이트에서 학생증으로 퇴실 인증 (모든 도서관)","외출은 퇴실 인증 후 최대 2시간. 안 돌아오면 자리가 자동 반납돼요 (남은 배정 시간이 2시간보다 적으면 그 시간까지)","좌석 연장은 도서관 안에 있을 때만 가능 (외출 상태에서는 불가)","다 쓰면 직접 반납. 자동 반납되면 미반납 1회로 기록","미반납 3회마다 당일+7일 동안 모든 열람실 좌석 배정 제한 (학기마다 초기화)","꼬리물기, 게이트 밖에서 팔 뻗어 퇴실 인증, 학생증 빌려주기·빌리기는 출입 제한 1회 1개월 → 2회 3개월 → 3회 6개월 (초기화 없음)","정상운영 시작일은 도서관이 따로 공지할 예정이에요"],"src":[["도서관 공지사항 「열람실 좌석 배정 제도 변경 공고」(11.10), 「열람실 좌석 이용 수칙 안내」(11.12)","https://lib.pusan.ac.kr/guide/notice"]]},{"tag":"학사","t":"겨울 계절·도약수업 수강신청, 11.17(화) 17:00 마감","items":["수강신청과 대기순번 신청 모두 11.17(화) 17:00 마감","신청: 수강신청시스템 sugang.pusan.ac.kr (PC·모바일웹)","11.24(화) 1차 폐강강좌 공고","겨울계절수업 12.24 ~ 1.21, 겨울도약수업 1.22 ~ 2.19","개설강좌·수강 제한 과목은 공지 첨부파일에서 확인"],"src":[["학과 게시판 전달 공지 「겨울 계절·도약수업 개설강좌 확정 및 수강신청 안내」(11.9, 통계학과 게시판)","https://stat.pusan.ac.kr/bbs/stat/502/1471864/artclView.do"]]},{"tag":"도서관","t":"새벽벌도서관 3층 2열람실 리모델링 예고","items":["공사 기간: 2026.12.21(월) ~ 2027.3.31(수) 예정 (진행에 따라 바뀔 수 있음)","3층 2열람실 전체 휴실, 복도·사물함·화장실도 공사 범위, 소음 예상","1층 전체, 2층(1열람실 등), 4층(3열람실·노트북열람실 등)은 이용 가능","동선·승강기 이용은 공사 전에 도서관이 다시 안내할 예정"],"src":[["도서관 공지사항 「2026학년도 동계방학 기간 새벽벌도서관 3층 2열람실 리모델링 사전 안내」(11.13)","https://lib.pusan.ac.kr/guide/notice"]]},{"tag":"장학","t":"2027 신입생부터 등록금 전액장학금 (수험생 동생·후배에게 공유)","items":["대상: 2027학년도 이후 학부 신입생. 의대·치대·한의대·약대 제외, 기존 재학생은 대상 아님","자동 면제가 아니에요: 학생 본인 명의로 국가장학금 신청 → 심사 → 추가지원금 약정","둘째 학기부터 원칙적으로 직전학기 12학점 이상, 백분위 80점(평점 2.51) 이상 필요 (기초·차상위 등 예외 있음)","자퇴·제적 시 받은 추가지원금을 전액 반환해야 해요","국가장학금 1차 신청 2026.11.24(화) ~ 2027.1.7(목), 2차 2027.2.2 ~ 3.16"],"src":[["부산대 공지사항 [학생과] 「2027학년도 지방 국립대학교 전액장학금 안내」(11.11)와 첨부 안내문","https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN095&mgr_seq=3&mode=view&mgr_seq=3&board_seq=1512125"]]},{"tag":"한 줄","t":"이것도 알아 두세요","items":["열람실 자유석 운영(좌석관리시스템 테스트)은 11.15(일)까지","도서관 홈페이지·앱 개편(11.9). 앱은 최신 버전으로 업데이트해야 이용 가능","법학도서관 11.28(토) 휴관. 법전원 면접으로 제2법학관 출입 통제"],"src":[["도서관 공지사항 (11.6 게시 공지 3건)","https://lib.pusan.ac.kr/guide/notice"]]}]}];
+let wkSel=null;
+function renderWeekly(){
+ const box=$('wk-issue');if(!box)return;
+ if(!WEEKLY.length){box.innerHTML='<div class="empty"><p>아직 올라온 호가 없어요.</p></div>';return}
+ const w=WEEKLY.find(x=>x.id===wkSel)||WEEKLY[0];wkSel=w.id;
+ const dir='weekly/'+w.id+'/',n=w.cards.length;
+ box.innerHTML=`<article class="wk-issue" aria-labelledby="wk-title">
+  <div class="wk-head"><span class="wk-no">${w.no}호</span><h3 id="wk-title">${esc(w.title)}</h3><div class="wk-meta">${esc(w.period)} · ${esc(w.posted)} 게시</div></div>
+  <div class="wk-body">
+   <div class="wk-deck">
+    <div class="wk-cards" id="wk-cards" tabindex="0" role="region" aria-label="카드뉴스 ${n}장, 옆으로 넘겨 보기">${w.cards.map((a,i)=>`<img src="${dir}${String(i+1).padStart(2,'0')}.webp" width="1080" height="1350" alt="${i+1}/${n}. ${esc(a)}" ${i?'loading="lazy" ':''}decoding="async">`).join('')}</div>
+    <div class="wk-ctrl"><button type="button" id="wk-prev" aria-label="이전 카드">‹</button><span class="wk-count" id="wk-count" aria-live="polite">1 / ${n}</span><button type="button" id="wk-next" aria-label="다음 카드">›</button></div>
+   </div>
+   <div class="wk-text">
+    ${w.sections.map(s=>`<section class="wk-sec"><h4><span class="wk-tag">${esc(s.tag)}</span>${esc(s.t)}</h4><ul>${s.items.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${(s.src||[]).map(r=>`<p class="wk-src">출처: <a href="${esc(r[1])}" target="_blank" rel="noopener" data-wk="${esc(s.t)}">${esc(r[0])}</a></p>`).join('')}</section>`).join('')}
+    <p class="wk-note">학교 공지 원문에 적힌 내용만 옮겼어요. 공지는 바뀔 수 있으니 신청·이용 전에는 꼭 원문을 확인해 주세요. 표지 사진: 부산대학교 홍보실, CC BY 4.0, 위키미디어 공용 (자르고 색을 덧씌움). 효온은 부산대 재학생 개인이 운영하는 비공식 서비스예요.</p>
+   </div>
+  </div>
+ </article>`;
+ const c=$('wk-cards'),cnt=$('wk-count'),idx=()=>Math.round(c.scrollLeft/Math.max(1,c.clientWidth));
+ const go=d=>{const i=Math.min(n-1,Math.max(0,idx()+d));c.scrollTo({left:i*c.clientWidth,behavior:'smooth'})};
+ c.addEventListener('scroll',()=>{cnt.textContent=(idx()+1)+' / '+n},{passive:true});
+ c.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(1)}else if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}});
+ $('wk-prev').onclick=()=>go(-1);$('wk-next').onclick=()=>go(1);
+ box.querySelectorAll('[data-wk]').forEach(a=>a.addEventListener('click',()=>track('outbound',{notice_title:('weekly '+w.id+' '+a.dataset.wk).slice(0,200),sub:null,tab:'weekly'})));
+ const past=$('wk-past');
+ past.innerHTML=WEEKLY.length>1?`<div class="wk-past"><h3>지난 호</h3><ul>${WEEKLY.map(x=>`<li><button type="button" data-wkid="${esc(x.id)}" aria-current="${x.id===w.id}"><img src="weekly/${esc(x.id)}/cover-s.webp" alt="" loading="lazy" width="56" height="70"><span><b>${x.no}호 · ${esc(x.title)}</b><span>${esc(x.period)}</span></span></button></li>`).join('')}</ul></div>`:'';
+ past.querySelectorAll('[data-wkid]').forEach(b=>b.onclick=()=>{wkSel=b.dataset.wkid;renderWeekly();$('wk-issue').scrollIntoView({block:'start'})});
+}
 function route(){
  const h=decodeURIComponent(location.hash.slice(1));const a=h&&A.find(x=>x.id===h);
  if(a){TABS.forEach(k=>$(k).classList.remove('on'));$('detail').style.display='block';renderDetail(a);window.scrollTo(0,0);return}
@@ -3597,7 +3678,8 @@ function route(){
  setTab(nextTab);
  if(nextTab==='calendar')renderCalendar();
  else if(nextTab==='saved')renderSaved();
- if(h==='feedback'||h==='calendar'||h==='promo'||h==='saved')window.scrollTo(0,0);
+ else if(nextTab==='weekly')renderWeekly();
+ if(h==='feedback'||h==='calendar'||h==='weekly'||h==='promo'||h==='saved')window.scrollTo(0,0);
 }
 function fillColleges(){
  $('college').innerHTML='<option value="">단과대학 선택</option>'+COLLEGES.map(c=>`<option>${esc(c.name)}</option>`).join('');
@@ -3887,7 +3969,7 @@ $('mine-out').addEventListener('keydown',e=>{
 });
 function syncPageTitle(){
  const h=decodeURIComponent(location.hash.slice(1));
- $('page-title').textContent=h==='all'?'전체 공고':h==='calendar'?'마감 달력':h==='promo'?'홍보 · 게시판':h==='saved'?'저장한 공고':h==='feedback'?'의견 보내기':'내게 맞는 공고';
+ $('page-title').textContent=h==='all'?'전체 공고':h==='calendar'?'마감 달력':h==='weekly'?'효온 주간':h==='promo'?'홍보 · 게시판':h==='saved'?'저장한 공고':h==='feedback'?'의견 보내기':'내게 맞는 공고';
 }
 function syncLoadView(){
  const loading=$('status').textContent==='불러오는 중',failed=$('status').textContent==='저장된 자료 표시 중';

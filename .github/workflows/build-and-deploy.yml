@@ -50,6 +50,7 @@ jobs:
           cp site/terms.html _site/terms.html
           cp site/privacy.html _site/privacy.html
           cp site/admin/index.html _site/admin/index.html
+          cp -r site/weekly _site/weekly
 
       - name: Configure Pages
         # 2026-11-08 기준 최신 메이저 버전
