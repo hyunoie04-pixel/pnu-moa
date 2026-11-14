@@ -614,6 +614,11 @@ select{padding-right:28px}
  text-underline-offset:4px;
 }
 .sec-more:hover{color:var(--sub)}
+.sec-actions{display:flex;align-items:center;gap:10px;flex:none}
+.rail-nav{display:inline-flex;align-items:center;gap:6px}
+.rail-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:18px;line-height:1;display:inline-grid;place-items:center;transition:border-color .15s,background-color .15s}
+.rail-btn:hover{border-color:var(--ink);background:var(--panel)}
+@media(max-width:640px){.rail-nav{display:none}}
 
 .rail{
  display:flex;
@@ -2818,7 +2823,7 @@ function railSection(title,subText,items,alt,moreSub,secId,extraHeadHtml,showEmp
   <div class="wrap">
    <div class="sec-head">
     <h2 class="sec-title">${esc(title)} <span>${esc(subText)}</span></h2>
-    <a class="sec-more" href="#all"${moreAttr}>전체 보기</a>
+    <div class="sec-actions"><div class="rail-nav"><button type="button" class="rail-btn" data-rail-dir="-1" aria-label="이전 목록">‹</button><button type="button" class="rail-btn" data-rail-dir="1" aria-label="다음 목록">›</button></div><a class="sec-more" href="#all"${moreAttr}>전체 보기</a></div>
    </div>
    ${extraHeadHtml||''}
    ${bodyHtml}
@@ -2831,7 +2836,7 @@ function popularRailSection(popItems,alt,extraHeadHtml){
   <div class="wrap">
    <div class="sec-head">
     <h2 class="sec-title">인기 TOP5 <span>최근 7일 관심순 · 익명 브라우저 기준</span></h2>
-    <a class="sec-more" href="#all" data-more-sub="">전체 보기</a>
+    <div class="sec-actions"><div class="rail-nav"><button type="button" class="rail-btn" data-rail-dir="-1" aria-label="이전 목록">‹</button><button type="button" class="rail-btn" data-rail-dir="1" aria-label="다음 목록">›</button></div><a class="sec-more" href="#all" data-more-sub="">전체 보기</a></div>
    </div>
    ${extraHeadHtml||''}
    <p class="sec-note">관심 수는 익명 브라우저 기준이며 공고의 품질을 보증하지 않아요.</p>
@@ -3578,6 +3583,12 @@ $('saved-sort').onchange=renderSaved;
 
 /* Delegated origin filter, bookmark & interest click/key handlers */
 document.addEventListener('click',e=>{
+ const rb=e.target.closest('[data-rail-dir]');
+ if(rb){
+  const rail=rb.closest('.rail-band')?.querySelector('.rail');
+  if(rail)rail.scrollBy({left:(+rb.dataset.railDir||1)*Math.max(440,rail.clientWidth*0.75),behavior:'smooth'});
+  return;
+ }
  const ob=e.target.closest('[data-origin]');
  if(ob){
   const seg=ob.closest('.origin-seg');
