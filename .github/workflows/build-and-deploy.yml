@@ -46,6 +46,9 @@ jobs:
         run: |
           mkdir -p _site/admin
           cp site/index.html _site/index.html
+          cp site/about.html _site/about.html
+          cp site/terms.html _site/terms.html
+          cp site/privacy.html _site/privacy.html
           cp site/admin/index.html _site/admin/index.html
 
       - name: Configure Pages

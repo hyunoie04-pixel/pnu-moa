@@ -1992,7 +1992,8 @@ footer p{margin:0 0 10px;max-width:980px}
 <footer>
  <div class="wrap">
   <p>모아는 부산대학교 학생을 위한 정보 탐색 서비스(비공식)입니다. 공고의 대상·마감은 자동·수동으로 정리한 값이므로 신청 전 반드시 원문을 확인해 주세요. 공고는 각 단과대학·학과·학생지원 공지에서 매일 모아 정리합니다. 틀린 곳을 발견하셨나요? <button type="button" class="flink" id="flink">의견 보내기</button></p>
-  <p><b>이용 통계 안내</b> · 서비스를 개선하려고 방문 횟수, 머문 시간, 본 공고, 선택한 단과대학·학과·학년을 통계로 집계합니다. 이름·연락처·IP 주소는 저장하지 않고, 브라우저가 만든 임의의 방문 코드만 사용해요. 관심 버튼을 누르면 익명 방문 코드와 공고 정보만 집계에 저장돼요. 통계를 끄면 집계되지 않아요. 브라우저의 '추적 안 함' 설정을 켜면 집계하지 않아요. <button type="button" class="flink" id="statsbtn"></button></p>
+  <p><b>이용 통계 안내</b> · 서비스를 개선하고 데이터 분석에 활용하려고 방문 횟수, 머문 시간, 본 공고, 검색어·분류 선택, 선택한 단과대학·학과·학년을 통계로 집계합니다. 이름·연락처·IP 주소는 저장하지 않고, 브라우저가 만든 임의의 방문 코드만 사용해요. 관심 버튼을 누르면 익명 방문 코드와 공고 정보만 집계에 저장돼요. 통계를 끄면 집계되지 않아요. 브라우저의 '추적 안 함' 설정을 켜면 집계하지 않아요. <button type="button" class="flink" id="statsbtn"></button></p>
+  <p class="flinks"><a href="about.html">서비스 소개</a> · <a href="terms.html">이용약관</a> · <a href="privacy.html">개인정보처리방침</a> · <button type="button" class="flink" id="flink-del">기관 수집 거부·삭제·정정 요청</button></p>
  </div>
 </footer>
 
@@ -3353,7 +3354,7 @@ function renderDetail(a){
     ${deadlineHtml}
     <p class="org">${esc(a.org||'기관 원문 확인')} · 게시 ${esc(a.date)}</p>
     <div class="detail-hero-actions">
-     ${a.link?`<a class="btn-fill" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">원문 보기</a>`:''}
+     ${a.link?`<a class="btn-fill" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer" data-outbound="1" data-t="${esc(a.title)}" data-s="${esc(a.sub)}">원문 보기</a>`:''}
      <button type="button" class="btn-outline bm-toggle" data-bm="${esc(a.id)}" aria-pressed="${on}" aria-label="${on?'저장 해제':'공고 저장'}">${bmSvg()}<span class="bm-label">${on?'저장됨':'저장'}</span></button>${heroIntBtn}
      <button type="button" class="btn-outline" data-share="${esc(a.id)}"><span class="share-label">공유</span></button>
      ${a.posters[0]?`<a class="btn-outline" href="${esc(a.posters[0])}" target="_blank" rel="noopener noreferrer">포스터 원본</a>`:''}
@@ -3377,7 +3378,7 @@ function renderDetail(a){
     <p class="notice">대상과 일정은 변경될 수 있어요. 신청 전 원문에서 최신 내용을 확인해 주세요.</p>
     <div class="dside-bar">
      <button type="button" class="btn-outline dside-bm bm-toggle" data-bm="${esc(a.id)}" aria-pressed="${on}" aria-label="${on?'저장 해제':'공고 저장'}">${bmSvg()}<span class="bm-label">${on?'저장됨':'저장'}</span></button>${sideIntBtn}
-     ${a.link?`<a class="cta" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">원문 보기</a>`:''}
+     ${a.link?`<a class="cta" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer" data-outbound="1" data-t="${esc(a.title)}" data-s="${esc(a.sub)}">원문 보기</a>`:''}
     </div>${sideIntNote}${calAdd}
     <button type="button" class="report" data-t="${esc(a.title)}">이 공고 정보가 틀렸나요? 알려주기</button>
     <p class="notice">${esc(a.note||'세부 조건은 원문에서 확인해 주세요.')}</p>
@@ -3460,7 +3461,10 @@ function fbSay(msg,cls){const o=$('fb-msgout');o.textContent=msg;o.className=cls
 $('fb-msg').oninput=()=>{$('fb-count').textContent=$('fb-msg').value.length+'/1000'};
 $('fb-notice-x').onclick=()=>setFbNotice('');
 $('flink').onclick=()=>{location.hash='feedback'};
+$('flink-del').onclick=()=>{const k=document.querySelector('input[name=kind][value="other"]');if(k)k.checked=true;fbSay('');location.hash='feedback'};
 $('dc').addEventListener('click',e=>{
+ const ob=e.target.closest('[data-outbound]');
+ if(ob){track('outbound',{notice_title:(ob.dataset.t||'').slice(0,200),sub:(ob.dataset.s||'').slice(0,30)||null,tab:'detail'});return}
  const sh=e.target.closest('[data-share]');
  if(!sh)return;
  const a=A.find(x=>x.id===sh.getAttribute('data-share'));
@@ -3535,8 +3539,10 @@ $('form').onsubmit=e=>{
  renderMine();
  track('search',{course:profile.course,college:profile.college,dept:profile.dept||null,grade:profile.grade||null});
 };
-$('q').oninput=renderAll;$('sort').onchange=renderAll;
-$('chips').onclick=e=>{const b=e.target.closest('.chip');if(b){sub=b.dataset.s;renderAll()}};
+let qTimer=null,lastQ='';
+$('q').oninput=()=>{renderAll();clearTimeout(qTimer);qTimer=setTimeout(()=>{const kw=$('q').value.trim().slice(0,80);if(kw.length>=2&&kw!==lastQ){lastQ=kw;track('filter',{keyword:kw,sub:sub||'전체',tab:'all'})}},800)};
+$('sort').onchange=renderAll;
+$('chips').onclick=e=>{const b=e.target.closest('.chip');if(b){sub=b.dataset.s;renderAll();track('filter',{sub:sub||'전체',tab:'all'})}};
 $('saved-sort').onchange=renderSaved;
 
 /* Delegated origin filter, bookmark & interest click/key handlers */
