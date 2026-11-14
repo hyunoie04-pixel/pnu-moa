@@ -6,6 +6,11 @@
 <title>모아, 부산대의 기회</title>
 <meta name="description" content="부산대학교 단과대학·학과·학생지원 공지에서 지금 신청할 수 있는 장학·공모전·취업·프로그램 공고를 소속과 학년에 맞춰 보여주는 비공식 정보 서비스입니다.">
 <meta name="theme-color" content="#EAF2FC">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="모아 MOA">
+<meta property="og:title" content="모아, 부산대의 기회">
+<meta property="og:description" content="부산대 학생이 지금 신청할 수 있는 장학·공모전·취업·프로그램 공고를 소속과 학년에 맞춰 모아 보여주는 비공식 서비스입니다.">
+<meta property="og:locale" content="ko_KR">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230F2A52'/%3E%3Ctext x='32' y='43' font-size='30' font-family='sans-serif' font-weight='600' text-anchor='middle' fill='%23EAF2FC'%3EM%3C/text%3E%3C/svg%3E">
 <style>
 #mine,#all,#calendar,#saved,#feedback{scroll-margin-top:100000px}
@@ -1356,6 +1361,14 @@ select{padding-right:28px}
 .detail-hero .org{font-size:16px;color:var(--dark-sub);white-space:normal;margin-bottom:24px}
 .detail-hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
 .detail-int-note{margin:10px 0 0;font-size:13px;color:var(--dark-sub);line-height:1.5}
+.hero-deadline{margin:0 0 6px;font-size:16px;font-weight:500;color:var(--dark-ink)}
+.hero-deadline span{font-weight:400;color:var(--dark-sub);margin-left:8px;font-size:14px}
+.dside .detail-int-note{margin:0 0 12px}
+.cal-add{margin:4px 0 16px;padding:14px 0 0;border-top:1px solid var(--line)}
+.cal-add-title{margin:0 0 4px;font-size:14px;font-weight:500;color:var(--ink)}
+.cal-add-sub{margin:0 0 10px;font-size:13px;color:var(--sub);line-height:1.5}
+.cal-add-btns{display:flex;flex-wrap:wrap;gap:8px}
+.cal-add-btns .btn-outline{flex:1 1 auto;padding:0 12px;background:var(--surface)}
 .detail-gallery-sec{margin-top:32px}
 .detail-gallery-sec h3{font-size:18px;font-weight:500;margin:0 0 14px}
 .detail-posters{
@@ -1961,6 +1974,7 @@ footer p{margin:0 0 10px;max-width:980px}
      <p id="fb-msgout" role="status" aria-live="polite"></p>
     </form>
     <p class="notice">이름·연락처 같은 개인정보는 적지 말아 주세요. 의견은 서비스 운영자만 볼 수 있고 공개되지 않으며, 답장은 드리지 않습니다. 선택한 단과대학·학과·학년은 함께 전송되지 않습니다.</p>
+    <p class="notice"><b>공고를 올린 기관이신가요?</b> 내용 정정이나 게시 중단을 원하시면 '기타'를 고르고 공고 제목과 함께 알려 주세요. 확인하는 대로 고치거나 내립니다.</p>
    </div>
   </div>
  </section>
@@ -3277,8 +3291,46 @@ function moveCalendarSelection(newDateStr,focusCell){
 
 function who(a){const b=[];b.push(a.course==='전체'?'학부·대학원':a.course);b.push(a.colleges?a.colleges.join(', '):'모든 단과대학');if(a.depts)b.push(a.depts.join(', '));b.push(a.grades?a.grades.map(g=>g+'학년').join(', '):'전 학년');return `<div class="who">${b.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`}
 
+/* ---------- add deadline to the visitor's own calendar (no server, no login) ---------- */
+function deadlineLabel(a){
+ const p=parseYMD(a.end);
+ return p?`${p.m}월 ${p.d}일 (${DOW_KR[dowOfYMD(a.end)]})`:'';
+}
+function noticeShareUrl(a){
+ return location.origin+location.pathname+'#'+a.id;
+}
+function calDetailsText(a){
+ return [a.org?`주최·출처: ${a.org}`:'',a.period?`모집 기간: ${a.period}`:'',a.link?`원문: ${a.link}`:'',`모아에서 보기: ${noticeShareUrl(a)}`,'마감일은 모아가 정리한 값이에요. 신청 전에 원문을 꼭 확인해 주세요.'].filter(Boolean).join('\n');
+}
+function googleCalUrl(a){
+ const s=a.end.replace(/-/g,''),e=addDaysYMD(a.end,1).replace(/-/g,'');
+ return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('[마감] '+a.title)+'&dates='+s+'/'+e+'&details='+encodeURIComponent(calDetailsText(a));
+}
+async function shareNotice(a,btn){
+ const url=noticeShareUrl(a);
+ const label=btn.querySelector('.share-label');
+ const say=t=>{if(!label)return;const o=label.dataset.o||label.textContent;label.dataset.o=o;label.textContent=t;setTimeout(()=>{label.textContent=o},2200)};
+ try{
+  if(navigator.share&&matchMedia('(pointer:coarse)').matches){await navigator.share({title:a.title,text:`${a.title}${a.end?' · 마감 '+deadlineLabel(a):''}`,url});return}
+  await navigator.clipboard.writeText(url);say('링크 복사됨');
+ }catch(err){
+  if(err&&err.name==='AbortError')return;
+  try{const t=document.createElement('textarea');t.value=url;t.setAttribute('readonly','');t.style.cssText='position:fixed;opacity:0';document.body.appendChild(t);t.select();const ok=document.execCommand('copy');t.remove();say(ok?'링크 복사됨':'복사하지 못했어요')}catch{say('복사하지 못했어요')}
+ }
+}
+
 function renderDetail(a){
  const d=dleft(a);
+ const dl=deadlineLabel(a);
+ const deadlineHtml=dl?`<p class="hero-deadline">마감 ${esc(dl)}<span>${d<0?'지난 공고예요':'모아가 정리한 날짜'}</span></p>`:`<p class="hero-deadline">마감일 미확인<span>원문에서 확인해 주세요</span></p>`;
+ const calAdd=a.end&&d!==null&&d>=0?`
+    <div class="cal-add">
+     <p class="cal-add-title">마감일을 내 캘린더에 넣기</p>
+     <p class="cal-add-sub">${esc(dl)} 종일 일정으로 들어가요.</p>
+     <div class="cal-add-btns">
+      <a class="btn-outline" href="${esc(googleCalUrl(a))}" target="_blank" rel="noopener noreferrer">구글 캘린더에 추가</a>
+     </div>
+    </div>`:'';
  const dHero=d===null?'마감일 확인':d<0?'종료됨':d===0?'오늘':`D-${d}`;
  const on=isSaved(a.id);
  const showInt=interestOn();
@@ -3298,10 +3350,12 @@ function renderDetail(a){
     <span class="hero-cat">${esc(a.sub)}</span>
     <p class="hero-dday" style="margin-top:8px">${esc(dHero)}</p>
     <h2>${esc(a.title)}</h2>
+    ${deadlineHtml}
     <p class="org">${esc(a.org||'기관 원문 확인')} · 게시 ${esc(a.date)}</p>
     <div class="detail-hero-actions">
      ${a.link?`<a class="btn-fill" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">원문 보기</a>`:''}
      <button type="button" class="btn-outline bm-toggle" data-bm="${esc(a.id)}" aria-pressed="${on}" aria-label="${on?'저장 해제':'공고 저장'}">${bmSvg()}<span class="bm-label">${on?'저장됨':'저장'}</span></button>${heroIntBtn}
+     <button type="button" class="btn-outline" data-share="${esc(a.id)}"><span class="share-label">공유</span></button>
      ${a.posters[0]?`<a class="btn-outline" href="${esc(a.posters[0])}" target="_blank" rel="noopener noreferrer">포스터 원본</a>`:''}
     </div>${heroIntNote}
    </div>
@@ -3324,7 +3378,7 @@ function renderDetail(a){
     <div class="dside-bar">
      <button type="button" class="btn-outline dside-bm bm-toggle" data-bm="${esc(a.id)}" aria-pressed="${on}" aria-label="${on?'저장 해제':'공고 저장'}">${bmSvg()}<span class="bm-label">${on?'저장됨':'저장'}</span></button>${sideIntBtn}
      ${a.link?`<a class="cta" href="${esc(a.link)}" target="_blank" rel="noopener noreferrer">원문 보기</a>`:''}
-    </div>${sideIntNote}
+    </div>${sideIntNote}${calAdd}
     <button type="button" class="report" data-t="${esc(a.title)}">이 공고 정보가 틀렸나요? 알려주기</button>
     <p class="notice">${esc(a.note||'세부 조건은 원문에서 확인해 주세요.')}</p>
    </aside>
@@ -3406,6 +3460,12 @@ function fbSay(msg,cls){const o=$('fb-msgout');o.textContent=msg;o.className=cls
 $('fb-msg').oninput=()=>{$('fb-count').textContent=$('fb-msg').value.length+'/1000'};
 $('fb-notice-x').onclick=()=>setFbNotice('');
 $('flink').onclick=()=>{location.hash='feedback'};
+$('dc').addEventListener('click',e=>{
+ const sh=e.target.closest('[data-share]');
+ if(!sh)return;
+ const a=A.find(x=>x.id===sh.getAttribute('data-share'));
+ if(a)shareNotice(a,sh);
+});
 $('dc').onclick=e=>{const b=e.target.closest('.report');if(!b)return;setFbNotice(b.dataset.t);const k=document.querySelector('input[name=kind][value="wrong-info"]');if(k)k.checked=true;fbSay('');location.hash='feedback'};
 $('fbform').onsubmit=async e=>{
  e.preventDefault();
