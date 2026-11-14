@@ -768,6 +768,7 @@ details.fold[open] summary{
    <button role="tab" type="button" data-v="visits" aria-selected="false"><span>방문 통계</span></button>
    <button role="tab" type="button" data-v="students" aria-selected="false"><span>학생 분포</span></button>
    <button role="tab" type="button" data-v="notices" aria-selected="false"><span>공고</span></button>
+   <button role="tab" type="button" data-v="analytics" aria-selected="false"><span>분석</span></button>
    <button role="tab" type="button" data-v="insta" aria-selected="false"><span>인스타</span></button>
    <button role="tab" type="button" data-v="feedback" aria-selected="false"><span>의견</span><span class="badge" id="fbbadge" hidden></span></button>
    <button role="tab" type="button" data-v="system" aria-selected="false"><span>시스템</span></button>
@@ -790,6 +791,7 @@ details.fold[open] summary{
   <section id="v-visits" hidden></section>
   <section id="v-students" hidden></section>
   <section id="v-notices" hidden></section>
+  <section id="v-analytics" hidden></section>
   <section id="v-insta" hidden></section>
   <section id="v-feedback" hidden></section>
   <section id="v-system" hidden></section>
@@ -985,6 +987,39 @@ async function api(path,opt={}){
  if(!r.ok){const j=await r.json().catch(()=>({}));throw new Error(j.message||('요청 실패 ('+r.status+')'))}
  const t=await r.text();return t?JSON.parse(t):null;
 }
+async function evAll(q,maxPages=30){
+ const out=[];
+ for(let p=0;p<maxPages;p++){
+  const r=await fetch(SB+'/rest/v1/events?'+q+'&order=created_at.asc&limit=1000&offset='+(p*1000),{headers:{apikey:KEY,Authorization:'Bearer '+S.access_token}});
+  if(!r.ok)throw new Error('이벤트 읽기 실패 ('+r.status+')');
+  const j=await r.json();out.push(...j);if(j.length<1000)break;
+ }
+ return out;
+}
+const sinceISO=days=>encodeURIComponent(new Date(Date.now()-days*864e5).toISOString());
+async function anFetch(days){
+ if(IS_MOCK){const pick=a=>a[Math.floor(Math.random()*a.length)];const T=(MOCK_STORE.notices||[]).map(n=>n.title).slice(0,25);
+  return {ends:Array.from({length:180},()=>({active_s:Math.round(Math.random()**2*900)})),
+   filters:Array.from({length:90},()=>({keyword:Math.random()<.6?pick(['장학금','공모전','인턴','AI','해외','현장실습','토익']):null,sub:pick(['전체','장학','공모전·경진대회','교육·특강·프로그램','취업·채용·현장실습'])})),
+   searches:Array.from({length:70},()=>({keyword:pick(['장학','공모전·경진대회','취업·채용·현장실습','교육·특강·프로그램,장학','국제교류·해외']),sub:null})),
+   outs:Array.from({length:60},()=>({notice_title:pick(T)||'예시 공고'})),
+   views:Array.from({length:400},()=>({notice_title:pick(T)||'예시 공고'})),
+   interest:T.slice(0,8).map((t,i)=>({title:t,n:12-i}))}}
+ const s=sinceISO(days);
+ try{
+  const [ends,filters,searches,outs,views,intr]=await Promise.all([
+   evAll('select=active_s&type=eq.end&created_at=gte.'+s),
+   evAll('select=keyword,sub&type=eq.filter&created_at=gte.'+s),
+   evAll('select=keyword,sub&type=eq.search&created_at=gte.'+s),
+   evAll('select=notice_title&type=eq.outbound&tab=eq.detail&created_at=gte.'+s),
+   evAll('select=notice_title&type=eq.notice&created_at=gte.'+s),
+   fetch(SB+'/rest/v1/rpc/popular_notice_top',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({p_days:days,p_limit:30,p_min:1})}).then(r=>r.ok?r.json():[]).catch(()=>[])
+  ]);
+  const byKey={};(D.notices||[]).forEach(n=>{if(n.row_key)byKey[n.row_key]=n.title;if(n.url)byKey[n.url]=n.title});
+  const interest=(Array.isArray(intr)?intr:[]).map(x=>({title:byKey[x.notice_key]||'(지금 목록에 없는 공고)',n:+x.interest_count||0})).filter(x=>x.n>0);
+  return {ends,filters,searches,outs,views,interest};
+ }catch(e){return {error:e.message}}
+}
 // 인스타 관련 이벤트: 프로필 링크 유입(visit, src=insta) + 사이트→인스타 클릭(outbound, notice_title 'instagram…')
 const IG_SRC=['insta','instagram','ig'];
 async function igFetch(days){
@@ -994,8 +1029,8 @@ async function igFetch(days){
  const get=async q=>{const r=await fetch(SB+'/rest/v1/events?'+q,{headers:{apikey:KEY,Authorization:'Bearer '+S.access_token}});if(!r.ok)throw new Error('이벤트 읽기 실패 ('+r.status+')');return r.json()};
  try{
   const [visits,clicks]=await Promise.all([
-   get('select=created_at,visitor_id,src&type=eq.visit&src=in.('+IG_SRC.join(',')+')&created_at=gte.'+encodeURIComponent(since)+'&limit=10000'),
-   get('select=created_at,visitor_id,tab,notice_title&type=eq.outbound&notice_title=ilike.instagram*&created_at=gte.'+encodeURIComponent(since)+'&limit=10000')
+   evAll('select=created_at,visitor_id,src&type=eq.visit&src=in.('+IG_SRC.join(',')+')&created_at=gte.'+encodeURIComponent(since)),
+   evAll('select=created_at,visitor_id,tab,notice_title&type=eq.outbound&notice_title=ilike.instagram*&created_at=gte.'+encodeURIComponent(since))
   ]);
   return {visits,clicks};
  }catch(e){return {error:e.message}}
@@ -1044,6 +1079,7 @@ async function loadAll(){
    igFetch(days)
   ]);
   D={stats,fb:fb||[],notices:notices||[],meta:meta||[],ig};
+  D.an=await anFetch(days);
   loadedAt=new Date();
   renderAll();
  }catch(err){
@@ -1309,6 +1345,39 @@ async function copyTextWithFallback(text,statusEl){
  }
 }
 
+function rAnalytics(){
+ const A=D.an||{};
+ if(A.error){$('v-analytics').innerHTML=`<div class="card band"><div class="note">이용 분석 데이터를 읽지 못했어요: ${esc(A.error)}</div></div>`;return}
+ const cnt=(arr,f)=>{const m={};arr.forEach(x=>{const k=f(x);if(k)m[k]=(m[k]||0)+1});return Object.entries(m).map(([k,n])=>({k,n})).sort((a,b)=>b.n-a.n)};
+ const secs=(A.ends||[]).map(x=>+x.active_s||0);
+ const B=[['10초 미만',0,10],['10~30초',10,30],['30초~1분',30,60],['1~3분',60,180],['3~10분',180,600],['10분 이상',600,1e9]];
+ const dist=B.map(([k,a,b])=>({k,n:secs.filter(s=>s>=a&&s<b).length}));
+ const stay30=secs.filter(s=>s>=30).length;
+ const kw=cnt(A.filters||[],x=>x.keyword?String(x.keyword).trim().toLowerCase():'').slice(0,20);
+ const sub=cnt((A.filters||[]).filter(x=>!x.keyword),x=>x.sub||'').slice(0,12);
+ const fit=cnt((A.searches||[]).flatMap(x=>String(x.keyword||x.sub||'').split(',').map(s=>({k:s.trim()}))),x=>x.k).slice(0,12);
+ const vmap={};(A.views||[]).forEach(x=>{if(x.notice_title)vmap[x.notice_title]=(vmap[x.notice_title]||0)+1});
+ const omap=cnt(A.outs||[],x=>x.notice_title||'');
+ const conv=omap.slice(0,20).map(x=>({t:x.k,o:x.n,v:vmap[x.k]||0}));
+ const totV=(A.views||[]).length,totO=(A.outs||[]).length,totI=(A.interest||[]).reduce((a,x)=>a+x.n,0);
+ $('v-analytics').innerHTML=`<div class="note" style="margin-bottom:14px">공개 사이트가 데이터 분석용으로 모으는 값(머문 시간, 검색어·분류 선택, 맞춤 관심 분야, 원문 클릭, 관심 버튼)을 기간별로 보여줘요. 관리자 본인 접속도 포함돼요.</div>
+ <div class="grid kpis">
+  ${kpi(secs.length?pct(stay30,secs.length):'-','30초 이상 머문 방문',secs.length?'측정 '+secs.length+'건 중 '+stay30+'건':'측정된 방문 없음')}
+  ${kpi(totO,'원문 링크 클릭','공고 상세 열람 '+totV+'회 대비 '+pct(totO,totV))}
+  ${kpi((A.filters||[]).filter(x=>x.keyword).length,'전체 탭 검색','서로 다른 검색어 '+kw.length+'개'+(kw.length>=20?' 이상':''))}
+  ${kpi(totI,'관심 표시','관심 받은 공고 '+(A.interest||[]).length+'개')}
+ </div>
+ <div class="grid two" style="margin-top:16px">
+  <div class="card"><h3>머문 시간 분포</h3>${hbars(dist.filter(x=>secs.length))}<div class="note" style="margin-top:8px">화면을 보고 있던 시간만 센 값이에요. 10초 미만이 많으면 첫 화면에서 바로 나간 방문이에요.</div></div>
+  <div class="card"><h3>맞춤 설정 관심 분야</h3>${hbars(fit)}<div class="note" style="margin-top:8px">'내게 맞는 공고'에서 고른 관심 분야 (여러 개 고르면 각각 셈)</div></div>
+  <div class="card"><h3>전체 탭 검색어 상위 20</h3>${hbars(kw)}<div class="note" style="margin-top:8px">사이트에 없는 공고를 찾는 검색어가 보이면 수집 대상을 늘릴 신호예요.</div></div>
+  <div class="card"><h3>전체 탭 분류 선택</h3>${hbars(sub)}</div>
+ </div>
+ <div class="grid two" style="margin-top:16px">
+  <div class="card"><h3>원문 클릭 많은 공고 (상위 20)</h3>${conv.length?`<div class="tw"><table><thead><tr><th scope="col">공고</th><th scope="col" class="n">열람</th><th scope="col" class="n">원문 클릭</th><th scope="col" class="n">전환</th></tr></thead><tbody>${conv.map(x=>`<tr><td>${esc(x.t)}</td><td class="n">${x.v}</td><td class="n">${x.o}</td><td class="n">${x.v?pct(x.o,x.v):'-'}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">아직 데이터가 없어요.</div>'}<div class="note" style="margin-top:8px">전환 = 상세를 연 횟수 대비 원문 링크를 누른 비율. 실제 지원 의향에 가장 가까운 지표예요.</div></div>
+  <div class="card"><h3>관심 많이 받은 공고</h3>${(A.interest||[]).length?`<div class="tw"><table><thead><tr><th scope="col">공고</th><th scope="col" class="n">관심</th></tr></thead><tbody>${A.interest.map(x=>`<tr><td>${esc(x.title)}</td><td class="n">${x.n}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">아직 관심 표시가 없어요.</div>'}</div>
+ </div>`;
+}
 function rInsta(){
  const postedList=getPostedList();
  const postedSet=new Set(postedList);
@@ -1606,12 +1675,12 @@ function rSystem(){
 }
 
 function renderAll(){
- rOverview();rVisits();rStudents();rNotices();rInsta();rFeedback();rSystem();
+ rOverview();rVisits();rStudents();rNotices();rAnalytics();rInsta();rFeedback();rSystem();
  $('loaded').textContent=loadedAt?fmtTime(loadedAt)+' 기준':'';
 }
 
 /* ---------- events ---------- */
-const TITLES={overview:'개요',visits:'방문 통계',students:'학생 분포',notices:'공고',insta:'인스타 홍보 큐레이션',feedback:'의견',system:'시스템'};
+const TITLES={overview:'개요',visits:'방문 통계',students:'학생 분포',notices:'공고',analytics:'이용 분석',insta:'인스타 홍보 큐레이션',feedback:'의견',system:'시스템'};
 function setView(v){
  view=v;$('vtitle').textContent=TITLES[v];
  document.querySelectorAll('#nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===v));
