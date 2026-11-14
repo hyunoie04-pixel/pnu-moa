@@ -105,6 +105,38 @@ header{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px s
  line-height:1;
 }
 .bar-right{justify-self:end;display:flex;align-items:center;gap:16px;min-width:0}
+/* Instagram promo banner */
+.ig-promo{position:relative;margin:24px 0 4px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.ig-copy{padding:34px 36px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;min-width:0}
+.ig-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#124EAA}
+.ig-copy h3{margin:0;font-size:clamp(22px,2.6vw,30px);font-weight:800;line-height:1.3;letter-spacing:-.03em;color:var(--ink);text-wrap:balance}
+.ig-copy h3 em{font-style:normal;color:#124EAA}
+.ig-copy p{margin:0;font-size:15px;line-height:1.6;color:var(--sub);max-width:46ch}
+.ig-cta{margin-top:8px;display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 22px;border-radius:999px;background:#124EAA;color:#fff;font-size:15.5px;font-weight:700;text-decoration:none}
+.ig-cta:hover{background:#0F2A52}
+.ig-cta:focus-visible{outline:2px solid #124EAA;outline-offset:3px}
+.ig-cta b{display:inline-block;width:22px;height:22px;border-radius:50%;background:#fff;margin-right:-10px}
+.ig-visual{position:relative;background:#0F2A52;min-height:260px;overflow:hidden}
+.ig-card{position:absolute;width:150px;aspect-ratio:4/5;background:#FBFDFF;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:7px;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+.ig-card i{display:block;height:7px;border-radius:4px;background:#C9DAF2}
+.ig-card i.s{width:55%}.ig-card i.c{width:38%;height:14px;border-radius:7px;background:#0F2A52}
+.ig-card span{margin-top:auto;align-self:flex-end;font:900 30px/1 'Pretendard','Noto Sans KR',sans-serif;letter-spacing:-.02em;color:#124EAA}
+.ig-card span.hot{color:#FF5A36}
+.ig-card.c1{left:12%;top:22%;transform:rotate(-9deg)}
+.ig-card.c2{left:36%;top:12%;transform:rotate(3deg);z-index:2}
+.ig-card.c3{left:60%;top:26%;transform:rotate(11deg)}
+.ig-close{position:absolute;top:8px;right:8px;width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:22px;line-height:1;color:#fff;background:rgba(15,42,82,.55);z-index:3}
+.ig-close:hover{background:rgba(15,42,82,.85)}
+@media(max-width:720px){
+ .ig-promo{grid-template-columns:1fr}
+ .ig-visual{order:-1;min-height:170px}
+ .ig-card{width:104px;padding:10px;gap:5px}
+ .ig-card span{font-size:21px}
+ .ig-card.c1{left:10%;top:18%}.ig-card.c2{left:37%;top:10%}.ig-card.c3{left:64%;top:22%}
+ .ig-copy{padding:24px 20px 26px}
+ .ig-cta{width:100%;justify-content:center}
+}
+@media(prefers-reduced-motion:no-preference){.ig-card{transition:transform .3s}.ig-promo:hover .ig-card.c2{transform:rotate(0) translateY(-6px)}}
 .ig-link{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:var(--btn-radius);color:var(--ink)}
 .ig-link:hover{background:var(--panel);color:#124EAA}
 .ig-link:focus-visible{outline:2px solid #124EAA;outline-offset:2px}
@@ -1915,6 +1947,18 @@ footer p{margin:0 0 10px;max-width:980px}
     </div>
    </div>
   </div>
+  <div class="wrap" id="ig-promo-wrap">
+   <aside class="ig-promo" aria-label="효온 인스타그램 안내">
+    <div class="ig-copy">
+     <span class="ig-eyebrow"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>인스타그램 @hyon.kr</span>
+     <h3>매주 <em>마감 공고</em>, 카드뉴스로 받아보세요</h3>
+     <p>이번 주에 끝나는 장학·공모전·학과 프로그램과 많이 본 공고를 매주 카드로 정리해 올려요. 저장해 두면 마감 전에 다시 꺼내 보기 쉬워요.</p>
+     <a class="ig-cta" href="https://www.instagram.com/hyon.kr/" target="_blank" rel="noopener" data-ig="banner">인스타에서 팔로우하기<b aria-hidden="true"></b></a>
+    </div>
+    <div class="ig-visual" aria-hidden="true"><div class="ig-card c1"><i class="c"></i><i></i><i class="s"></i><span class="">D-5</span></div><div class="ig-card c2"><i class="c"></i><i></i><i class="s"></i><span class="hot">D-2</span></div><div class="ig-card c3"><i class="c"></i><i></i><i class="s"></i><span class="">TOP3</span></div></div>
+    <button type="button" class="ig-close" id="ig-close" aria-label="인스타그램 안내 7일 동안 숨기기">×</button>
+   </aside>
+  </div>
   <div id="mine-out"></div>
  </section>
 
@@ -3621,6 +3665,8 @@ function fbSay(msg,cls){const o=$('fb-msgout');o.textContent=msg;o.className=cls
 $('fb-msg').oninput=()=>{$('fb-count').textContent=$('fb-msg').value.length+'/1000'};
 $('fb-notice-x').onclick=()=>setFbNotice('');
 $('flink').onclick=()=>{location.hash='feedback'};
+(()=>{const K='moa-ig-promo-hide',w=$('ig-promo-wrap');try{const t=+localStorage.getItem(K)||0;if(Date.now()-t<7*864e5)w.hidden=true}catch{}
+ $('ig-close').onclick=()=>{w.hidden=true;try{localStorage.setItem(K,String(Date.now()))}catch{}track('outbound',{notice_title:'instagram banner close',sub:null,tab:'banner'})}})();
 document.querySelectorAll('[data-ig]').forEach(a=>a.addEventListener('click',()=>track('outbound',{notice_title:'instagram @hyon.kr',sub:null,tab:a.dataset.ig})));
 $('flink-del').onclick=()=>{const k=document.querySelector('input[name=kind][value="other"]');if(k)k.checked=true;fbSay('');location.hash='feedback'};
 $('dc').addEventListener('click',e=>{
