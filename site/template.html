@@ -686,45 +686,69 @@ select{padding-right:28px}
 .card:hover .poster img,.card:focus-visible .poster img,.zoom:hover .poster img{
  transform:scale(1.02);
 }
-/* Typographic 3:4 Solid Tiles for Notices Without Posters (Low-saturation Dark Blue Palette) */
+/* Editorial Light Cards for Notices Without Posters (avoids title duplication & dark monotony) */
 .ph{
  position:absolute;
  inset:0;
- padding:20px 18px;
+ padding:16px 16px 46px;
  display:flex;
  flex-direction:column;
- justify-content:space-between;
- color:#fff;
- background:var(--tone-0);
+ justify-content:flex-start;
+ gap:10px;
+ color:var(--ink);
+ background:#f2f6fc;
+ border-top:4px solid #1e4b8f;
 }
-.ph[data-tone="0"]{background:var(--tone-0)}
-.ph[data-tone="1"]{background:var(--tone-1)}
-.ph[data-tone="2"]{background:var(--tone-2)}
-.ph[data-tone="3"]{background:var(--tone-3)}
-.ph[data-tone="4"]{background:var(--tone-4)}
-.ph[data-tone="5"]{background:var(--tone-5)}
-.ph[data-tone="6"]{background:var(--tone-6)}
-.ph[data-tone="7"]{background:var(--tone-7)}
+.ph[data-tone="0"]{background:#eff5ff;border-top-color:#1e4b8f}
+.ph[data-tone="1"]{background:#f0f7f4;border-top-color:#1b6b53}
+.ph[data-tone="2"]{background:#f4f3ff;border-top-color:#4b439b}
+.ph[data-tone="3"]{background:#fff7ed;border-top-color:#b45309}
+.ph[data-tone="4"]{background:#f0f8fa;border-top-color:#0e677a}
+.ph[data-tone="5"]{background:#f5f3f7;border-top-color:#6b3b75}
+.ph[data-tone="6"]{background:#f3f6f9;border-top-color:#355070}
+.ph[data-tone="7"]{background:#fdf4f5;border-top-color:#9b2c48}
 .ph-cat{
- font-size:20px;
- font-weight:500;
- letter-spacing:-.02em;
- line-height:1.25;
- color:#fff;
- padding-right:40px;
+ align-self:flex-start;
+ font-size:12px;
+ font-weight:700;
+ letter-spacing:-.01em;
+ line-height:1.3;
+ color:var(--ink);
+ background:rgba(255,255,255,.85);
+ border:1px solid rgba(18,32,51,.12);
+ border-radius:4px;
+ padding:4px 8px;
+ max-width:calc(100% - 44px);
 }
 .ph-snippet{
  font-size:13px;
  font-weight:400;
- line-height:1.45;
- color:var(--dark-sub);
+ line-height:1.5;
+ color:#33465e;
  display:-webkit-box;
- -webkit-line-clamp:3;
+ -webkit-line-clamp:5;
  -webkit-box-orient:vertical;
  overflow:hidden;
  overflow-wrap:anywhere;
- margin-bottom:28px;
+ margin:2px 0 0;
 }
+.pnu-tags{display:inline-flex;flex-wrap:wrap;gap:4px;margin-left:4px;vertical-align:middle}
+.pnu-tag{font-size:10px;font-weight:700;padding:1px 5px;border-radius:2px;background:#eef5ff;color:#124eaa;border:1px solid #c7daf7}
+.cal-dot.acad{background:#0b6b3a}
+.cal-acad-box{margin:10px 0 12px;display:flex;flex-direction:column;gap:6px}
+.cal-acad-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;background:#eef8f2;border:1px solid #c7e6d3;font-size:13px;color:#114629}
+.cal-acad-badge{flex:none;font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px;background:#0b6b3a;color:#fff}
+.cal-acad-month{margin-top:24px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+.cal-acad-month h3{margin:0 0 4px;font-size:16px;font-weight:600}
+.cal-acad-month p.sub{margin:0 0 12px;font-size:12px;color:var(--sub)}
+.cal-acad-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.cal-acad-list li{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.cal-acad-list li:last-child{border-bottom:0;padding-bottom:0}
+.cal-acad-date{font-weight:600;color:#0b6b3a;min-width:130px}
+.fb-club-box{margin:14px 0 6px;padding:14px 16px;border-radius:10px;background:#f3f7ff;border:1px solid #cde0fa;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.fb-club-box p{margin:0;font-size:13px;color:#1d3b66}
+.fb-club-btn{min-height:36px;padding:6px 14px;border-radius:6px;border:1px solid #124eaa;background:#fff;color:#124eaa;font-size:13px;font-weight:700}
+.fb-club-btn:hover{background:#124eaa;color:#fff}
 
 /* Bookmark & Interest Buttons on Poster Top-Right (36px visual circle, >=44px hit target, 36px vertical spacing) */
 .bm-btn,.int-btn{
@@ -1931,6 +1955,7 @@ footer p{margin:0 0 10px;max-width:980px}
      <h3 id="cal-day-title" aria-live="polite"></h3>
      <span id="cal-day-sub"></span>
     </div>
+    <div class="cal-acad-box" id="cal-acad-day" hidden></div>
     <ul class="cal-list" id="cal-day-list" aria-label="선택한 날 마감 공고"></ul>
    </div>
 
@@ -1941,6 +1966,8 @@ footer p{margin:0 0 10px;max-width:980px}
     </div>
     <ul class="cal-list" id="cal-month-list" aria-label="이번 달 마감 목록"></ul>
    </div>
+
+   <div class="cal-acad-month" id="cal-acad-month"></div>
   </div>
  </section>
 
@@ -1967,7 +1994,11 @@ footer p{margin:0 0 10px;max-width:980px}
   <div class="wrap fb-wrap">
    <div class="fb">
     <h2>의견을 들려주세요</h2>
-    <p class="hint" style="margin-top:0">틀린 정보, 빠진 공고, 있었으면 하는 기능까지 무엇이든 좋아요. 보내 주신 의견은 서비스를 고치는 데 쓰입니다.</p>
+    <p class="hint" style="margin-top:0">틀린 정보, 빠진 공고, 교내 동아리·학회 행사 등록까지 무엇이든 좋아요. 보내 주신 의견은 서비스를 고치는 데 쓰입니다.</p>
+    <div class="fb-club-box">
+     <p><b>부산대 동아리·학회·소모임이신가요?</b> 모집·행사 공고도 제보하시면 확인 후 올려드려요.</p>
+     <button type="button" class="fb-club-btn" id="fb-club-btn">동아리·행사 등록 양식 채우기</button>
+    </div>
     <form id="fbform" autocomplete="off" novalidate>
      <fieldset class="field">
       <legend>어떤 의견인가요?</legend>
@@ -2012,7 +2043,7 @@ footer p{margin:0 0 10px;max-width:980px}
  <div class="wrap">
   <p>모아는 부산대학교 학생을 위한 정보 탐색 서비스(비공식)입니다. 공고의 대상·마감은 자동·수동으로 정리한 값이므로 신청 전 반드시 원문을 확인해 주세요. 공고는 각 단과대학·학과·학생지원 공지에서 매일 모아 정리합니다. 틀린 곳을 발견하셨나요? <button type="button" class="flink" id="flink">의견 보내기</button></p>
   <p><b>이용 통계 안내</b> · 서비스를 개선하고 데이터 분석에 활용하려고 방문 횟수, 머문 시간, 본 공고, 검색어·분류 선택, 선택한 단과대학·학과·학년을 통계로 집계합니다. 이름·연락처·IP 주소는 저장하지 않고, 브라우저가 만든 임의의 방문 코드만 사용해요. 관심 버튼을 누르면 익명 방문 코드와 공고 정보만 집계에 저장돼요. 통계를 끄면 집계되지 않아요. 브라우저의 '추적 안 함' 설정을 켜면 집계하지 않아요. <button type="button" class="flink" id="statsbtn"></button></p>
-  <p class="flinks"><a href="about.html">서비스 소개</a> · <a href="terms.html">이용약관</a> · <a href="privacy.html">개인정보처리방침</a> · <button type="button" class="flink" id="flink-del">기관 수집 거부·삭제·정정 요청</button></p>
+  <p class="flinks"><a href="about.html">서비스 소개</a> · <a href="terms.html">이용약관</a> · <a href="privacy.html">개인정보처리방침</a> · <button type="button" class="flink" id="flink-club">동아리·행사 등록</button> · <button type="button" class="flink" id="flink-del">기관 수집 거부·삭제·정정 요청</button></p>
  </div>
 </footer>
 
@@ -2792,10 +2823,25 @@ function toneOf(subName){
  const idx=SUBS.indexOf(subName);
  return idx>=0?idx%8:0;
 }
+function pnuTags(a){
+ if(!a||a.origin!=='교내')return [];
+ const txt=[a.title,a.how,a.benefit,a.org,a.cat].join(' ');
+ const tags=[];
+ if(/학생지원시스템|onestop\.pusan/i.test(txt))tags.push('학생지원시스템');
+ if(/비교과|마일리지/.test(txt))tags.push('비교과');
+ if(/근로|멘토|튜터/.test(txt))tags.push('근로·멘토');
+ if(/계절|교류\s*수학|수강/.test(txt))tags.push('계절·학사');
+ return tags.slice(0,2);
+}
+function pnuTagHtml(a){
+ const t=pnuTags(a);
+ return t.length?`<span class="pnu-tags">${t.map(x=>`<span class="pnu-tag">${esc(x)}</span>`).join('')}</span>`:'';
+}
 function poster(a,u,withChip,forceEnded,rankNum){
  u=u===undefined?(a.posters&&a.posters[0]):u;
  const tone=toneOf(a.sub);
- const snippet=String(a.title||'').slice(0,36);
+ const rawSnip=String(a.benefit||a.target||a.period||a.org||'').replace(/\s+/g,' ').trim();
+ const snippet=rawSnip&&rawSnip!=='원문 확인 필요'?rawSnip.slice(0,68):String(a.org||'자세한 내용은 눌러서 확인하세요');
  const rankHtml=rankNum?`<span class="rank-badge" aria-label="인기 ${rankNum}위">${rankNum}</span>`:'';
  return `<div class="poster">${rankHtml}<div class="ph" data-tone="${tone}" aria-hidden="true"><span class="ph-cat">${esc(a.sub)}</span><span class="ph-snippet">${esc(snippet)}</span></div>${u?`<img src="${esc(u)}" alt="${esc(a.title)} 포스터" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}${withChip?ddayBadge(a,forceEnded):''}</div>`;
 }
@@ -2806,7 +2852,7 @@ function card(a,why,inRail,popMeta){
  const rankNum=popMeta&&popMeta.rank?popMeta.rank:0;
  const popHtml=popMeta&&popMeta.count?`<p class="pop-meta" aria-label="최근 7일 관심 ${popMeta.count}">관심 ${popMeta.count}</p>`:'';
  const nKey=noticeKey(a);
- return `<li${cls}><a class="card" href="#${esc(a.id)}">${poster(a,undefined,true,false,rankNum)}<div class="cbody"><h3>${esc(a.title)}</h3>${popHtml}<p class="org">${originBadge(a.origin)}${esc(a.org||'기관 원문 확인')}</p><span class="targets">${tline}</span></div></a>${bmBtnHtml(a.id)}${intBtnHtml(nKey)}</li>`;
+ return `<li${cls}><a class="card" href="#${esc(a.id)}">${poster(a,undefined,true,false,rankNum)}<div class="cbody"><h3>${esc(a.title)}</h3>${popHtml}<p class="org">${originBadge(a.origin)}${pnuTagHtml(a)}${esc(a.org||'기관 원문 확인')}</p><span class="targets">${tline}</span></div></a>${bmBtnHtml(a.id)}${intBtnHtml(nKey)}</li>`;
 }
 const hit=(h,t)=>/^[a-z0-9]+$/.test(t)?new RegExp('(^|[^a-z0-9])'+t).test(h):h.includes(t);
 
@@ -3197,6 +3243,22 @@ function calRowHtml(item){
  const inner=linkHref?`<a class="cal-row-link" href="${linkHref}"${linkAttrs}>${thumb}${body}</a>`:`<div class="cal-row-link">${thumb}${body}</div>`;
  return `<li class="cal-row${item.ended?' ended':''}">${inner}${bmBtnHtml(item.id,'cal-row-bm')}</li>`;
 }
+const PNU_ACAD=[
+ {s:'2026-11-13',e:'2026-11-13',t:'2학기 수업일수 2/3선'},
+ {s:'2026-11-13',e:'2026-11-17',t:'겨울계절·도약수업 수강신청'},
+ {s:'2026-11-24',e:'2026-11-24',t:'겨울계절·도약수업 1차 폐강강좌 공고'},
+ {s:'2026-11-25',e:'2026-11-26',t:'겨울계절·도약수업 1차 수강정정'},
+ {s:'2026-12-03',e:'2026-12-03',t:'겨울계절·도약수업 2차(최종) 폐강강좌 공고'},
+ {s:'2026-12-04',e:'2026-12-07',t:'겨울계절·도약수업 2차 수강정정'},
+ {s:'2026-12-08',e:'2026-12-14',t:'2학기 휴업일 지정보강일'},
+ {s:'2026-12-11',e:'2026-12-14',t:'겨울계절·도약수업 등록금 납부'},
+ {s:'2026-12-15',e:'2026-12-21',t:'2026학년도 2학기 기말고사'},
+ {s:'2026-12-15',e:'2026-12-28',t:'2학기 성적 입력 기간'},
+ {s:'2026-12-22',e:'2026-12-22',t:'2학기 겨울휴가 시작'},
+ {s:'2026-12-24',e:'2027-01-21',t:'겨울계절수업 강의 기간'},
+ {s:'2026-12-29',e:'2027-01-04',t:'2학기 성적 열람 및 정정 신청'}
+];
+const acadOnDate=d=>PNU_ACAD.filter(x=>d>=x.s&&d<=x.e);
 function renderCalendar(focusDateStr){
  const grid=$('cal-grid');
  if(!grid)return;
@@ -3242,6 +3304,7 @@ function renderCalendar(focusDateStr){
   const cellDiff=monthDiff(y,m,tParsed.y,tParsed.m);
   const outOfRange=cellDiff<-12||cellDiff>12;
   const itemsOnDay=byDate.get(dateStr)||[];
+  const acadDay=acadOnDate(dateStr);
   const totalCnt=itemsOnDay.length;
   const savedCnt=itemsOnDay.filter(x=>x.saved).length;
   const dLeftDay=dleft({end:dateStr});
@@ -3250,15 +3313,16 @@ function renderCalendar(focusDateStr){
   const isSel=dateStr===calSelDate;
 
   let dotsHtml='';
-  if(totalCnt>0){
-   const showDots=itemsOnDay.slice(0,3);
+  if(totalCnt>0||acadDay.length>0){
+   const showDots=itemsOnDay.slice(0,acadDay.length?2:3);
    dotsHtml=showDots.map(it=>{
     const cls=['cal-dot'];
     if(it.saved)cls.push('saved');
     if(isSoonDay)cls.push('soon');
     return `<span class="${cls.join(' ')}" aria-hidden="true"></span>`;
    }).join('');
-   if(totalCnt>3)dotsHtml+=`<span class="cal-more" aria-hidden="true">+${totalCnt-3}</span>`;
+   if(acadDay.length>0)dotsHtml+='<span class="cal-dot acad" aria-hidden="true" title="부산대 학사일정"></span>';
+   if(totalCnt>showDots.length)dotsHtml+=`<span class="cal-more" aria-hidden="true">+${totalCnt-showDots.length}</span>`;
   }
 
   const labelParts=[`${m}월 ${d}일`];
@@ -3290,6 +3354,12 @@ function renderCalendar(focusDateStr){
  const dayItems=byDate.get(calSelDate)||[];
  $('cal-day-title').textContent=`${selParsed.m}월 ${selParsed.d}일 (${selDow}) 마감 공고 ${dayItems.length}건`;
  $('cal-day-sub').textContent=calFilter==='saved'?'저장한 공고 기준':'전체 공고 기준';
+ const selAcad=acadOnDate(calSelDate);
+ const acadDayEl=$('cal-acad-day');
+ if(acadDayEl){
+  acadDayEl.hidden=selAcad.length===0;
+  acadDayEl.innerHTML=selAcad.map(x=>`<div class="cal-acad-item"><span class="cal-acad-badge">학사일정</span><span>${esc(x.t)} (${esc(x.s.slice(5).replace('-','.'))}${x.s!==x.e?'~'+esc(x.e.slice(5).replace('-','.')):''})</span></div>`).join('');
+ }
  $('cal-day-list').innerHTML=dayItems.length
   ?dayItems.map(calRowHtml).join('')
   :'<li class="empty">이 날 마감되는 공고가 없어요.</li>';
@@ -3301,6 +3371,16 @@ function renderCalendar(focusDateStr){
  $('cal-month-list').innerHTML=monthItems.length
   ?monthItems.map(calRowHtml).join('')
   :'<li class="empty">이번 달에 마감되는 공고가 없어요.</li>';
+
+ const acadMonthEl=$('cal-acad-month');
+ if(acadMonthEl){
+  const mStart=ymPrefix+'01',mEnd=ymPrefix+'31';
+  const mAcad=PNU_ACAD.filter(x=>x.e>=mStart&&x.s<=mEnd);
+  acadMonthEl.hidden=mAcad.length===0;
+  if(mAcad.length){
+   acadMonthEl.innerHTML=`<h3>${calMonth}월 부산대 주요 학사일정</h3><p class="sub">부산대 공식 학사일정 기준 · 세부 변경 여부는 학생지원시스템에서 확인해 주세요.</p><ul class="cal-acad-list">${mAcad.map(x=>`<li><span class="cal-acad-date">${esc(x.s.slice(5).replace('-','.'))}${x.s!==x.e?' ~ '+esc(x.e.slice(5).replace('-','.')):''}</span><span>${esc(x.t)}</span></li>`).join('')}</ul>`;
+  }
+ }
 
  if(focusDateStr){
   const btn=grid.querySelector(`button[data-date="${focusDateStr}"]`);
@@ -3496,6 +3576,14 @@ function fbSay(msg,cls){const o=$('fb-msgout');o.textContent=msg;o.className=cls
 $('fb-msg').oninput=()=>{$('fb-count').textContent=$('fb-msg').value.length+'/1000'};
 $('fb-notice-x').onclick=()=>setFbNotice('');
 $('flink').onclick=()=>{location.hash='feedback'};
+function fillClubForm(){
+ const k=document.querySelector('input[name=kind][value="missing"]');if(k)k.checked=true;
+ const tpl='[교내 동아리·학회·행사 등록 요청]\n- 단체/주최명: \n- 행사/모집명: \n- 모집/진행 기간: \n- 지원 대상: \n- 원문/신청 링크(SNS·폼 등): ';
+ if(!$('fb-msg').value.trim()){$('fb-msg').value=tpl;$('fb-count').textContent=tpl.length+'/1000'}
+ fbSay('');location.hash='feedback';
+}
+if($('fb-club-btn'))$('fb-club-btn').onclick=fillClubForm;
+if($('flink-club'))$('flink-club').onclick=fillClubForm;
 $('flink-del').onclick=()=>{const k=document.querySelector('input[name=kind][value="other"]');if(k)k.checked=true;fbSay('');location.hash='feedback'};
 $('dc').addEventListener('click',e=>{
  const ob=e.target.closest('[data-outbound]');
