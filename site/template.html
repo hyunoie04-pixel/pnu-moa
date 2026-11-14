@@ -156,6 +156,15 @@ select{padding-right:28px}
 }
 .dark-surface select option{background:var(--dark-bg);color:var(--dark-ink)}
 .dark-surface .form .go{height:48px;min-height:48px}
+.fit-subs-field{grid-column:1/-1;margin-top:4px}
+.fit-subs-field legend span{font-weight:400;opacity:.75;margin-left:4px;font-size:12px}
+.fit-subs{display:flex;flex-wrap:wrap;gap:8px}
+.fit-sub-chip{position:relative;margin:0;cursor:pointer}
+.fit-sub-chip input{position:absolute;opacity:0;width:1px;height:1px}
+.fit-sub-chip span{display:inline-flex;align-items:center;min-height:36px;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:500;background:var(--dark-field);border:1px solid var(--dark-line);color:var(--dark-sub);transition:all .15s}
+.fit-sub-chip:hover span{border-color:#fff;color:#fff}
+.fit-sub-chip input:checked+span{background:#fff;border-color:#fff;color:var(--dark-bg);font-weight:600}
+.fit-sub-chip input:focus-visible+span{outline:2px solid #fff;outline-offset:2px}
 
 /* Buttons (Strictly 2 styles, 40px height / 44px touch area, 4px radius) */
 .btn-fill,.go,.cta{
@@ -1772,7 +1781,7 @@ footer p{margin:0 0 10px;max-width:980px}
      <div id="fit-form-wrap">
       <span class="fit-label">맞춤 설정</span>
       <h2 class="fit-title">내게 맞는 공고만 골라드려요</h2>
-      <p class="fit-sub">단과대학·학과·학년을 선택하면 지금 지원할 수 있는 공고만 모아 보여드려요.</p>
+      <p class="fit-sub">단과대학·학과·학년과 관심 분야를 선택하면 지금 지원할 수 있는 공고만 모아 보여드려요.</p>
       <form class="form" id="form" autocomplete="off">
        <fieldset class="field">
         <legend>과정</legend>
@@ -1785,6 +1794,10 @@ footer p{margin:0 0 10px;max-width:980px}
        <div class="field"><label for="dept">학과·전공</label><select id="dept"></select></div>
        <div class="field"><label for="grade">학년</label><select id="grade"></select></div>
        <button class="go" type="submit">공고 찾기</button>
+       <fieldset class="field fit-subs-field">
+        <legend>관심 분야 <span>(선택 · 여러 개 고르면 위로 먼저 보여드려요)</span></legend>
+        <div class="fit-subs" id="fit-subs"></div>
+       </fieldset>
       </form>
       <details class="privacy">
        <summary>선택한 정보는 이 브라우저에만 저장돼요. <span>자세히</span></summary>
@@ -2761,10 +2774,12 @@ function match(a,p){
  if(a.depts){if(p.dept){if(!deptHit)return null;score+=6;why.push(p.dept+' 대상')}else{check=true;why.push('학과 조건: '+a.depts.join(', '))}}
  if(a.grades){if(p.course==='대학원')return null;if(p.grade&&!a.grades.includes(+p.grade))return null;if(p.grade){score+=2;why.push(p.grade+'학년 대상')}else check=true}
  if(!why.length)why.push('전체 대상');
- return {check,why,score}
+ const subHit=Array.isArray(p.subs)&&p.subs.includes(a.sub);
+ if(subHit)why.unshift('★ 관심 분야');
+ return {check,why,score,subHit}
 }
 const cmpEnd=(x,y)=>(x.end||'9999').localeCompare(y.end||'9999')||String(y.date||'').localeCompare(String(x.date||''));
-const cmpFit=(x,y)=>y.m.score-x.m.score||cmpEnd(x.a,y.a);
+const cmpFit=(x,y)=>y.m.score-x.m.score||(y.m.subHit?1:0)-(x.m.subHit?1:0)||cmpEnd(x.a,y.a);
 
 /* ---------- rendering ---------- */
 function toneOf(subName){
@@ -2886,6 +2901,10 @@ function renderFitSummary(hits,fit){
  const whoParts=profile.course==='대학원'
   ?['대학원',profile.college,profile.dept]
   :[profile.college,profile.dept,profile.grade?profile.grade+'학년':''];
+ const subLabel=Array.isArray(profile.subs)&&profile.subs.length
+  ?`관심: ${profile.subs.length>2?profile.subs.slice(0,2).join(', ')+` 외 ${profile.subs.length-2}`:profile.subs.join(', ')}`
+  :'';
+ if(subLabel)whoParts.push(subLabel);
  $('fit-who').textContent=whoParts.filter(Boolean).join(' · ');
  const todayCnt=hits.filter(({a})=>dleft(a)===0).length;
  const weekCnt=hits.filter(({a})=>{const d=dleft(a);return d!==null&&d>=0&&d<=7}).length;
@@ -2931,6 +2950,7 @@ function renderMine(){
   const fHits=hits.filter(x=>matchOrigin(x.a));
   const fMaybe=maybe.filter(x=>matchOrigin(x.a));
   const fFit=fit.filter(x=>matchOrigin(x.a));
+  const fSubHits=Array.isArray(profile.subs)&&profile.subs.length?fHits.filter(x=>x.m.subHit):[];
   const soon=fHits.filter(({a})=>{const d=dleft(a);return d!==null&&d>=0&&d<=7}).sort((x,y)=>cmpEnd(x.a,y.a)).slice(0,12);
   const everyone=fHits.filter(x=>x.m.score<2);
   if(!hits.length&&!maybe.length){
@@ -2938,8 +2958,11 @@ function renderMine(){
   }
   if(fit.length){
    html+=railSection('내 추천 공고',`${fFit.length}건 · 내 소속·학년에 맞춘 순`,fFit,(bandIdx++)%2===1,'','rail-fit',takeSeg(),true);
-  }else{
+  }else if(!Array.isArray(profile.subs)||!profile.subs.length){
    html+=`<div class="wrap" style="padding:24px var(--pad) 0">${takeSeg()}</div>`;
+  }
+  if(Array.isArray(profile.subs)&&profile.subs.length){
+   html+=railSection('내 관심 분야 공고',`${fSubHits.length}건 · ${profile.subs.join(', ')}`,fSubHits,(bandIdx++)%2===1,profile.subs.length===1?profile.subs[0]:'','rail-interest',takeSeg(),true);
   }
   if(popItems.length)html+=popularRailSection(popItems,(bandIdx++)%2===1);
   if(soon.length)html+=railSection('마감 임박',`${soon.length}건 · 마감 가까운 순`,soon,(bandIdx++)%2===1,'','rail-soon');
@@ -3401,7 +3424,11 @@ function route(){
  else if(nextTab==='saved')renderSaved();
  if(h==='feedback'||h==='calendar'||h==='saved')window.scrollTo(0,0);
 }
-function fillColleges(){$('college').innerHTML='<option value="">단과대학 선택</option>'+COLLEGES.map(c=>`<option>${esc(c.name)}</option>`).join('')}
+function fillColleges(){
+ $('college').innerHTML='<option value="">단과대학 선택</option>'+COLLEGES.map(c=>`<option>${esc(c.name)}</option>`).join('');
+ const sb=$('fit-subs');
+ if(sb)sb.innerHTML=SUBS.filter(s=>s!=='기타').map(s=>`<label class="fit-sub-chip"><input type="checkbox" name="subs" value="${esc(s)}"><span>${esc(s)}</span></label>`).join('');
+}
 function fillDepts(){const c=COLLEGES.find(x=>x.name===$('college').value);$('dept').innerHTML='<option value="">학과 선택 안 함</option>'+((c&&c.depts)||[]).map(d=>`<option>${esc(d)}</option>`).join('');$('dept').disabled=!c||!(c.depts||[]).length}
 function fillGrades(){const g=document.querySelector('input[name=course]:checked').value==='학부';$('grade').innerHTML=g?'<option value="">학년 선택</option>'+[1,2,3,4].map(n=>`<option value="${n}">${n}학년</option>`).join('')+'<option value="5">5학년 이상</option>':'<option value="">해당 없음</option>';$('grade').disabled=!g;$('grade').required=g}
 function save(){try{localStorage.setItem('moa-profile',JSON.stringify(profile))}catch{}}
@@ -3414,6 +3441,8 @@ function populateFormFromProfile(){
  fillDepts();
  $('dept').value=profile.dept||'';
  $('grade').value=profile.grade||'';
+ const chosen=new Set(Array.isArray(profile.subs)?profile.subs:[]);
+ document.querySelectorAll('#fit-subs input[name=subs]').forEach(cb=>{cb.checked=chosen.has(cb.value)});
 }
 function loadSaved(){try{const p=JSON.parse(localStorage.getItem('moa-profile')||'null');if(p&&COLLEGES.some(c=>c.name===p.college)){profile=p;populateFormFromProfile()}}catch{}}
 /* notices use the embedded snapshot when fresh (<= SNAPSHOT_STALE_HOURS); otherwise fall back to reading from Supabase */
@@ -3533,11 +3562,12 @@ $('college').onchange=fillDepts;
 document.querySelectorAll('input[name=course]').forEach(r=>r.onchange=fillGrades);
 $('form').onsubmit=e=>{
  e.preventDefault();
- profile={course:document.querySelector('input[name=course]:checked').value,college:$('college').value,dept:$('dept').value,grade:$('grade').value};
+ const subs=[...document.querySelectorAll('#fit-subs input[name=subs]:checked')].map(el=>el.value).filter(v=>SUBS.includes(v));
+ profile={course:document.querySelector('input[name=course]:checked').value,college:$('college').value,dept:$('dept').value,grade:$('grade').value,subs};
  editingProfile=false;
  save();
  renderMine();
- track('search',{course:profile.course,college:profile.college,dept:profile.dept||null,grade:profile.grade||null});
+ track('search',{course:profile.course,college:profile.college,dept:profile.dept||null,grade:profile.grade||null,sub:subs[0]?subs[0].slice(0,30):null,keyword:subs.length?subs.join(',').slice(0,80):null});
 };
 let qTimer=null,lastQ='';
 $('q').oninput=()=>{renderAll();clearTimeout(qTimer);qTimer=setTimeout(()=>{const kw=$('q').value.trim().slice(0,80);if(kw.length>=2&&kw!==lastQ){lastQ=kw;track('filter',{keyword:kw,sub:sub||'전체',tab:'all'})}},800)};
