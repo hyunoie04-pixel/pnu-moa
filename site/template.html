@@ -631,6 +631,9 @@ select{padding-right:28px}
  gap:10px;
 }
 .sec-title span{font-size:14px;font-weight:400;color:var(--sub);letter-spacing:0}
+.sec-ig{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:#124EAA;min-height:44px;padding:0 4px;white-space:nowrap;text-decoration:underline;text-underline-offset:4px}
+.sec-ig:hover{color:var(--ink)}
+.sec-title .sec-badge{display:inline-flex;align-items:center;font-size:12px;font-weight:700;color:#fff;background:#124EAA;border-radius:999px;padding:3px 10px;letter-spacing:0;align-self:center}
 .sec-note{
  margin:-12px 0 18px;
  font-size:13px;
@@ -723,71 +726,126 @@ select{padding-right:28px}
 .card:hover .poster img,.card:focus-visible .poster img,.zoom:hover .poster img{
  transform:scale(1.02);
 }
-/* Editorial Light Cards for Notices Without Posters (avoids title duplication & dark monotony) */
+/* Ticket-style card for notices without posters (same look as the Instagram card news: chip, org, perforated cut, facts, deadline) */
+.poster{container-type:inline-size}
 .ph{
+ --tc:#1e4b8f;
+ --tb:#eff5ff;
  position:absolute;
  inset:0;
  z-index:0;
- padding:16px 16px 46px;
+ padding:10px;
+ padding:4.5cqw;
  display:flex;
- flex-direction:column;
- justify-content:flex-start;
- gap:10px;
  color:var(--ink);
- background:#f2f6fc;
- border-top:4px solid #1e4b8f;
+ background:#fbfcfe;
  overflow:hidden;
 }
 .ph::after{
  content:'';
  position:absolute;
  left:50%;
- top:62%;
- width:144px;
- height:36px;
+ top:66%;
+ width:58%;
+ max-width:170px;
+ aspect-ratio:4/1;
  transform:translate(-50%,-50%) rotate(-12deg);
  background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 146 36'%3E%3Ctext x='0' y='27' fill='%230F2A52' font-family='sans-serif' font-size='25' font-weight='800' letter-spacing='1'%3EHYO%3C/text%3E%3Ccircle cx='67' cy='13.5' r='2.6' fill='%230F2A52'/%3E%3Ccircle cx='67' cy='23.5' r='2.6' fill='%230F2A52'/%3E%3Crect x='75' y='4' width='66' height='28' rx='14' fill='%23124EAA'/%3E%3Ctext x='97' y='22.5' fill='%23FFFFFF' font-family='sans-serif' font-size='13.5' font-weight='800' text-anchor='middle'%3EON%3C/text%3E%3Ccircle cx='127' cy='18' r='9.5' fill='%23FFFFFF'/%3E%3C/svg%3E");
- opacity:.11;
+ opacity:.1;
  pointer-events:none;
  user-select:none;
 }
-.ph[data-tone="0"]{background:#eff5ff;border-top-color:#1e4b8f}
-.ph[data-tone="1"]{background:#f0f7f4;border-top-color:#1b6b53}
-.ph[data-tone="2"]{background:#f4f3ff;border-top-color:#4b439b}
-.ph[data-tone="3"]{background:#fff7ed;border-top-color:#b45309}
-.ph[data-tone="4"]{background:#f0f8fa;border-top-color:#0e677a}
-.ph[data-tone="5"]{background:#f5f3f7;border-top-color:#6b3b75}
-.ph[data-tone="6"]{background:#f3f6f9;border-top-color:#355070}
-.ph[data-tone="7"]{background:#fdf4f5;border-top-color:#9b2c48}
-.ph-cat{
+.ph[data-tone="0"]{--tb:#eff5ff;--tc:#1e4b8f}
+.ph[data-tone="1"]{--tb:#f0f7f4;--tc:#1b6b53}
+.ph[data-tone="2"]{--tb:#f4f3ff;--tc:#4b439b}
+.ph[data-tone="3"]{--tb:#fff7ed;--tc:#b45309}
+.ph[data-tone="4"]{--tb:#f0f8fa;--tc:#0e677a}
+.ph[data-tone="5"]{--tb:#f5f3f7;--tc:#6b3b75}
+.ph[data-tone="6"]{--tb:#f3f6f9;--tc:#355070}
+.ph[data-tone="7"]{--tb:#fdf4f5;--tc:#9b2c48}
+.ph-tk{
  position:relative;
- z-index:1;
- align-self:flex-start;
- font-size:12px;
+ flex:1;
+ min-width:0;
+ display:flex;
+ flex-direction:column;
+ background:var(--tb);
+ background:color-mix(in srgb,var(--tc) 9%,#fff);
+ border-radius:14px;
+ border-radius:6.5cqw;
+ padding:14px 14px 0;
+ padding:6.5cqw 6.5cqw 0;
+ font-size:clamp(10.5px,5cqw,15px);
+ line-height:1.45;
+}
+.ph-head{display:flex;flex-direction:column;align-items:flex-start;gap:.5em;padding-right:22px;padding-right:calc(48px - 11cqw);min-width:0}
+.ph-cat{
+ font-size:.95em;
  font-weight:700;
  letter-spacing:-.01em;
  line-height:1.3;
- color:var(--ink);
- background:rgba(255,255,255,.85);
- border:1px solid rgba(18,32,51,.12);
- border-radius:4px;
- padding:4px 8px;
- max-width:calc(100% - 44px);
+ color:#fff;
+ background:var(--tc);
+ border-radius:999px;
+ padding:.3em .8em;
+ max-width:100%;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
 }
-.ph-snippet{
+.ph-org{font-size:.95em;color:#5b6b80;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ph-cut{
  position:relative;
- z-index:1;
- font-size:13px;
- font-weight:400;
- line-height:1.5;
- color:#33465e;
+ flex:none;
+ height:0;
+ margin:1em -14px .9em;
+ margin:1em -6.5cqw .9em;
+ border-top:1.5px dashed rgba(18,32,51,.22);
+}
+.ph-cut::before,.ph-cut::after{
+ content:'';
+ position:absolute;
+ top:-.6em;
+ width:1.2em;
+ height:1.2em;
+ border-radius:50%;
+ background:#fbfcfe;
+}
+.ph-cut::before{left:-.6em}
+.ph-cut::after{right:-.6em}
+.ph-facts{margin:0;display:flex;flex-direction:column;gap:.55em;min-height:0;overflow:hidden}
+.ph-facts>div{display:flex;gap:.7em;min-width:0}
+.ph-facts dt{flex:none;font-weight:700;color:var(--tc)}
+.ph-facts dd{
+ margin:0;
+ min-width:0;
+ color:#263445;
  display:-webkit-box;
- -webkit-line-clamp:5;
+ -webkit-line-clamp:2;
  -webkit-box-orient:vertical;
  overflow:hidden;
  overflow-wrap:anywhere;
- margin:2px 0 0;
 }
+.ph-none{margin:0;color:#5b6b80}
+.ph-foot{
+ flex:none;
+ margin-top:auto;
+ min-height:3.4em;
+ padding:.6em 0 .7em;
+ border-top:1px solid rgba(18,32,51,.14);
+ display:flex;
+ flex-direction:column;
+ align-items:flex-end;
+ justify-content:center;
+ line-height:1.2;
+}
+.ph-foot span{font-size:.82em;color:#6b7a8d}
+.ph-foot b{font-size:1.15em;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+@container (max-width:190px){
+ .ph-facts>div:nth-child(n+3){display:none}
+}
+/* the D-day chip sits inside the ticket's bottom row when there is no poster image */
+.poster:not(:has(img)) .dday{left:calc(11cqw + 1px);bottom:calc(4.5cqw + .9em)}
 .pnu-tags{display:inline-flex;flex-wrap:wrap;gap:4px;margin-left:4px;vertical-align:middle}
 .pnu-tag{font-size:10px;font-weight:700;padding:1px 5px;border-radius:2px;background:#eef5ff;color:#124eaa;border:1px solid #c7daf7}
 .cal-dot.acad{background:#0b6b3a;border-color:#0b6b3a}
@@ -857,7 +915,8 @@ select{padding-right:28px}
  line-height:1;
 }
 .poster:has(.rank-badge) .ph-cat{
- padding-left:32px;
+ margin-left:18px;
+ max-width:calc(100% - 18px);
 }
 .pop-meta{
  margin:0;
@@ -1405,13 +1464,21 @@ select{padding-right:28px}
  object-position:top;
  display:block;
 }
+.cal-thumb .ph::after{display:none}
 .cal-thumb .ph{
+ background:var(--tb);
+ border-top:3px solid var(--tc);
  padding:6px;
  justify-content:center;
  align-items:center;
  text-align:center;
 }
 .cal-thumb .ph-cat{
+ color:var(--ink);
+ background:none;
+ padding:0;
+ border-radius:0;
+ white-space:normal;
  font-size:11px;
  padding-right:0;
  line-height:1.2;
@@ -2974,13 +3041,17 @@ function pnuTagHtml(a){
  const t=pnuTags(a);
  return t.length?`<span class="pnu-tags">${t.map(x=>`<span class="pnu-tag">${esc(x)}</span>`).join('')}</span>`:'';
 }
+function phHtml(a){
+ const clean=v=>{v=String(v||'').replace(/\s+/g,' ').trim();return v&&v!=='원문 확인 필요'&&v!=='원문 참조'&&v!=='원문·첨부 참조'?v.slice(0,70):''};
+ const facts=[['대상',clean(a.target)],['혜택',clean(a.benefit)],['기간',clean(a.period)]].filter(x=>x[1]);
+ const org=clean(a.org);
+ const end=a.end?String(a.end).slice(5).replace('-','.'):'';
+ return `<div class="ph" data-tone="${toneOf(a.sub)}" aria-hidden="true"><div class="ph-tk"><div class="ph-head"><span class="ph-cat">${esc(a.sub||'공고')}</span>${org?`<span class="ph-org">${esc(org)}</span>`:''}</div><div class="ph-cut"></div>${facts.length?`<dl class="ph-facts">${facts.map(x=>`<div><dt>${x[0]}</dt><dd>${esc(x[1])}</dd></div>`).join('')}</dl>`:`<p class="ph-none">자세한 내용은 눌러서 확인하세요</p>`}<div class="ph-foot">${end?`<span>마감일</span><b>${esc(end)}</b>`:`<span>마감일은 원문 확인</span>`}</div></div></div>`;
+}
 function poster(a,u,withChip,forceEnded,rankNum){
  u=u===undefined?(a.posters&&a.posters[0]):u;
- const tone=toneOf(a.sub);
- const rawSnip=String(a.benefit||a.target||a.period||a.org||'').replace(/\s+/g,' ').trim();
- const snippet=rawSnip&&rawSnip!=='원문 확인 필요'?rawSnip.slice(0,68):String(a.org||'자세한 내용은 눌러서 확인하세요');
  const rankHtml=rankNum?`<span class="rank-badge" aria-label="인기 ${rankNum}위">${rankNum}</span>`:'';
- return `<div class="poster">${rankHtml}<div class="ph" data-tone="${tone}" aria-hidden="true"><span class="ph-cat">${esc(a.sub)}</span><span class="ph-snippet">${esc(snippet)}</span></div>${u?`<img src="${esc(u)}" alt="${esc(a.title)} 포스터" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}${withChip?ddayBadge(a,forceEnded):''}</div>`;
+ return `<div class="poster">${rankHtml}${phHtml(a)}${u?`<img src="${esc(u)}" alt="${esc(a.title)} 포스터" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}${withChip?ddayBadge(a,forceEnded):''}</div>`;
 }
 function card(a,why,inRail,popMeta){
  const targets=why?why.split(' · '):[a.course!=='전체'?a.course:'전체 대상',...(a.depts||a.colleges||[]),...(a.grades||[]).map(g=>g+'학년')];
@@ -3010,6 +3081,28 @@ function railSection(title,subText,items,alt,moreSub,secId,extraHeadHtml,showEmp
    </div>
    ${extraHeadHtml||''}
    ${bodyHtml}
+  </div>
+ </section>`;
+}
+/* 인스타에 올린 카드뉴스의 공고. 새 게시물은 맨 앞에 추가한다 (date=인스타에 올린 날, links=시트 L열 대표 원문 링크, 카드 순서대로). 올린 날부터 7일 동안만 홈에 보인다. */
+const INSTA_POSTS=[{date:'2026-11-16',title:'이번 주 놓치면 아까운 공고',links:['https://job.pusan.ac.kr/ko/notice/notice/view/204609?p=1','https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN095&mgr_seq=3&mode=view&mgr_seq=3&board_seq=1512129','https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN095&mgr_seq=3&mode=view&mgr_seq=3&board_seq=1511938','https://www.pusan.ac.kr/kor/CMS/Board/Board.do?mCode=MN095&mgr_seq=3&mode=view&mgr_seq=3&board_seq=1512126','https://history.pusan.ac.kr/bbs/history/174/1473453/artclView.do']}];
+function instaRailSection(act,alt){
+ const p=INSTA_POSTS[0];if(!p)return '';
+ const age=Math.round((new Date(todayKST())-new Date(p.date))/864e5);
+ if(!(age>=0&&age<7))return '';
+ const items=p.links.map(l=>{const u=safeUrl(l);return act.find(a=>a.link===u||a.link===l)}).filter(Boolean);
+ if(!items.length)return '';
+ const md=p.date.slice(5).replace('-','.');
+ const title=age===0?'오늘 인스타에 올라온 공고':'인스타에 올라온 공고';
+ return `<section class="rail-band${alt?' alt':''} reveal" id="rail-insta">
+  <div class="wrap">
+   <div class="sec-head">
+    <h2 class="sec-title">${title} ${age===0?'<span class="sec-badge">NEW</span>':''}<span>${items.length}건 · ${md} 게시 · ${esc(p.title)}</span></h2>
+    <div class="sec-actions"><div class="rail-nav"><button type="button" class="rail-btn" data-rail-dir="-1" aria-label="이전 목록">‹</button><button type="button" class="rail-btn" data-rail-dir="1" aria-label="다음 목록">›</button></div><a class="sec-ig" href="https://www.instagram.com/hyon.kr/" target="_blank" rel="noopener" data-ig="rail">인스타에서 보기</a></div>
+   </div>
+   <ul class="rail" tabindex="0" aria-label="${title} 목록">
+    ${items.map(a=>{const m=profile?match(a,profile):null;return card(a,m?m.why.join(' · '):undefined,true)}).join('')}
+   </ul>
   </div>
  </section>`;
 }
@@ -3129,6 +3222,8 @@ function renderMine(){
  let html='';
  let segPlaced=false;
  const takeSeg=()=>{if(segPlaced)return '';segPlaced=true;return originBarHtml('mine-origin-seg',act)};
+ const igHtml=instaRailSection(act,false);
+ if(igHtml){html+=igHtml;bandIdx++}
  if(!profile){
   if(popItems.length)html+=popularRailSection(popItems,(bandIdx++)%2===1,takeSeg());
   const soon=fAct.filter(a=>dleft(a)!==null&&dleft(a)>=0&&dleft(a)<=7).sort(cmpEnd).slice(0,12);
@@ -3749,7 +3844,7 @@ $('fb-notice-x').onclick=()=>setFbNotice('');
 $('flink').onclick=()=>{location.hash='feedback'};
 (()=>{const K='moa-ig-promo-hide',w=$('ig-promo-wrap');try{const t=+localStorage.getItem(K)||0;if(Date.now()-t<7*864e5)w.hidden=true}catch{}
  $('ig-close').onclick=()=>{w.hidden=true;try{localStorage.setItem(K,String(Date.now()))}catch{}track('outbound',{notice_title:'instagram banner close',sub:null,tab:'banner'})}})();
-document.querySelectorAll('[data-ig]').forEach(a=>a.addEventListener('click',()=>track('outbound',{notice_title:'instagram @hyon.kr',sub:null,tab:a.dataset.ig})));
+document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('[data-ig]');if(a)track('outbound',{notice_title:'instagram @hyon.kr',sub:null,tab:a.dataset.ig})});
 $('flink-del').onclick=()=>{const k=document.querySelector('input[name=kind][value="other"]');if(k)k.checked=true;fbSay('');location.hash='feedback'};
 $('dc').addEventListener('click',e=>{
  const ob=e.target.closest('[data-outbound]');
