@@ -1821,6 +1821,15 @@ footer p{margin:0 0 10px;max-width:980px}
  .top3-thumb{flex:0 0 40px;width:40px;height:52px}
  .top3-item-title{-webkit-line-clamp:2;line-height:1.35}
 }
+/* header: 7 tabs no longer fit beside the status text on mid-width screens (tabs overlapped the status). Hide the status first, then move the tabs to their own row. */
+@media(max-width:1180px){.status{display:none}}
+@media(max-width:880px){
+ .bar{height:auto;min-height:56px;grid-template-columns:1fr auto;padding-top:6px}
+ .nav-center{grid-column:1/-1;grid-row:2;justify-self:stretch;border-top:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+ .nav-center::-webkit-scrollbar{display:none}
+ .tabs{gap:2px;justify-content:space-between}
+ .tab{padding:0 9px;font-size:14px}
+}
 @media(max-width:720px){
  :root{--pad:16px}
  .bar{
