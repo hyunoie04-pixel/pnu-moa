@@ -24,7 +24,7 @@ jobs:
   build-and-deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -64,5 +64,16 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
+        # GitHub 쪽 일시 오류("Fetching artifact metadata failed")로 가끔 실패해서, 실패하면 아래에서 한 번 더 시도한다
+        continue-on-error: true
         # 2026-11-08 기준 최신 메이저 버전
+        uses: actions/deploy-pages@v5
+
+      - name: Wait before deploy retry
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 45
+
+      - name: Retry deploy to GitHub Pages
+        id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v5
