@@ -694,7 +694,9 @@ select{padding-right:28px}
  background:var(--panel);
  color:var(--sub);
 }
-.card.ended .poster img,.card.ended .ph{
+.card.ended .poster img{filter:grayscale(1)}
+.card.ended .poster img.loaded{opacity:.72}
+.card.ended .ph{
  filter:grayscale(1);
  opacity:.72;
 }
@@ -721,8 +723,11 @@ select{padding-right:28px}
  object-fit:cover;
  object-position:top;
  background:#fff;
- transition:transform .2s ease;
+ opacity:0;
+ transition:transform .2s ease,opacity .25s ease;
 }
+/* 로딩 중에는 티켓 카드(.ph)가 보이게 하고, 다 불러온 뒤에만 포스터를 덮는다 */
+.poster img.loaded{opacity:1}
 .card:hover .poster img,.card:focus-visible .poster img,.zoom:hover .poster img{
  transform:scale(1.02);
 }
@@ -3060,7 +3065,7 @@ function phHtml(a){
 function poster(a,u,withChip,forceEnded,rankNum){
  u=u===undefined?(a.posters&&a.posters[0]):u;
  const rankHtml=rankNum?`<span class="rank-badge" aria-label="인기 ${rankNum}위">${rankNum}</span>`:'';
- return `<div class="poster">${rankHtml}${phHtml(a)}${u?`<img src="${esc(u)}" alt="${esc(a.title)} 포스터" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:''}${withChip?ddayBadge(a,forceEnded):''}</div>`;
+ return `<div class="poster">${rankHtml}${phHtml(a)}${u?`<img src="${esc(u)}" alt="${esc(a.title)} 포스터" loading="lazy" referrerpolicy="no-referrer" onload="this.classList.add('loaded')" onerror="this.remove()">`:''}${withChip?ddayBadge(a,forceEnded):''}</div>`;
 }
 function card(a,why,inRail,popMeta){
  const targets=why?why.split(' · '):[a.course!=='전체'?a.course:'전체 대상',...(a.depts||a.colleges||[]),...(a.grades||[]).map(g=>g+'학년')];
