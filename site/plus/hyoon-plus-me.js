@@ -50,9 +50,9 @@ function decorateDetail(a){
   box.innerHTML=`<p class="cal-add-title">내 일정에 담아 두기</p><p class="cal-add-sub">${a.end?'지난 공고예요. 기록용으로 담을 수 있어요.':'마감일이 정리되지 않은 공고예요. 담아 두면 마이페이지에서 메모와 상태를 남길 수 있어요.'}</p><div class="cal-add-btns"><button type="button" class="btn-outline hp-cal-my" data-hp-mycal aria-pressed="${!!inCal}">${inCal?'내 일정에 있음':'내 일정에 담기'}</button></div>`;
   side.insertBefore(box,side.querySelector('.report'));
  }
- const pf=document.createElement('div');pf.className='hp-detail-box hp-pf-hint';
+ if(HP.flags.portfolio){const pf=document.createElement('div');pf.className='hp-detail-box hp-pf-hint';
  pf.innerHTML=`<p>이 공고에 참여했나요?</p><button type="button" class="hp-link" data-hp-pf-from>포트폴리오에 기록하기 →</button>`;
- side.insertBefore(pf,side.querySelector('.report'));
+ side.insertBefore(pf,side.querySelector('.report'))}
  HP.emit('detail',a);
 }
 HP.decorateDetail=decorateDetail;
@@ -86,18 +86,18 @@ function renderMe(){
    <dl class="hp-me-stats">
     <div><dt>다가오는 마감</dt><dd>${soon.length}<small>건</small></dd></div>
     <div><dt>내 일정</dt><dd>${cal.length}<small>건</small></dd></div>
-    <div><dt>포트폴리오</dt><dd>${pf.length}<small>개</small></dd></div>
+    ${HP.flags.portfolio?`<div><dt>포트폴리오</dt><dd>${pf.length}<small>개</small></dd></div>`:''}
     ${HP.flags.teams?`<div><dt>참여 중인 팀</dt><dd>${teams}<small>팀</small></dd></div>`:''}
    </dl>
   </div>
   ${soon[0]?`<p class="hp-next">가장 가까운 마감: <a href="#${h(soon[0].notice_id)}">${h(soon[0].title)}</a> <b>${HP.ddayText(soon[0].end)}</b></p>`:''}
-  <div class="chips hp-me-tabs" role="tablist" aria-label="마이페이지 메뉴">${TABS_ME.map(([k,n])=>`<button type="button" class="chip" role="tab" data-me="${k}" aria-pressed="${k===tab}" aria-selected="${k===tab}">${n}</button>`).join('')}</div>
+  <div class="chips hp-me-tabs" role="tablist" aria-label="마이페이지 메뉴">${TABS_ME.map(([k,n])=>`<button type="button" class="chip" role="tab" data-me="${k}" aria-pressed="${k===tab}" aria-selected="${k===tab}">${n}${k==='pf'&&!HP.flags.portfolio?'<span class="hp-soon">준비중</span>':''}</button>`).join('')}</div>
   <div id="me-body"></div>
  </div>`;
  sec.querySelector('#me-edit').onclick=()=>HP.openOnboarding(null,true);
  const pnuB=sec.querySelector('#me-pnu');if(pnuB)pnuB.onclick=()=>HP.openPnuVerify(()=>renderMe());
  sec.querySelector('#me-out').onclick=()=>{HP.log('logout');DB.signOut();HP.renderAuth();HP.toast('로그아웃했어요');location.hash='mine'};
- sec.querySelector('.hp-me-tabs').onclick=e=>{const b=e.target.closest('[data-me]');if(b){tab=b.dataset.me;renderMe();HP.log('tab',{tab:'me-'+tab})}};
+ sec.querySelector('.hp-me-tabs').onclick=e=>{const b=e.target.closest('[data-me]');if(b){if(b.dataset.me==='pf'&&!HP.flags.portfolio){HP.toast('포트폴리오는 준비 중입니다.');return}tab=b.dataset.me;renderMe();HP.log('tab',{tab:'me-'+tab})}};
  const body=sec.querySelector('#me-body');
  if(tab==='cal')renderCal(body,u);
  if(tab==='pf')renderPf(body,u);
@@ -112,7 +112,7 @@ function renderCal(body,u){
  const up=items.filter(x=>!x.end||x.end>=t),past=items.filter(x=>x.end&&x.end<t);
  const recorded=new Set(DB.list('pf',p=>p.uid===u.id).map(p=>p.notice_id));
  const reviewed=new Set(DB.list('reviews',r=>r.uid===u.id).map(r=>r.notice_key));
- const row=x=>{const n=HP.findNotice(x.notice_id);const pfOk=['pass','done'].includes(x.status)&&!recorded.has(x.notice_id);
+ const row=x=>{const n=HP.findNotice(x.notice_id);const pfOk=HP.flags.portfolio&&['pass','done'].includes(x.status)&&!recorded.has(x.notice_id);
   const rvOk=['pass','done'].includes(x.status)&&!reviewed.has(x.row_key)&&HP.openReview;
   return `<li class="hp-cal-row" data-id="${h(x.id)}">
    <div class="hp-cal-d ${x.end&&x.end<t?'past':''}"><b>${x.end?HP.fmtDate(x.end):'미정'}</b><span>${HP.ddayText(x.end)}</span></div>
@@ -143,6 +143,7 @@ function renderCal(body,u){
 
 /* ---------- 포트폴리오 ---------- */
 function openPfForm(item,notice,calRow){
+ if(!HP.flags.portfolio){HP.toast('포트폴리오는 준비 중입니다.');return}
  const u=DB.me();if(!u)return;
  const it=item||{type:notice?subToType(notice.sub):'공모전·대회',title:notice?notice.title.replace(/^\s*\[[^\]]*\]\s*/,''):'',org:notice?notice.org:'',start:'',end:notice&&notice.end?notice.end:'',ongoing:false,role:'',desc:'',result:calRow&&calRow.status==='pass'?'합격·선정':'',skills:[],link:'',notice_id:notice?notice.id:'',visibility:'private'};
  const d=HP.modal(`<form class="hp-form hp-pf-form" id="pf-form" novalidate>
@@ -252,7 +253,7 @@ function renderSet(body,u){
     <div class="hp-field"><label for="set-skills">할 수 있는 것 <small>(쉼표로 구분)</small></label><input id="set-skills" value="${h((u.skills||[]).join(', '))}" maxlength="100" placeholder="예) 피그마, 파이썬, 영상 편집"></div>
     <button type="button" class="btn-outline" id="set-save">저장</button>
    </section>
-   <section class="danger-zone"><h4>탈퇴</h4><p class="hp-hint">탈퇴하면 계정, 내 일정, 포트폴리오${HP.flags.teams?', 내가 만든 팀 글과 받은 지원':''}, 동의 기록이 바로 지워져요. 익명 통계는 남을 수 있어요.</p>
+   <section class="danger-zone"><h4>탈퇴</h4><p class="hp-hint">탈퇴하면 계정, 내 일정${HP.flags.portfolio?', 포트폴리오':''}${HP.flags.teams?', 내가 만든 팀 글과 받은 지원':''}, 동의 기록이 바로 지워져요. 익명 통계는 남을 수 있어요.</p>
     <button type="button" class="btn-outline danger" id="set-del">탈퇴하기</button></section>
   </div>`;
  const sp=body.querySelector('#set-pnu');if(sp)sp.onclick=()=>HP.openPnuVerify(()=>renderMe());
@@ -265,12 +266,13 @@ function renderSet(body,u){
  const del=body.querySelector('#set-del');
  del.onclick=()=>{
   const u2=DB.me();if(!u2)return;
-  const list=['계정과 프로필(소속·희망 직무·닉네임)','내 일정과 지원 기록','포트폴리오','동의 기록'];
+  const list=['계정과 프로필(소속·희망 직무·닉네임)','내 일정과 지원 기록','동의 기록'];
+  if(HP.flags.portfolio)list.splice(2,0,'포트폴리오');
   if(HP.flags.teams)list.splice(3,0,'내가 만든 팀 모집 글과 받은 지원');
   const d=HP.modal(`<form class="hp-form" id="del-form" novalidate><h2>정말 탈퇴할까요?</h2>
    <p class="hp-sub">탈퇴하면 아래 정보가 <b>바로 영구 삭제</b>되고 되돌릴 수 없어요.</p>
    <ul class="hp-del-list">${list.map(x=>`<li>${h(x)}</li>`).join('')}</ul>
-   <p class="hp-hint">포트폴리오·일정이 필요하면 탈퇴하기 전에 먼저 <b>PDF로 저장</b>하거나 글로 복사해 두세요. 익명 이용 통계는 개인을 알 수 없는 형태로 남을 수 있어요.</p>
+   <p class="hp-hint">${HP.flags.portfolio?'포트폴리오·일정이':'일정이'} 필요하면 탈퇴하기 전에 먼저 ${HP.flags.portfolio?'<b>PDF로 저장</b>하거나 글로 복사':'따로 적어'}해 두세요. 익명 이용 통계는 개인을 알 수 없는 형태로 남을 수 있어요.</p>
    <div class="hp-field"><label for="del-ok">계속하려면 <b>탈퇴</b>라고 입력해 주세요</label><input id="del-ok" autocomplete="off" placeholder="탈퇴"></div>
    <div class="hp-actions"><button type="button" class="btn-outline" data-close>취소</button><button type="submit" class="btn-fill danger" id="del-go" disabled>영구 삭제하고 탈퇴</button></div></form>`);
   const inp=d.querySelector('#del-ok'),go=d.querySelector('#del-go');

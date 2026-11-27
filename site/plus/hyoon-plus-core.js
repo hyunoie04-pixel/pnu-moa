@@ -214,7 +214,7 @@ W.addEventListener('storage',e=>{if(e.key===ADMIN_KEY){build();renderMine();rend
 
 /* ---------- 이벤트 버스 ---------- */
 const bus={};
-const FLAGS=Object.assign({pnu:false,teams:true,promo:true,signals:true,demoStats:true,publicPf:true,consentKinds:['research','personalize','notify']},W.HYOON_FLAGS||{});   /* 기능 스위치 (plus/hyoon-config.js) */
+const FLAGS=Object.assign({pnu:false,teams:true,promo:true,signals:true,demoStats:true,publicPf:true,portfolio:true,consentKinds:['research','personalize','notify']},W.HYOON_FLAGS||{});   /* 기능 스위치 (plus/hyoon-config.js) */
 const HP=W.HP={
  flags:FLAGS,
  pnuOn:!!FLAGS.pnu,
