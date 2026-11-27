@@ -65,6 +65,29 @@ def fetch_rows():
     return rows
 
 
+
+# --- plus (login phase 1) ---
+def inject_plus(html):
+    """site/plus/manifest.json 이 있으면 그 CSS·JS 를 index.html 에 끼워 넣는다. 실패해도 사이트 빌드는 계속한다."""
+    pdir = HERE / "plus"
+    mf = pdir / "manifest.json"
+    if not mf.exists():
+        return html
+    try:
+        m = json.loads(mf.read_text(encoding="utf-8"))
+        NL, BS = chr(10), chr(92)
+        css = "".join((pdir / n).read_text(encoding="utf-8") + NL for n in m["css"])
+        js = "".join("<script>" + (pdir / n).read_text(encoding="utf-8").replace("</script", "<" + BS + "/script") + "</script>" + NL for n in m["js"])
+        if "</head>" not in html or "</body>" not in html:
+            return html
+        html = html.replace("</head>", "<style>" + css + "</style>" + NL + "</head>", 1)
+        i = html.rfind("</body>")
+        return html[:i] + js + html[i:]
+    except Exception as e:  # noqa: BLE001
+        print("warn: plus inject skipped:", e)
+        return html
+
+
 def main():
     snap_path = HERE / "snapshot.json"
     meta_path = HERE / "snapshot.meta.json"
@@ -120,6 +143,7 @@ def main():
         origin_rules = json.loads(rules_path.read_text(encoding="utf-8-sig"))
         html = html.replace("/*ORIGIN_RULES*/", "const ORIGIN_RULES=" + safe(origin_rules) + ";")
         rules_note = " | origin_rules ok"
+    html = inject_plus(html)
     (HERE / "index.html").write_text(html, encoding="utf-8")
     print(
         f"built site/index.html | rows {len(rows)} | snapshot_at {snapshot_at}{meta_note} "

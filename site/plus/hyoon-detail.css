@@ -1,0 +1,79 @@
+/* 공고 상세 압축 (2026-11-27): 한 화면에 더 많은 정보. 규칙은 DESIGN.md "상세 페이지 길이" */
+
+/* ---- 공통: 정보 칸 ---- */
+.info-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.info-cell{padding:10px 14px}
+.info-cell dt{font-size:12px;margin:0 0 2px}
+.info-cell dd{font-size:14px;line-height:1.5}
+.info-cell.hp-hide{display:none}
+.who{gap:4px}
+.who span{padding:2px 8px;font-size:12.5px}
+.hp-missing{margin:8px 2px 0;font-size:12.5px;color:var(--sub)}
+
+/* 요약 바: 주최·마감·시상/혜택 3칸 */
+.hp-summary{grid-template-columns:1.3fr 1fr 1.3fr}
+.hp-summary>div{padding:8px 12px}
+.hp-summary span{font-size:11.5px;margin-bottom:1px}
+.hp-summary b{font-size:13.5px;line-height:1.35}
+.hp-summary-wrap{margin:0 0 12px}
+.hp-awards{margin-top:6px}
+.hp-ask{margin-top:6px;font-size:12.5px}
+.hp-origin{display:inline-block;margin-left:6px;padding:0 6px;border:1px solid var(--line);border-radius:4px;font-size:11px;font-weight:600;color:var(--sub);vertical-align:1px}
+
+/* 사이드 */
+.dside{padding:16px}
+.dside h3{font-size:15px;margin:0 0 4px}
+.dside .notice{margin:4px 0 8px;font-size:12.5px;line-height:1.5}
+.cal-add{margin:2px 0 8px;padding-top:10px}
+.cal-add-sub{display:none}
+.hp-detail-box{margin:8px 0;padding:10px 12px}
+.hp-detail-box p{margin:0}
+.detail-gallery-sec{margin-top:16px}
+.hp-related{margin-top:18px;padding-top:14px}
+
+/* ---- 컴퓨터 ---- */
+@media(min-width:721px){
+ .detail{padding:14px 0 56px}
+ .detail-hero{padding:22px 32px;gap:28px;grid-template-columns:minmax(0,1fr) minmax(150px,190px);align-items:center}
+ .detail-hero .hero-cat{letter-spacing:.08em;margin-bottom:2px}
+ .detail-hero .hero-dday{font-size:clamp(38px,4vw,56px);font-weight:400;margin:2px 0 6px!important}
+ .detail-hero h2{font-size:clamp(20px,2.1vw,27px);margin:4px 0 6px}
+ .detail-hero .hero-deadline{margin:0 0 4px;font-size:14px}
+ .detail-hero .org{font-size:14px;margin-bottom:10px}
+ .detail-hero-actions{gap:8px;margin-top:2px}
+ .hero-poster-wrap{max-width:190px}
+ .detail-body{margin-top:18px;gap:22px;grid-template-columns:minmax(0,1fr) 300px}
+}
+
+/* ---- 휴대폰 ---- */
+@media(max-width:720px){
+ .detail{padding:6px 0 84px}
+ .back{margin-bottom:8px;min-height:36px}
+ .detail-hero{padding:14px;gap:2px 14px;grid-template-columns:92px minmax(0,1fr);align-items:start;border-radius:12px}
+ .detail-hero>div:first-child{display:contents}
+ .hero-poster-wrap{order:0;grid-column:1;grid-row:1/span 6;width:92px;max-width:none;justify-self:start}
+ .detail-hero .hero-cat,.detail-hero .hero-dday,.detail-hero h2,.detail-hero .hero-deadline,.detail-hero .org{grid-column:2}
+ .detail-hero .hero-cat{font-size:12px;letter-spacing:0;text-transform:none;margin:0}
+ .detail-hero .hero-dday{font-size:26px!important;font-weight:600;line-height:1.1;margin:2px 0 0!important}
+ .detail-hero h2{font-size:17px;margin:4px 0 2px;line-height:1.35}
+ .detail-hero .hero-deadline{font-size:12.5px;margin:0}
+ .detail-hero .hero-deadline span{margin-left:6px;font-size:12px}
+ .detail-hero .org{font-size:12.5px;margin:2px 0 0}
+ /* 저장·관심·원문 보기는 화면 아래 고정 줄이 이미 있어서 공유만 남김 */
+ .detail-hero-actions{grid-column:1/-1;margin-top:8px;gap:8px}
+ .detail-hero-actions>*:not([data-share]){display:none!important}
+ .detail-hero-actions [data-share]{min-height:34px;height:34px;padding:0 14px;font-size:13px}
+ .detail-hero .detail-int-note{grid-column:1/-1;margin-top:6px}
+ .detail-body{margin-top:12px;gap:12px}
+ .info-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .info-cell{padding:8px 12px}
+ .info-cell dd{font-size:13.5px}
+ .hp-summary{grid-template-columns:1fr 1fr}
+ .hp-summary>div:first-child{grid-column:1/-1;border-bottom:1px solid var(--line)}
+ .hp-summary>div:nth-child(2){border-left:0}
+ .hp-summary>div:nth-child(n+2){border-top:0}
+ .dside{padding:12px}
+}
+
+/* 요약 바 안의 칩은 라벨(span) 스타일을 받지 않게 */
+.hp-summary b .hp-origin{display:inline-block;margin:0 0 0 6px;padding:0 6px;font-size:11px;line-height:1.5;vertical-align:1px}

@@ -1,0 +1,70 @@
+/* 강조 (2026-11-27): 팀원 모집 진입점 + 섹션 제목 구분 */
+
+/* ---- 1. 팀원 모집: 다른 색(보라→하늘 그라데이션) + 살짝 지나가는 빛. 마감 임박 빨강과 겹치지 않게 푸른 보라 계열 ---- */
+:root{--team-a:#6A3DF0;--team-b:#1E8BFF}
+@keyframes hpTeamShine{0%{transform:translateX(-120%)}60%,100%{transform:translateX(220%)}}
+@keyframes hpTeamPulse{0%,100%{box-shadow:0 0 0 0 rgba(106,61,240,.45)}50%{box-shadow:0 0 0 6px rgba(106,61,240,0)}}
+
+/* 컴퓨터 위쪽 탭 */
+#tab-teams{
+ position:relative;overflow:hidden;
+ margin:0 4px;min-height:34px;padding:0 14px;
+ color:#fff!important;font-weight:700;
+ background:linear-gradient(100deg,var(--team-a),var(--team-b));
+ border-radius:999px;border-bottom:0!important;
+}
+#tab-teams:hover{filter:brightness(1.08)}
+#tab-teams[aria-selected=true]{outline:2px solid var(--ink);outline-offset:2px}
+#tab-teams .hp-new{background:#fff;color:var(--team-a);margin-left:5px;padding:1px 5px;border-radius:999px;font-size:9.5px}
+#tab-teams::after,.hp-team-cta::after{
+ content:"";position:absolute;top:0;bottom:0;left:0;width:40%;
+ background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+ transform:translateX(-120%);pointer-events:none;
+}
+@media(prefers-reduced-motion:no-preference){
+ #tab-teams::after,.hp-team-cta::after{animation:hpTeamShine 3.4s ease-in-out infinite}
+ #tab-teams{animation:hpTeamPulse 2.8s ease-out infinite}
+}
+
+/* 공고 상세의 "팀원 모집하기", 팀원 모집 화면의 "팀원 모집하기" */
+.hp-hero-team,#tm-new,.hp-team-cta{
+ position:relative;overflow:hidden;
+ background:linear-gradient(100deg,var(--team-a),var(--team-b))!important;
+ color:#fff!important;border:0!important;font-weight:700;
+}
+.hp-hero-team:hover,#tm-new:hover{filter:brightness(1.1)}
+.hp-hero-team::before{content:"";display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:50%;background:#fff;vertical-align:1px}
+.hp-hero-team::after,#tm-new::after{
+ content:"";position:absolute;top:0;bottom:0;left:0;width:40%;
+ background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);
+ transform:translateX(-120%);pointer-events:none;
+}
+@media(prefers-reduced-motion:no-preference){.hp-hero-team::after,#tm-new::after{animation:hpTeamShine 3.4s ease-in-out infinite}}
+
+/* 휴대폰 더보기 시트의 "팀원 모집" 줄 + 아래 내비의 더보기 점 */
+.hp-sheet li button[data-more=teams]{
+ background:linear-gradient(100deg,rgba(106,61,240,.12),rgba(30,139,255,.12));
+ border-left:4px solid var(--team-a);padding-left:12px;border-radius:6px;margin:2px 0;
+}
+.hp-sheet li button[data-more=teams] b{color:var(--team-a)}
+.hp-sheet li button[data-more=teams] b::after{content:"NEW";margin-left:6px;padding:1px 6px;border-radius:999px;background:var(--team-a);color:#fff;font-size:10px;font-weight:700;vertical-align:2px}
+.hp-bnav [data-go=more]{position:relative}
+.hp-bnav [data-go=more]::after{content:"";position:absolute;top:6px;left:calc(50% + 6px);width:8px;height:8px;border-radius:50%;background:var(--team-a);box-shadow:0 0 0 2px var(--bg)}
+
+/* ---- 2. 섹션 제목: 굵게 + 왼쪽 막대 + 아래 선으로 구역이 확실히 나뉘게 ---- */
+.rail-band{border-top:1px solid var(--line)}
+.rail-band .sec-head{
+ padding:0 0 10px;margin-bottom:16px;
+ border-bottom:2px solid var(--ink);
+}
+.rail-band .sec-title{
+ font-size:26px;font-weight:800;letter-spacing:-.03em;
+ padding-left:14px;border-left:6px solid var(--accent);line-height:1.2;
+ align-items:center;
+}
+.rail-band .sec-title span{font-size:13.5px;font-weight:500;color:var(--sub)}
+.rail-band .sec-title .sec-badge{font-weight:700}
+@media(max-width:720px){
+ .rail-band .sec-title{font-size:21px;border-left-width:5px;padding-left:10px;gap:6px 8px}
+ .rail-band .sec-head{padding-bottom:8px;margin-bottom:12px}
+}

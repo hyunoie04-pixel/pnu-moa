@@ -1,0 +1,19 @@
+{
+ "css": [
+  "hyoon-plus.css",
+  "hyoon-ui.css",
+  "hyoon-bench.css",
+  "hyoon-detail.css",
+  "hyoon-emph.css"
+ ],
+ "js": [
+  "hyoon-config.js",
+  "vendor-supabase.js",
+  "hyoon-plus-core.js",
+  "hyoon-shared.js",
+  "hyoon-plus-me.js",
+  "hyoon-ui.js",
+  "hyoon-bench.js",
+  "hyoon-auth.js"
+ ]
+}

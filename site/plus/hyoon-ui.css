@@ -1,0 +1,101 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+/* =====================================================================
+   효온 UI 개편 1차 (로컬 시안) — 규칙은 preview/DESIGN.md
+   원본 template.html의 토큰(--bg, --ink …)을 그대로 쓰고 위에 덮는다
+   ===================================================================== */
+:root{--accent:#124EAA;--bnav-h:60px}
+
+/* ---------- 공통: 움직임 줄이기 (스크롤 따라 떠오르는 효과 끔) ---------- */
+.reveal,.reveal.pending{opacity:1!important;transform:none!important;transition:none!important}
+
+/* 글자: 제목은 조금 촘촘하게 */
+.sec-title,.fit-title,.page-head h2,.detail-hero h2{letter-spacing:-.02em}
+.card h3,.cbody h3{letter-spacing:-.01em}
+
+/* 마감 배지 날짜 */
+.dday .dday-date{font-size:.86em;font-weight:600;opacity:.92;margin-left:.3em}
+
+/* 데스크톱 맞춤 설정 패널: 높이 줄여서 첫 공고 줄이 첫 화면에 보이게 */
+@media(min-width:721px){
+ .fit-sec .fit-panel{padding-top:28px;padding-bottom:24px}
+ .fit-sec .fit-title{font-size:clamp(26px,2.6vw,34px);margin-bottom:6px}
+ .fit-sec .fit-sub{margin-bottom:16px}
+ .fit-sec .fit-label{display:none}
+ .fit-sec .privacy{margin-top:10px}
+ #mine-out > .rail-band:first-child{padding-top:28px}
+}
+/* 첫 줄 다음에 오는 로그인 안내 띠: 위아래 여백 */
+#mine-out > .wrap:has(.hp-cta-strip){margin-top:-12px;margin-bottom:12px}
+
+/* 인스타 안내는 공고 다음, 맨 아래로 */
+#mine.on{display:flex;flex-direction:column}
+#mine > .fit-sec{order:0}
+#mine > #mine-out,#mine > :not(.fit-sec):not(#ig-promo-wrap){order:1}
+#mine > #ig-promo-wrap{order:2;margin-bottom:40px}
+
+/* 첫 방문 접힌 맞춤 설정 카드 (휴대폰) */
+.hp-fit-cta{display:none}
+.fit-panel.hp-fit-collapsed{padding:16px 18px}
+.fit-panel.hp-fit-collapsed .hp-fit-cta{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.fit-panel.hp-fit-collapsed #fit-form-wrap{display:none}
+.hp-fit-cta b{display:block;font-size:16px;color:#fff}
+.hp-fit-cta span{display:block;font-size:13px;color:var(--dark-sub);margin-top:2px}
+.hp-fit-open{flex:none;height:44px;padding:0 16px;border-radius:var(--btn-radius);background:#fff;color:var(--dark-bg);font-weight:700;font-size:14px}
+
+/* ---------- 아래 내비 (휴대폰) ---------- */
+.hp-bnav{display:none}
+.hp-sheet{border:0;padding:0;margin:auto auto 0;width:100%;max-width:560px;border-radius:16px 16px 0 0;background:var(--surface);color:var(--ink)}
+.hp-sheet::backdrop{background:rgba(15,31,58,.45)}
+.hp-sheet-in{padding:10px 16px calc(16px + env(safe-area-inset-bottom))}
+.hp-sheet-grip{width:40px;height:4px;border-radius:2px;background:var(--line);margin:2px auto 10px}
+.hp-sheet h2{margin:0 0 6px;font-size:17px}
+.hp-sheet ul{list-style:none;margin:0;padding:0}
+.hp-sheet li button{display:flex;flex-direction:column;align-items:flex-start;width:100%;min-height:56px;padding:9px 4px;border-bottom:1px solid var(--line);text-align:left}
+.hp-sheet li:last-child button{border-bottom:0}
+.hp-sheet li b{font-size:15.5px;font-weight:600}
+.hp-sheet li span{font-size:13px;color:var(--sub)}
+.hp-sheet-close{width:100%;margin-top:10px;height:46px}
+@media(prefers-reduced-motion:no-preference){.hp-sheet[open]{animation:hpSheetUp .22s ease-out}}
+@keyframes hpSheetUp{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+
+@media(max-width:720px){
+ /* 헤더: 로고 · 알림 · 로그인만 */
+ header .nav-center,header .brand-kr,header .ig-link,header .profile-trigger,header .status{display:none!important}
+ header .bar{grid-template-columns:auto 1fr;min-height:56px}
+ header .bar-right{gap:4px}
+ .hp-preview-bar{font-size:12px;padding:5px 12px}
+
+ .hp-bnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:55;
+  height:calc(var(--bnav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);
+  background:var(--surface);border-top:1px solid var(--line)}
+ .hp-bnav button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:var(--bnav-h);color:var(--sub);font-size:11.5px;font-weight:500}
+ .hp-bnav button.on{color:var(--dark-bg);font-weight:700}
+ .hp-bnav button.on svg{stroke-width:2.3}
+ .hp-bnav-n{position:absolute;top:6px;left:calc(50% + 6px);min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--accent);color:#fff;font-size:10px;font-style:normal;font-weight:700;line-height:16px}
+ body{padding-bottom:calc(var(--bnav-h) + env(safe-area-inset-bottom))}
+ body.hp-on-detail .hp-bnav{display:none}
+ body.hp-on-detail{padding-bottom:0}
+ .hp-toast{bottom:calc(var(--bnav-h) + 16px + env(safe-area-inset-bottom))!important}
+ .mock-badge{bottom:calc(var(--bnav-h) + 8px)}
+
+ /* 맞춤 설정 요약: 휴대폰에서는 숫자만, TOP3 카드는 아래 목록과 겹쳐서 숨김 */
+ .fit-sec{padding-top:12px}
+ #fit-top3-card{display:none}
+
+ /* 로그인 안내 띠: 한 줄로 작게 */
+ .hp-cta-strip{padding:12px 14px!important;gap:10px!important;flex-direction:row!important;align-items:center!important}
+ .hp-cta-strip span{display:none!important}
+ .hp-cta-strip b{font-size:14px}
+ .hp-cta-strip .btn-fill{flex:none;width:auto!important;height:40px;min-height:40px;padding:0 14px;font-size:13.5px}
+
+ /* 전체 탭: 검색과 정렬을 한 줄로 */
+ #all .tools{display:grid;grid-template-columns:minmax(0,1fr) 142px;gap:8px;align-items:end}
+ #all .tools label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ #all .tools select{width:100%}
+ #all .origin-bar-label{display:none}
+ #all .summary{margin-top:8px}
+ .all-wrap{padding-top:16px}
+}
+
+/* 글자 없는 공고(포스터 대신 정보 카드) 주황 톤: 대비 4.5:1 이상으로 */
+.ph[data-tone="3"]{--tc:#9A4508}
