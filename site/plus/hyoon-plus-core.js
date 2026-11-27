@@ -344,7 +344,17 @@ function openOnboarding(then,editMode){
     <label><input type="checkbox" id="c-all"><b>전체 동의</b></label>
     <label><input type="checkbox" data-c="terms"${st.consent.terms?' checked':''}><span><em class="req">필수</em> 이용약관 동의</span></label>
     <label><input type="checkbox" data-c="age14"${st.consent.age14?' checked':''}><span><em class="req">필수</em> 만 14세 이상이에요</span></label>
-    <label><input type="checkbox" data-c="privacy"${st.consent.privacy?' checked':''}><span><em class="req">필수</em> 개인정보 수집·이용 동의 <small>이메일, 닉네임, 소속(단과대학·학과·학년), 희망 직무 · 회원 관리와 맞춤 공고 제공 · 탈퇴 시 즉시 삭제</small></span></label>
+    <label><input type="checkbox" data-c="privacy"${st.consent.privacy?' checked':''}><span><em class="req">필수</em> 개인정보 수집·이용 동의 <small>가입 때 입력하는 소속·학년·희망 직무 등을 저장해요 · 맞춤 공고 안내와 개인을 알아볼 수 없는 통계 분석에 써요 · 탈퇴 시 바로 삭제</small></span></label>
+    <details class="hp-consent-detail"><summary>수집하는 정보와 쓰임 자세히 보기</summary>
+     <dl>
+      <dt>수집 항목</dt><dd>구글 계정의 이메일·이름, 닉네임, 소속(과정·단과대학·학과·학년), 희망 직무, 관심 분야, 동의 기록, 내 일정(담은 공고·지원 상태·메모), 직접 적은 경우의 소개·연락 방법</dd>
+      <dt>이용 목적</dt><dd>회원 확인과 로그인, 내 일정 저장, 소속·희망 직무에 맞는 공고 안내, <b>서비스 개선을 위한 통계 분석</b>(예: 단과대·학년별로 많이 보는 공고). 통계는 <b>개인을 알아볼 수 없게 집계한 형태로만</b> 쓰고, 이름·이메일은 통계에 쓰지 않아요.</dd>
+      <dt>보유 기간</dt><dd>탈퇴할 때까지. 탈퇴하면 바로 삭제돼요.</dd>
+      <dt>보관 장소</dt><dd>Supabase 데이터베이스(프랑스 파리 서버)</dd>
+      <dt>동의하지 않으면</dt><dd>가입만 할 수 없어요. 공고 보기·검색 등 기본 기능은 로그인 없이 계속 쓸 수 있어요.</dd>
+     </dl>
+     <p><a href="privacy.html" target="_blank" rel="noopener">개인정보처리방침 전문</a> · <a href="terms.html" target="_blank" rel="noopener">이용약관 전문</a></p>
+    </details>
     ${HP.flags.consentKinds.includes('research')?`<label><input type="checkbox" data-c="research"${st.consent.research?' checked':''}><span><em class="opt">선택</em> 서비스 개선·통계 분석에 이용 기록 활용 <small>본 공고·저장·검색·일정 담기 기록을 내 계정과 연결해 분석해요(예: "공대생이 많이 보는 공고"). 분석 결과는 개인을 알아볼 수 없는 통계로만 써요 · 동의 철회 또는 탈퇴 시 연결을 끊어요</small></span></label>`:''}
     ${HP.flags.consentKinds.includes('personalize')?`<label><input type="checkbox" data-c="personalize"${st.consent.personalize?' checked':''}><span><em class="opt">선택</em> 맞춤 추천에 내 이용 기록 반영 <small>자주 본 분야를 추천 순서에 반영해요</small></span></label>`:''}
     ${HP.flags.consentKinds.includes('notify')?`<label><input type="checkbox" data-c="notify"${st.consent.notify?' checked':''}><span><em class="opt">선택</em> 마감 알림 메일 받기 <small>내 일정에 담은 공고의 마감 전 알림 (시안에서는 발송 안 함)</small></span></label>`:''}
