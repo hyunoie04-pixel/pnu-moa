@@ -214,7 +214,7 @@ W.addEventListener('storage',e=>{if(e.key===ADMIN_KEY){build();renderMine();rend
 
 /* ---------- 이벤트 버스 ---------- */
 const bus={};
-const FLAGS=Object.assign({pnu:false,teams:true,promo:true,signals:true,demoStats:true,publicPf:true},W.HYOON_FLAGS||{});   /* 기능 스위치 (plus/hyoon-config.js) */
+const FLAGS=Object.assign({pnu:false,teams:true,promo:true,signals:true,demoStats:true,publicPf:true,consentKinds:['research','personalize','notify']},W.HYOON_FLAGS||{});   /* 기능 스위치 (plus/hyoon-config.js) */
 const HP=W.HP={
  flags:FLAGS,
  pnuOn:!!FLAGS.pnu,
@@ -345,9 +345,9 @@ function openOnboarding(then,editMode){
     <label><input type="checkbox" data-c="terms"${st.consent.terms?' checked':''}><span><em class="req">필수</em> 이용약관 동의</span></label>
     <label><input type="checkbox" data-c="age14"${st.consent.age14?' checked':''}><span><em class="req">필수</em> 만 14세 이상이에요</span></label>
     <label><input type="checkbox" data-c="privacy"${st.consent.privacy?' checked':''}><span><em class="req">필수</em> 개인정보 수집·이용 동의 <small>이메일, 닉네임, 소속(단과대학·학과·학년), 희망 직무 · 회원 관리와 맞춤 공고 제공 · 탈퇴 시 즉시 삭제</small></span></label>
-    <label><input type="checkbox" data-c="research"${st.consent.research?' checked':''}><span><em class="opt">선택</em> 서비스 개선·통계 분석에 이용 기록 활용 <small>본 공고·저장·검색·일정 담기 기록을 내 계정과 연결해 분석해요(예: "공대생이 많이 보는 공고"). 분석 결과는 개인을 알아볼 수 없는 통계로만 써요 · 동의 철회 또는 탈퇴 시 연결을 끊어요</small></span></label>
-    <label><input type="checkbox" data-c="personalize"${st.consent.personalize?' checked':''}><span><em class="opt">선택</em> 맞춤 추천에 내 이용 기록 반영 <small>자주 본 분야를 추천 순서에 반영해요</small></span></label>
-    <label><input type="checkbox" data-c="notify"${st.consent.notify?' checked':''}><span><em class="opt">선택</em> 마감 알림 메일 받기 <small>내 일정에 담은 공고의 마감 전 알림 (시안에서는 발송 안 함)</small></span></label>
+    ${HP.flags.consentKinds.includes('research')?`<label><input type="checkbox" data-c="research"${st.consent.research?' checked':''}><span><em class="opt">선택</em> 서비스 개선·통계 분석에 이용 기록 활용 <small>본 공고·저장·검색·일정 담기 기록을 내 계정과 연결해 분석해요(예: "공대생이 많이 보는 공고"). 분석 결과는 개인을 알아볼 수 없는 통계로만 써요 · 동의 철회 또는 탈퇴 시 연결을 끊어요</small></span></label>`:''}
+    ${HP.flags.consentKinds.includes('personalize')?`<label><input type="checkbox" data-c="personalize"${st.consent.personalize?' checked':''}><span><em class="opt">선택</em> 맞춤 추천에 내 이용 기록 반영 <small>자주 본 분야를 추천 순서에 반영해요</small></span></label>`:''}
+    ${HP.flags.consentKinds.includes('notify')?`<label><input type="checkbox" data-c="notify"${st.consent.notify?' checked':''}><span><em class="opt">선택</em> 마감 알림 메일 받기 <small>내 일정에 담은 공고의 마감 전 알림 (시안에서는 발송 안 함)</small></span></label>`:''}
    </div><p class="hp-err" id="ob-err" role="alert"></p>`;
   const last=step===3||editMode&&step===2;
   box.innerHTML=head+body+`<div class="hp-actions">${step>(editMode?1:0)?'<button type="button" class="btn-outline" id="ob-prev">이전</button>':'<span></span>'}<button type="button" class="btn-fill" id="ob-next">${last?(editMode?'저장':'가입 완료'):'다음'}</button></div>`;

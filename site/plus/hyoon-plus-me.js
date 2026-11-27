@@ -240,10 +240,10 @@ function renderSet(body,u){
     <p class="hp-acct"><span class="hp-badge">${u.provider==='kakao'?'카카오':u.provider==='google'?'구글':'메일'} 로그인</span> ${h(u.email||'(이메일 없음)')}</p>
     ${HP.pnuOn||u.verified?`<div class="hp-pnu-box ${u.verified?'ok':''}"><div><b>${u.verified?'부산대 인증 완료':'부산대 인증 전'}</b><small>${u.verified?h(HP.maskMail(u.pnu_email))+' · '+h(new Date(u.pnu_verified_at||Date.now()).toLocaleDateString('ko-KR'))+' 인증':'학교 메일로 코드를 받아 인증하면 팀원 모집 글을 쓸 수 있고, 지원·후기에 인증 마크가 보여요.'}</small></div>${u.verified?'':'<button type="button" class="btn-fill" id="set-pnu">인증하기</button>'}</div>`:''}
    </section>
-   <section><h4>선택 동의</h4>
-    <label class="hp-toggle"><input type="checkbox" data-c="research"${c.research?' checked':''}><span><b>이용 기록 분석</b><small>본 공고·저장·일정 기록을 내 계정과 연결해 통계 분석에 써요.</small></span></label>
-    <label class="hp-toggle"><input type="checkbox" data-c="personalize"${c.personalize?' checked':''}><span><b>맞춤 추천</b><small>자주 본 분야를 추천 순서에 반영해요.</small></span></label>
-    <label class="hp-toggle"><input type="checkbox" data-c="notify"${c.notify?' checked':''}><span><b>마감 알림 메일</b><small>${h(u.email||HP.maskMail(u.pnu_email)||'메일 없음')} 로 보내요. (시안에서는 발송 안 함)</small></span></label>
+   <section><h4>${HP.flags.consentKinds.length?'선택 동의':'동의'}</h4>
+    ${HP.flags.consentKinds.includes('research')?`<label class="hp-toggle"><input type="checkbox" data-c="research"${c.research?' checked':''}><span><b>이용 기록 분석</b><small>본 공고·저장·일정 기록을 내 계정과 연결해 통계 분석에 써요.</small></span></label>`:''}
+    ${HP.flags.consentKinds.includes('personalize')?`<label class="hp-toggle"><input type="checkbox" data-c="personalize"${c.personalize?' checked':''}><span><b>맞춤 추천</b><small>자주 본 분야를 추천 순서에 반영해요.</small></span></label>`:''}
+    ${HP.flags.consentKinds.includes('notify')?`<label class="hp-toggle"><input type="checkbox" data-c="notify"${c.notify?' checked':''}><span><b>마감 알림 메일</b><small>${h(u.email||HP.maskMail(u.pnu_email)||'메일 없음')} 로 보내요. (시안에서는 발송 안 함)</small></span></label>`:''}
     <p class="hp-hint">필수 동의(이용약관, 개인정보 수집·이용)는 ${c.at?h(new Date(c.at).toLocaleDateString('ko-KR')):''}에 했어요. 철회하려면 탈퇴해 주세요. 내 정보를 보고 싶거나 고치거나 지우고 싶으면 <a href="#feedback">의견 보내기</a>로 요청해 주세요(확인 후 10일 안에 처리해요).</p>
    </section>
    <section><h4>팀원 모집용 연락처</h4>
@@ -263,8 +263,22 @@ function renderSet(body,u){
   const cc=ct?HP.contactCheck(ct):{ok:true,value:''};if(!cc.ok){HP.toast(cc.err);return}
   DB.updateMe({contact:cc.value,bio:body.querySelector('#set-bio').value.trim(),skills:body.querySelector('#set-skills').value.split(/[,，]/).map(s=>s.trim()).filter(Boolean).slice(0,8)});HP.toast('저장했어요')};
  const del=body.querySelector('#set-del');
- del.onclick=()=>{if(del.dataset.armed!=='1'){del.dataset.armed='1';del.textContent='정말 탈퇴할까요? 한 번 더 누르면 바로 지워져요';setTimeout(()=>{if(del.isConnected){del.dataset.armed='';del.textContent='탈퇴하기'}},5000);return}
-  DB.deleteMe();HP.renderAuth();HP.toast('탈퇴했어요. 그동안 고마웠어요');location.hash='mine'};
+ del.onclick=()=>{
+  const u2=DB.me();if(!u2)return;
+  const list=['계정과 프로필(소속·희망 직무·닉네임)','내 일정과 지원 기록','포트폴리오','동의 기록'];
+  if(HP.flags.teams)list.splice(3,0,'내가 만든 팀 모집 글과 받은 지원');
+  const d=HP.modal(`<form class="hp-form" id="del-form" novalidate><h2>정말 탈퇴할까요?</h2>
+   <p class="hp-sub">탈퇴하면 아래 정보가 <b>바로 영구 삭제</b>되고 되돌릴 수 없어요.</p>
+   <ul class="hp-del-list">${list.map(x=>`<li>${h(x)}</li>`).join('')}</ul>
+   <p class="hp-hint">포트폴리오·일정이 필요하면 탈퇴하기 전에 먼저 <b>PDF로 저장</b>하거나 글로 복사해 두세요. 익명 이용 통계는 개인을 알 수 없는 형태로 남을 수 있어요.</p>
+   <div class="hp-field"><label for="del-ok">계속하려면 <b>탈퇴</b>라고 입력해 주세요</label><input id="del-ok" autocomplete="off" placeholder="탈퇴"></div>
+   <div class="hp-actions"><button type="button" class="btn-outline" data-close>취소</button><button type="submit" class="btn-fill danger" id="del-go" disabled>영구 삭제하고 탈퇴</button></div></form>`);
+  const inp=d.querySelector('#del-ok'),go=d.querySelector('#del-go');
+  inp.addEventListener('input',()=>{go.disabled=inp.value.trim()!=='탈퇴'});
+  d.querySelector('#del-form').onsubmit=e=>{e.preventDefault();if(inp.value.trim()!=='탈퇴')return;
+   d.close();DB.deleteMe();HP.renderAuth();HP.toast('탈퇴했어요. 그동안 고마웠어요');location.hash='mine'};
+  setTimeout(()=>inp.focus(),50);
+ };
 }
 
 HP.on('route',r=>{if(r==='me')renderMe()});

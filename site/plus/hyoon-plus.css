@@ -382,3 +382,9 @@
 .hp-tm-poster span{color:var(--sub)}
 .hp-tm-poster small{color:#124EAA;font-weight:600}
 @media(max-width:640px){.hp-tposter{width:64px}.hp-tposter.lg{width:88px}.hp-team-head{gap:12px}}
+
+/* 탈퇴 확인 창 */
+.hp-del-list{margin:8px 0 12px;padding-left:20px}
+.hp-del-list li{margin:3px 0;font-size:14px}
+.btn-fill.danger{background:#B3261E;border-color:#B3261E;color:#fff}
+.btn-fill.danger:disabled{background:#d9a8a4;border-color:#d9a8a4;cursor:not-allowed;opacity:1}
