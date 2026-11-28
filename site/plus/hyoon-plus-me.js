@@ -120,11 +120,11 @@ function renderCal(body,u){
     <input class="hp-memo" data-k="memo" value="${h(x.memo)}" placeholder="메모 (예: 자소서 초안 11/28까지)" maxlength="120" aria-label="메모"></div>
    <div class="hp-cal-ctl">
     <label class="sr" for="st-${h(x.id)}">진행 상태</label><select id="st-${h(x.id)}" data-k="status">${ST.map(([k,n])=>`<option value="${k}"${k===x.status?' selected':''}>${n}</option>`).join('')}</select>
-    <label class="sr" for="rm-${h(x.id)}">알림</label><select id="rm-${h(x.id)}" data-k="remind" ${x.end?'':'disabled'}>${REM.map(([k,n])=>`<option value="${k}"${+x.remind===k?' selected':''}>${n}</option>`).join('')}</select>
+    ${HP.flags.consentKinds.includes('notify')?`<label class="sr" for="rm-${h(x.id)}">알림</label><select id="rm-${h(x.id)}" data-k="remind" ${x.end?'':'disabled'}>${REM.map(([k,n])=>`<option value="${k}"${+x.remind===k?' selected':''}>${n}</option>`).join('')}</select>`:''}
     <div class="hp-cal-btns">${rvOk?'<button type="button" class="hp-link" data-a="review">한 줄 후기 남기기</button>':''}${pfOk?'<button type="button" class="hp-link" data-a="pf">포트폴리오에 기록</button>':''}<button type="button" class="hp-link danger" data-a="del">빼기</button></div>
    </div></li>`};
  const counts={};items.forEach(x=>counts[x.status]=(counts[x.status]||0)+1);
- body.innerHTML=`<div class="hp-sec-head"><div><h3>내 일정</h3><p>담은 공고의 마감일과 지원 상태를 한눈에 봐요. 알림은 마감 전 메일로 보내 드릴 예정이에요(시안에서는 발송 안 함).</p></div>
+ body.innerHTML=`<div class="hp-sec-head"><div><h3>내 일정</h3><p>담은 공고의 마감일과 지원 상태를 한눈에 봐요.${HP.flags.consentKinds.includes('notify')?' 알림을 정해 두면 마감 전에 메일로 알려 드려요.':' 마감 알림 메일은 준비 중이에요.'}</p></div>
   <div class="hp-row-btns"><a class="btn-outline" href="#calendar">마감 달력 보기</a></div></div>
   ${items.length?`<div class="hp-pipe">${ST.map(([k,n])=>`<span class="${counts[k]?'on':''}">${n} <b>${counts[k]||0}</b></span>`).join('')}</div>`:''}
   ${items.length?`<ul class="hp-cal-list">${up.map(row).join('')}</ul>${past.length?`<details class="hp-past"><summary>지난 일정 ${past.length}건</summary><ul class="hp-cal-list">${past.map(row).join('')}</ul></details>`:''}`

@@ -166,6 +166,7 @@ function flushLog(reason){
  clearTimeout(bufT);bufT=null;
  if(!buf.length)return;
  const batch=buf;buf=[];
+ if(!W.HYOON_PREVIEW)return;   /* 운영: 이 브라우저 기록(시안 관리자용)은 남기지 않는다. 익명 통계는 사이트 본체(track)가 서버로 보낸다 */
  const bid=uid('b');
  try{
   if(!sessionSent){
@@ -356,7 +357,7 @@ function openOnboarding(then,editMode){
     <label><input type="checkbox" data-c="privacy"${st.consent.privacy?' checked':''}><span><em class="req">필수</em> 개인정보 수집·이용 동의 <small>가입 때 입력하는 소속·학년·희망 직무 등을 저장해요 · 맞춤 공고 안내와 개인을 알아볼 수 없는 통계 분석에 써요 · 탈퇴 시 바로 삭제</small></span></label>
     <details class="hp-consent-detail"><summary>수집하는 정보와 쓰임 자세히 보기</summary>
      <dl>
-      <dt>수집 항목</dt><dd>구글 계정의 이메일·이름, 닉네임, 소속(과정·단과대학·학과·학년), 희망 직무, 관심 분야, 동의 기록, 내 일정(담은 공고·지원 상태·메모), 직접 적은 경우의 소개·연락 방법${HP.flags.teams?', (팀원 모집·홍보 요청을 쓰면) 올린 글·지원·초대·신고 내용':''}</dd>
+      <dt>수집 항목</dt><dd>로그인 계정의 회원 식별값(구글은 이메일·이름, 카카오는 닉네임과 동의한 경우 이메일), 닉네임, 소속(과정·단과대학·학과·학년), 희망 직무, 관심 분야, 동의 기록, 내 일정(담은 공고·지원 상태·메모), 직접 적은 경우의 소개·연락 방법${HP.flags.teams?', (팀원 모집·홍보 요청을 쓰면) 올린 글·지원·초대·신고 내용':''}</dd>
       <dt>이용 목적</dt><dd>회원 확인과 로그인, 내 일정 저장, 소속·희망 직무에 맞는 공고 안내, <b>서비스 개선을 위한 통계 분석</b>(예: 단과대·학년별로 많이 보는 공고). 통계는 <b>개인을 알아볼 수 없게 집계한 형태로만</b> 쓰고, 이름·이메일은 통계에 쓰지 않아요.</dd>
       <dt>보유 기간</dt><dd>탈퇴할 때까지. 탈퇴하면 바로 삭제돼요.</dd>${HP.flags.teams?'<dt>다른 회원에게 보이는 정보</dt><dd>팀원 모집을 쓰면 글과 닉네임·단과대·학과·학년·소개가 로그인한 회원에게 보여요. <b>연락 방법은 합류가 확정된 팀원에게만</b> 보이고, 이메일은 보이지 않아요.</dd>':''}
       <dt>보관 장소</dt><dd>Supabase 데이터베이스(프랑스 파리 서버)</dd>
