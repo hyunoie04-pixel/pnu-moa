@@ -65,7 +65,7 @@ begin
   perform pg_temp.as_user(A);
   select public.apply_team(tid,'디자인','디자인 맡을게요') into aid;
   insert into public.zz_res (step, ok, info) values ('지원하기', aid is not null, aid::text);
-  begin perform public.apply_team(tid,'디자인','또 지원'); insert into public.zz_res values (default,'중복 지원 막힘', false, '들어감');
+  begin perform public.apply_team(tid,'디자인','또 지원할게요요'); insert into public.zz_res values (default,'중복 지원 막힘', false, '들어감');
   exception when others then insert into public.zz_res (step, ok, info) values ('중복 지원 막힘', sqlerrm like '%already_applied%', sqlerrm); end;
   begin update public.team_applications set status='accepted' where id=aid; get diagnostics n = row_count; insert into public.zz_res (step, ok, info) values ('지원자가 스스로 수락 못 함', n=0, 'rows='||n);
   exception when others then insert into public.zz_res (step, ok, info) values ('지원자가 스스로 수락 못 함', true, sqlerrm); end;
@@ -219,4 +219,4 @@ exception when others then
   insert into public.zz_res (step, ok, info) values ('!! 테스트 중단', false, sqlerrm||' @ '||replace(ctx,chr(10),' / '));
 end $$;
 
-select step, case when ok then 'PASS' else 'FAIL' end as r, left(info, 400) as info from public.zz_res order by n;
+select (select count(*) from public.zz_res where ok) as pass, (select count(*) from public.zz_res where not ok) as fail, (select string_agg(step||': '||left(info,250), ' || ' order by n) from public.zz_res where not ok) as failed;
