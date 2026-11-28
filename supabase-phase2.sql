@@ -452,6 +452,12 @@ begin
   perform set_config('hyoon.internal', '', true);
 end $$;
 
+-- 내가 요청한 홍보 (requester 칼럼은 일반 조회에서 숨기므로 이 함수로 내 글만 가져옴)
+create or replace function public.my_promo_requests() returns setof public.promo_posts
+language sql stable security definer set search_path = '' as $$
+  select * from public.promo_posts where requester = auth.uid() order by created_at desc;
+$$;
+
 -- ---------------------------------------------------------------------
 -- 관리자 집계 (회원 개인정보 없이 숫자만)
 -- ---------------------------------------------------------------------
@@ -585,6 +591,8 @@ grant execute on function
   to authenticated;
 revoke execute on function public.team_by_code(text) from public;
 grant execute on function public.team_by_code(text) to anon, authenticated;
+revoke execute on function public.my_promo_requests() from public, anon;
+grant execute on function public.my_promo_requests() to authenticated;
 revoke execute on function public.promo_hit(uuid, text) from public;
 grant execute on function public.promo_hit(uuid, text) to anon, authenticated;
 revoke all on public.member_cards from public, anon, authenticated;
