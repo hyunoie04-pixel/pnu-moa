@@ -103,7 +103,8 @@ async function onSession(session,fresh){
    document.querySelectorAll('dialog.hp-modal[open]').forEach(d=>d.close());
   }
   if(!user.onboarded){ if(!obShown){obShown=true;HP.openOnboarding()} }
-  else{ HP.syncProfileFromUser(user); if(fresh)HP.toast('로그인했어요'); HP.emit('auth') }
+  else{ HP.syncProfileFromUser(user); if(fresh)HP.toast('로그인했어요'); HP.emit('auth');
+   try{const rh=sessionStorage.getItem('hp-return-hash');if(rh){sessionStorage.removeItem('hp-return-hash');if(rh!==location.hash)setTimeout(()=>{location.hash=rh},300)}}catch(e){} }
  }finally{busy=false}
 }
 
@@ -147,7 +148,7 @@ HP.sbAuth={
   const redirectTo=location.origin+location.pathname;
   const opt={redirectTo};
   if(provider==='kakao')opt.scopes='profile_nickname';   // 이메일 권한이 아직 없어서 닉네임만 요청 (비즈 앱 전환 뒤 이메일 추가)
-  try{sessionStorage.setItem('hp-oauth-go','1')}catch(e){}
+  try{sessionStorage.setItem('hp-oauth-go','1');if(/^#(join-|teams|me|promo)/.test(location.hash))sessionStorage.setItem('hp-return-hash',location.hash)}catch(e){}   // 로그인 뒤 보던 화면(초대 링크 등)으로 돌아오기
   return sb.auth.signInWithOAuth({provider,options:opt}).then(({error})=>{if(error)HP.toast('로그인을 시작하지 못했어요: '+error.message)});
  },
  client:sb

@@ -12,8 +12,11 @@
   "hyoon-plus-core.js",
   "hyoon-shared.js",
   "hyoon-plus-me.js",
+  "hyoon-plus-teams.js",
+  "hyoon-plus-promo.js",
   "hyoon-ui.js",
   "hyoon-bench.js",
-  "hyoon-auth.js"
+  "hyoon-auth.js",
+  "hyoon-server.js"
  ]
 }

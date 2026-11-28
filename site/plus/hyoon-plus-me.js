@@ -268,7 +268,7 @@ function renderSet(body,u){
   const u2=DB.me();if(!u2)return;
   const list=['계정과 프로필(소속·희망 직무·닉네임)','내 일정과 지원 기록','동의 기록'];
   if(HP.flags.portfolio)list.splice(2,0,'포트폴리오');
-  if(HP.flags.teams)list.splice(3,0,'내가 만든 팀 모집 글과 받은 지원');
+  if(HP.flags.teams)list.splice(3,0,'내가 올린 팀 모집 글·지원·초대·팀 구해요 글과 신고 내용');
   const d=HP.modal(`<form class="hp-form" id="del-form" novalidate><h2>정말 탈퇴할까요?</h2>
    <p class="hp-sub">탈퇴하면 아래 정보가 <b>바로 영구 삭제</b>되고 되돌릴 수 없어요.</p>
    <ul class="hp-del-list">${list.map(x=>`<li>${h(x)}</li>`).join('')}</ul>
