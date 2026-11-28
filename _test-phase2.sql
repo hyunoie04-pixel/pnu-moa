@@ -1,5 +1,6 @@
 -- 시험 프로젝트 전용: 2차 DB(팀·홍보)의 권한과 흐름을 가짜 회원 5명으로 검증. 운영에는 실행하지 않음.
 create table if not exists public.zz_res (n serial, step text, ok boolean, info text);
+alter table public.zz_res disable row level security;
 truncate public.zz_res restart identity;
 grant all on public.zz_res to authenticated, anon;
 grant usage, select on sequence public.zz_res_n_seq to authenticated, anon;
