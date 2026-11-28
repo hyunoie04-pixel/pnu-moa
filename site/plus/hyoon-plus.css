@@ -404,3 +404,8 @@
 .hp-consent-detail dd{margin:0;line-height:1.5}
 .hp-consent-detail p{margin:4px 0 0}
 @media(max-width:520px){.hp-consent-detail{margin-left:0}.hp-consent-detail dl{grid-template-columns:1fr}.hp-consent-detail dt{margin-top:4px}}
+/* 홍보 요청: 사진 미리보기, 신청·문의 방법 */
+.hp-poster-prev{margin-top:8px;display:flex;align-items:flex-end;gap:12px}
+.hp-poster-prev img{max-width:160px;max-height:200px;border-radius:8px;border:1px solid var(--line);object-fit:cover}
+.hp-promo-contact{margin:14px 0 0;padding:12px 14px;background:var(--bg);border-radius:10px;font-size:14.5px;word-break:break-all}
+.hp-promo-contact b{margin-right:8px}

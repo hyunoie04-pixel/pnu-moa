@@ -160,6 +160,23 @@ S.promo={
    promoAt=0;return {ok:true};
   }catch(e){return {ok:false,err:errText(e)}}
  },
+ /* 포스터 사진 올리기: 줄인 JPEG를 내 폴더(회원 id)에 올리고 공개 주소를 돌려준다 */
+ async uploadPoster(file){
+  const g=need();if(g)return g;
+  let blob;
+  try{blob=await HP.shrinkImage(file,1280,900*1024)}
+  catch(e){return {ok:false,err:e&&e.message==='toolarge'?'사진이 너무 커요. 더 작은 사진으로 올려 주세요':'사진을 읽지 못했어요. jpg·png·webp 사진인지 확인해 주세요'}}
+  const id=(W.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+Math.random().toString(36).slice(2,8);
+  const path=meId()+'/'+id+'.jpg';
+  try{
+   const r=await sb.storage.from('promo-posters').upload(path,blob,{contentType:'image/jpeg',cacheControl:'31536000'});
+   if(r.error){
+    const m=String(r.error.message||'');
+    return {ok:false,err:/row-level|policy|unauthor/i.test(m)?'올릴 수 있는 사진은 한 사람당 10장까지예요':/size|exceed|large/i.test(m)?'사진이 너무 커요':'사진을 올리지 못했어요. 잠시 뒤 다시 시도해 주세요'}
+   }
+   return {ok:true,url:sb.storage.from('promo-posters').getPublicUrl(path).data.publicUrl};
+  }catch(e){return {ok:false,err:errText(e)}}
+ },
  hit(id,kind){try{sb.rpc('promo_hit',{p_id:id,p_kind:kind}).then(()=>{},()=>{})}catch(e){}}
 };
 

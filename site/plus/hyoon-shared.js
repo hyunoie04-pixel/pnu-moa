@@ -39,6 +39,24 @@ function contactHtml(v){
  return `<span>${e}</span> ${copy}`;
 }
 HP.contactCheck=contactCheck;HP.contactHtml=contactHtml;
+/* 사진 줄이기: 긴 변 1280px 이하 JPEG(투명은 흰 배경)로 바꿔 보낸다. 올리기 한도(1MB)에 걸리지 않게 화질을 단계적으로 낮춘다. 해석 못 하는 파일이면 거절 */
+HP.shrinkImage=async function(file,maxEdge,maxBytes){
+ maxEdge=maxEdge||1280;maxBytes=maxBytes||900*1024;
+ let bmp;
+ try{bmp=await createImageBitmap(file)}catch(e){
+  bmp=await new Promise((res,rej)=>{const im=new Image(),u=URL.createObjectURL(file);im.onload=()=>{URL.revokeObjectURL(u);res(im)};im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('decode'))};im.src=u});
+ }
+ const w0=bmp.width||bmp.naturalWidth,h0=bmp.height||bmp.naturalHeight;
+ if(!w0||!h0)throw new Error('decode');
+ const k=Math.min(1,maxEdge/Math.max(w0,h0)),w=Math.max(1,Math.round(w0*k)),hh=Math.max(1,Math.round(h0*k));
+ const c=document.createElement('canvas');c.width=w;c.height=hh;
+ const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,w,hh);g.drawImage(bmp,0,0,w,hh);
+ for(const q of [0.86,0.74,0.62,0.5]){
+  const b=await new Promise(r=>c.toBlob(r,'image/jpeg',q));
+  if(b&&b.size<=maxBytes)return b;
+ }
+ throw new Error('toolarge');
+};
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-copy]');if(!b)return;
  (navigator.clipboard?navigator.clipboard.writeText(b.dataset.copy):Promise.reject()).then(()=>HP.toast('복사했어요'),()=>HP.toast('복사하지 못했어요. 길게 눌러 복사해 주세요'))});
 })();

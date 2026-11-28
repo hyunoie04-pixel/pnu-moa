@@ -60,9 +60,11 @@ function openPost(id){
   <p class="hp-sub">${h(p.summary)}</p>
   <dl class="hp-promo-dl"><div><dt>기간</dt><dd>${h(period)} ${p.end?`<b>${h(HP.ddayText(p.end))}</b>`:''}</dd></div></dl>
   ${p.body?`<div class="hp-promo-body">${h(p.body).replace(/\n/g,'<br>')}</div>`:''}
+  ${p.link&&!okUrl(p.link)?`<div class="hp-promo-contact" data-promo-contact><b>신청·문의</b> ${HP.contactHtml(p.link)}</div>`:''}
   <div class="hp-actions">${okUrl(p.link)?`<a class="btn-fill" href="${h(p.link)}" target="_blank" rel="noopener noreferrer" data-promo-link>신청·문의 열기</a>`:'<span></span>'}<button type="button" class="btn-outline" data-close>닫기</button></div>
   <p class="hp-fine">${p.sponsored?'광고·제휴 게시물이에요. 일반 공고의 추천·인기 순위와 따로 보여 드려요. ':'효온이 확인해 올린 학생 단체 홍보예요. '}신청 전에 링크 내용을 꼭 확인해 주세요.</p></div>`,{wide:true});
  const a=d.querySelector('[data-promo-link]');if(a)a.addEventListener('click',()=>{bump(id,'clicks');HP.log('promo_click',{list:'promo',status:p.kind,extra:{promo_id:id}})});
+ const ct=d.querySelector('[data-promo-contact]');if(ct)ct.addEventListener('click',e=>{if(e.target.closest('a,[data-copy]')){bump(id,'clicks');HP.log('promo_click',{list:'promo',status:p.kind,extra:{promo_id:id}})}});
 }
 function openRequest(u){
  const d=HP.modal(`<form class="hp-form" id="pr-form" novalidate><span class="hp-eyebrow">홍보 요청</span><h2>알리고 싶은 소식을 보내 주세요</h2>
@@ -75,25 +77,39 @@ function openRequest(u){
   <div class="hp-field"><label for="pr-sum">한 줄 소개 <small>(필수, 80자)</small></label><input id="pr-sum" maxlength="80" placeholder="예) 매주 출사, 사진 몰라도 환영해요"></div>
   <div class="hp-grid2">
    <div class="hp-field"><label for="pr-end">모집·행사 마감일</label><input id="pr-end" type="date"></div>
-   <div class="hp-field"><label for="pr-link">신청·문의 링크 <small>(https)</small></label><input id="pr-link" type="url" placeholder="구글폼·오픈채팅·인스타 등"></div>
+   <div class="hp-field"><label for="pr-link">신청·문의 방법 <small>(선택)</small></label><input id="pr-link" type="text" maxlength="120" autocomplete="off" placeholder="인스타 @아이디 · 오픈채팅·구글폼 주소 · 이메일 · 연락처"></div>
   </div>
-  <div class="hp-field"><label for="pr-poster">포스터 이미지 주소 <small>(선택, https)</small></label><input id="pr-poster" type="url" placeholder="이미지 링크"></div>
+  <div class="hp-field"><label for="pr-poster">포스터 사진 <small>(선택, jpg·png·webp)</small></label><input id="pr-poster" type="file" accept="image/*"><div id="pr-prev" class="hp-poster-prev" hidden><img alt="포스터 미리보기"><button type="button" class="hp-link danger" id="pr-prev-x">사진 빼기</button></div></div>
   <div class="hp-field"><label for="pr-body">자세한 내용 <small>(선택, 1,000자)</small></label><textarea id="pr-body" rows="5" maxlength="1000" placeholder="활동 내용, 모집 대상, 일정 등"></textarea></div>
-  <p class="hp-hint">개인 전화번호는 쓰지 말고, 연락은 링크로 받아 주세요.</p>
+  <p class="hp-hint">여기에 적은 인스타 아이디·연락처·이메일은 <b>게시되면 누구나 볼 수 있어요.</b> 개인 번호가 부담되면 인스타 아이디나 오픈채팅·구글폼을 써 주세요. 사진에는 얼굴이나 개인 정보가 나오지 않게 해 주세요.</p>
   <p class="hp-err" id="pr-err" role="alert"></p>
   <div class="hp-actions"><button type="button" class="btn-outline" data-close>취소</button><button type="submit" class="btn-fill">요청 보내기</button></div></form>`,{wide:true});
  const q=s=>d.querySelector(s);
+ /* 사진 고르면 미리보기 */
+ q('#pr-poster').onchange=()=>{const f=q('#pr-poster').files&&q('#pr-poster').files[0],box=q('#pr-prev');
+  if(!f){box.hidden=true;return}
+  if(f.size>25*1024*1024){HP.toast('사진이 너무 커요(25MB 이하)');q('#pr-poster').value='';box.hidden=true;return}
+  box.querySelector('img').src=URL.createObjectURL(f);box.hidden=false};
+ q('#pr-prev-x').onclick=()=>{q('#pr-poster').value='';q('#pr-prev').hidden=true};
  q('#pr-form').onsubmit=async e=>{
   e.preventDefault();
-  const v={org:q('#pr-org').value.trim(),kind:q('#pr-kind').value,title:q('#pr-title').value.trim(),summary:q('#pr-sum').value.trim(),end:q('#pr-end').value,link:q('#pr-link').value.trim(),poster:q('#pr-poster').value.trim(),body:q('#pr-body').value.trim()};
+  const v={org:q('#pr-org').value.trim(),kind:q('#pr-kind').value,title:q('#pr-title').value.trim(),summary:q('#pr-sum').value.trim(),end:q('#pr-end').value,link:q('#pr-link').value.trim(),poster:'',body:q('#pr-body').value.trim()};
+  const file=q('#pr-poster').files&&q('#pr-poster').files[0];
   const err=m=>{q('#pr-err').textContent=m};
   if(!v.org||!v.title||!v.summary)return err('단체 이름, 제목, 한 줄 소개를 채워 주세요.');
   if(v.end&&v.end<today())return err('이미 지난 날짜예요.');
-  if(v.link&&!okUrl(v.link))return err('링크는 https://로 시작해야 해요.');
-  if(v.poster&&!okUrl(v.poster))return err('포스터 주소는 https://로 시작해야 해요.');
-  if(BAD.test(v.title+v.summary+v.body))return err('개인 전화번호는 빼고 보내 주세요.');
+  if(v.link){const cc=HP.contactCheck(v.link);if(!cc.ok)return err(cc.err);v.link=cc.value}
+  if(BAD.test(v.title+v.summary+v.body))return err("제목·소개·내용에는 전화번호를 쓸 수 없어요. 연락처는 '신청·문의 방법' 칸에 적어 주세요.");
+  const sub=q('#pr-form [type=submit]');
+  if(file){
+   if(sub)sub.disabled=true;
+   if(SVP()){const up=await HP.srv.promo.uploadPoster(file);if(!up.ok){if(sub)sub.disabled=false;return err(up.err)}v.poster=up.url}
+   else{try{const b=await HP.shrinkImage(file,900,300*1024);v.poster=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(b)})}catch(e2){if(sub)sub.disabled=false;return err('사진을 읽지 못했어요.')}}
+  }
   if(SVP()){
+   if(sub)sub.disabled=true;
    const r=await HP.srv.promo.request({org:v.org,kind:v.kind,title:v.title,summary:v.summary,end:v.end,link:v.link,poster:v.poster,body:v.body});
+   if(sub)sub.disabled=false;
    if(!r.ok)return err(r.err);
    HP.log('promo_submit',{status:v.kind});d.close();HP.toast('요청을 보냈어요. 관리자 확인 뒤 올라가요');renderPromo();return;
   }

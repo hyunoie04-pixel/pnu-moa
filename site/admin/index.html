@@ -1779,6 +1779,7 @@ $('v-system').onclick=async e=>{
 
 
 
+
 <!--hyoon-admin-plus-->
 <script>
 /* =====================================================================
@@ -1842,6 +1843,30 @@ function gviz(gid){
   ({promo:rPromo,members:rMembers,datalog:rDatalog,review:rReview})[b.dataset.v]?.();});
 })();
 
+/* ---------- 포스터 사진 (Storage promo-posters) ---------- */
+const PUB='/storage/v1/object/public/promo-posters/';
+async function shrink(file){
+ let bmp;try{bmp=await createImageBitmap(file)}catch(e){throw new Error('사진을 읽지 못했어요')}
+ const k=Math.min(1,1280/Math.max(bmp.width,bmp.height)),w=Math.round(bmp.width*k),h=Math.round(bmp.height*k);
+ const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,w,h);g.drawImage(bmp,0,0,w,h);
+ for(const q of [0.86,0.74,0.62,0.5]){const b=await new Promise(r=>c.toBlob(r,'image/jpeg',q));if(b&&b.size<=900*1024)return b}
+ throw new Error('사진이 너무 커요')
+}
+async function uploadPoster(file){
+ const blob=await shrink(file);
+ await api('/rest/v1/admin_emails?select=email');   // 로그인 갱신 확인
+ const id=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random().toString(36).slice(2,8));
+ const path='admin/'+id+'.jpg';
+ const r=await fetch(SB+'/storage/v1/object/promo-posters/'+path,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+S.access_token,'Content-Type':'image/jpeg','x-upsert':'false','cache-control':'max-age=31536000'},body:blob});
+ if(!r.ok){const j=await r.json().catch(()=>({}));throw new Error('사진을 올리지 못했어요: '+(j.message||r.status))}
+ return SB+PUB+path;
+}
+async function removePoster(url){
+ const i=String(url||'').indexOf(PUB);if(i<0)return;
+ const path=url.slice(i+PUB.length);
+ try{await api('/rest/v1/admin_emails?select=email');await fetch(SB+'/storage/v1/object/promo-posters/'+path,{method:'DELETE',headers:{apikey:KEY,Authorization:'Bearer '+S.access_token}})}catch(e){}
+}
+
 /* ---------- 홍보 게시판 ---------- */
 let PROMO=[],PF='pending',PEDIT=null;
 async function loadPromo(){
@@ -1884,7 +1909,7 @@ async function promoAct(id,a,btn){
   else if(a==='ad'){await patch(`/rest/v1/promo_posts?id=eq.${id}`,{sponsored:!p.sponsored})}
   else if(a==='rej'){const why=prompt('반려 사유를 적어 주세요 (120자까지, 신청자에게 보여요)','');if(why==null)return;await patch(`/rest/v1/promo_posts?id=eq.${id}`,{state:'rejected',reject_reason:String(why).trim().slice(0,120)||null})}
   else if(a==='edit'){promoForm(p);return}
-  else if(a==='del'){if(btn.dataset.armed!=='1'){btn.dataset.armed='1';btn.textContent='한 번 더 누르면 삭제';return}await api(`/rest/v1/promo_posts?id=eq.${id}`,{method:'DELETE',headers:{Prefer:'return=minimal'}})}
+  else if(a==='del'){if(btn.dataset.armed!=='1'){btn.dataset.armed='1';btn.textContent='한 번 더 누르면 삭제';return}await api(`/rest/v1/promo_posts?id=eq.${id}`,{method:'DELETE',headers:{Prefer:'return=minimal'}});if(p.poster_url)await removePoster(p.poster_url)}
   say('저장했어요');rPromo();
  }catch(e){say('실패했어요: '+errMsg(e))}
 }
@@ -1895,7 +1920,7 @@ function promoForm(p){
   <div class="grid two"><label>제목 (60자)<input id="pf-t" maxlength="60" value="${esc(v.title)}"></label><label>단체·행사 (40자)<input id="pf-o" maxlength="40" value="${esc(v.org)}"></label></div>
   <div class="grid two"><label>종류<select id="pf-k">${KINDS.map(k=>`<option${k===v.kind?' selected':''}>${k}</option>`).join('')}</select></label><label>한 줄 소개 (80자)<input id="pf-s" maxlength="80" value="${esc(v.summary)}"></label></div>
   <div class="grid two"><label>게시 시작일 (비우면 바로)<input id="pf-a" type="date" value="${esc(v.start_date||'')}"></label><label>마감일 (비우면 상시)<input id="pf-e" type="date" value="${esc(v.end_date||'')}"></label></div>
-  <div class="grid two"><label>신청·문의 링크 (https)<input id="pf-l" type="url" value="${esc(v.link||'')}"></label><label>포스터 이미지 주소 (https)<input id="pf-p" type="url" value="${esc(v.poster_url||'')}"></label></div>
+  <div class="grid two"><label>신청·문의 방법 (인스타 @아이디·링크·이메일·연락처, 120자)<input id="pf-l" type="text" maxlength="120" value="${esc(v.link||'')}"></label><label>포스터 사진 (jpg·png·webp)<input id="pf-p" type="file" accept="image/*">${v.poster_url?`<span class="muted">현재 사진 있음 <img src="${esc(v.poster_url)}" alt="" style="height:36px;vertical-align:middle;border-radius:4px"> · 새 사진을 고르면 바뀌어요 <label style="display:inline"><input type="checkbox" id="pf-pdel"> 사진 빼기</label></span>`:''}</label></div>
   <label>자세한 내용 (1,000자)<textarea id="pf-b" rows="5" maxlength="1000">${esc(v.body||'')}</textarea></label>
   <div class="ap-btns"><label><input type="checkbox" id="pf-pin"${v.pinned?' checked':''}> 상단 고정</label><label><input type="checkbox" id="pf-ad"${v.sponsored?' checked':''}> 광고·제휴(AD) 표시</label></div>
   <p class="note" id="pf-err" role="alert"></p>
@@ -1904,14 +1929,16 @@ function promoForm(p){
  g('pf-cancel').onclick=()=>{box.innerHTML=''};
  g('pf-form').onsubmit=async e=>{e.preventDefault();
   const b={title:g('pf-t').value.trim(),org:g('pf-o').value.trim(),kind:g('pf-k').value,summary:g('pf-s').value.trim(),body:g('pf-b').value.trim()||null,
-   start_date:g('pf-a').value||null,end_date:g('pf-e').value||null,link:g('pf-l').value.trim()||null,poster_url:g('pf-p').value.trim()||null,pinned:g('pf-pin').checked,sponsored:g('pf-ad').checked};
+   start_date:g('pf-a').value||null,end_date:g('pf-e').value||null,link:g('pf-l').value.trim()||null,pinned:g('pf-pin').checked,sponsored:g('pf-ad').checked};
   const er=m=>{g('pf-err').textContent=m};
   if(b.title.length<2||!b.org||b.summary.length<2)return er('제목·단체·한 줄 소개를 채워 주세요.');
-  if(b.link&&!/^https:\/\//.test(b.link))return er('링크는 https://로 시작해야 해요.');
-  if(b.poster_url&&!/^https:\/\//.test(b.poster_url))return er('포스터 주소는 https://로 시작해야 해요.');
+  if(b.link&&b.link.length>120)return er('신청·문의 방법은 120자 이내로 적어 주세요.');
   if(b.start_date&&b.end_date&&b.start_date>b.end_date)return er('시작일이 마감일보다 늦어요.');
   if(BAD.test(b.title+b.summary+(b.body||'')))return er('개인 전화번호는 쓸 수 없어요.');
   try{
+   const file=g('pf-p').files&&g('pf-p').files[0];
+   if(file){b.poster_url=await uploadPoster(file);if(p&&p.poster_url)await removePoster(p.poster_url)}
+   else if(p&&g('pf-pdel')&&g('pf-pdel').checked){b.poster_url=null;await removePoster(p.poster_url)}
    if(p)await patch(`/rest/v1/promo_posts?id=eq.${p.id}`,b);
    else await api('/rest/v1/promo_posts',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify(Object.assign(b,{state:'published',source:'admin'}))});
    say('저장했어요');box.innerHTML='';rPromo();
