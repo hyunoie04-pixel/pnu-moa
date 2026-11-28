@@ -418,6 +418,7 @@ create index if not exists promo_live_idx on public.promo_posts (state, end_date
 create or replace function private.promo_guard() returns trigger
 language plpgsql security definer set search_path = '' as $$
 begin
+  if coalesce(current_setting('hyoon.internal', true), '') = '1' then return new; end if;   -- promo_hit 같은 내부 함수
   if public.is_hyoon_admin() then
     if tg_op = 'UPDATE' and new.state = 'published' and old.state <> 'published' then new.approved_at := now(); end if;
     if tg_op = 'INSERT' and new.source = 'admin' and new.state = 'published' then new.approved_at := now(); end if;
@@ -438,10 +439,13 @@ drop trigger if exists promo_guard on public.promo_posts;
 create trigger promo_guard before insert or update on public.promo_posts for each row execute function private.promo_guard();
 
 create or replace function public.promo_hit(p_id uuid, p_kind text) returns void
-language sql security definer set search_path = '' as $$
+language plpgsql security definer set search_path = '' as $$
+begin
+  perform set_config('hyoon.internal', '1', true);
   update public.promo_posts set views = views + (p_kind = 'view')::int, clicks = clicks + (p_kind = 'click')::int
    where id = p_id and state = 'published';
-$$;
+  perform set_config('hyoon.internal', '', true);
+end $$;
 
 -- ---------------------------------------------------------------------
 -- 관리자 집계 (회원 개인정보 없이 숫자만)
