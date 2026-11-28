@@ -202,6 +202,10 @@
 .hp-lonely li{display:flex;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--bg);font-size:14px;flex-wrap:wrap}
 .hp-lonely li a{flex:1;min-width:200px}
 .hp-lonely li span{font-size:12.5px;color:var(--signal);font-weight:700}
+.hp-lonely h3 small{font-size:12.5px;font-weight:600;color:var(--sub);margin-left:6px}
+.hp-lonely-n{font-style:normal;font-size:12.5px;color:var(--sub);background:var(--bg);border-radius:999px;padding:2px 9px}
+.hp-lonely-n.has{color:#1c4fa3;background:#e6efff;font-weight:700}
+.hp-lonely ul{max-height:560px;overflow:auto}
 .hp-rules{margin-top:18px}
 .hp-team-detail .hp-team-contest{-webkit-line-clamp:2}
 .hp-team-detail .hp-team-top{padding-right:40px}

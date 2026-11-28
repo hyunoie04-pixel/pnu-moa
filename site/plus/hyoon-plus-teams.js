@@ -134,7 +134,8 @@ function renderTeams(){
  const myInv=me?DB.list('invites',x=>x.to===me.id&&x.status==='pending'):[];
  const contests=A.filter(active).filter(isContest);
  const withTeams=new Set(all.filter(teamOpen).map(t=>t.notice_id));
- const lonely=contests.filter(a=>!withTeams.has(a.id)).sort(cmpEnd).slice(0,6);
+ const teamCount={};all.filter(teamOpen).forEach(t=>{teamCount[t.notice_id]=(teamCount[t.notice_id]||0)+1});
+ const lonely=contests.slice().sort(cmpEnd);   /* 팀을 만들 수 있는 모든 공모전(팀이 이미 있어도 함께 만들 수 있다) */
  sec.innerHTML=`<div class="wrap hp-page">
   <div class="page-head"><div><h2>공모전 팀원 모집</h2><p>효온에 올라온 공모전으로 부산대 학생끼리 팀을 꾸려요. 모집글을 올려 지원을 받거나, 팀을 찾는 사람에게 직접 초대를 보낼 수 있어요.</p></div>
    <div class="hp-row-btns"><button type="button" class="btn-fill" id="tm-new">팀원 모집하기</button><button type="button" class="btn-outline" id="sk-new">${mySeek?'내 팀 구해요 수정':'팀 구해요 등록'}</button></div></div>
@@ -148,7 +149,7 @@ function renderTeams(){
    ${view==='teams'?`<div><label for="tm-only">상태</label><select id="tm-only"><option value="open"${flt.only==='open'?' selected':''}>모집 중만</option><option value="all"${flt.only==='all'?' selected':''}>전체</option></select></div>`:''}</div>
   ${view==='teams'?`<div class="summary"><h2>${list.length}팀</h2><p>모집 마감 가까운 순 · 공고 마감일이 지나면 자동으로 닫혀요</p></div>
    ${list.length?`<ul class="hp-team-grid">${list.map(teamCard).join('')}</ul>`:'<div class="empty"><p>조건에 맞는 팀이 아직 없어요. 먼저 팀을 만들어 보세요.</p></div>'}
-   ${lonely.length?`<section class="hp-lonely"><h3>아직 팀이 없는 공모전</h3><ul>${lonely.map(a=>`<li><a href="#${h(a.id)}">${h(a.title)}</a><span>${HP.ddayText(a.end)}</span><button type="button" class="hp-link" data-new-for="${h(a.id)}">이 공모전으로 팀 만들기</button></li>`).join('')}</ul></section>`:''}`
+   ${lonely.length?`<section class="hp-lonely"><h3>팀을 만들 수 있는 공모전 <small>${lonely.length}개 · 마감 임박순</small></h3><ul>${lonely.map(a=>`<li><a href="#${h(a.id)}">${h(a.title)}</a><em class="hp-lonely-n${teamCount[a.id]?' has':''}">${teamCount[a.id]?'모집 중인 팀 '+teamCount[a.id]+'개':'아직 팀 없음'}</em><span>${HP.ddayText(a.end)}</span><button type="button" class="hp-link" data-new-for="${h(a.id)}">이 공모전으로 팀 만들기</button></li>`).join('')}</ul></section>`:''}`
   :`<div class="summary"><h2>${slist.length}명</h2><p>${me&&myOpenTeams(me).length?'내 팀에 맞는 사람에게 초대를 보내 보세요':'팀장이 되면 이 사람들에게 초대를 보낼 수 있어요'}</p></div>
    ${slist.length?`<ul class="hp-team-grid">${slist.map(seekerCard).join('')}</ul>`:'<div class="empty"><p>아직 팀을 찾는 사람이 없어요.</p></div>'}`}
   <p class="hp-hint hp-rules">이용 규칙: 한 사람이 동시에 모집할 수 있는 팀은 ${MAX_OPEN}개예요. 전화번호·실명은 글에 쓰지 말아 주세요. 홍보·광고·금전 요구 글은 신고되면 숨겨져요.</p>
