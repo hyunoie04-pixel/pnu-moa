@@ -382,7 +382,7 @@ create or replace view public.member_cards with (security_invoker = false) as
   from public.profiles p
   where p.id = auth.uid()
      or exists (select 1 from public.team_seekers s where s.user_id = p.id and s.status = 'open')
-     or exists (select 1 from public.teams t where t.leader_id = p.id and t.status <> 'hidden')
+     or exists (select 1 from public.teams t where t.leader_id = p.id and t.status <> 'hidden' and public.is_team_member(t.id))   -- 팀장 정보는 합류가 확정된 팀원에게만
      or exists (select 1 from public.team_applications a join public.teams t on t.id = a.team_id
                 where a.user_id = p.id
                   and (t.leader_id = auth.uid() or (a.status = 'accepted' and public.is_team_member(t.id))))

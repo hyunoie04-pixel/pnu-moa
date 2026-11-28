@@ -23,6 +23,8 @@ function teamOpen(t){if(t.status!=='open')return false;const dl=t.deadline||t.no
 function filled(t){return t.roles.reduce((s,r)=>s+(r.filled||0),0)}
 function need(t){return t.roles.reduce((s,r)=>s+(+r.need||0),0)}
 function leaderOf(t){return DB.user(t.leader)||{nickname:'알 수 없음'}}
+/* 팀장 이름·학과는 팀장 본인과 합류가 확정된 팀원에게만 보여 준다(서버 member_cards도 같은 규칙) */
+function leaderSeen(t){const me=DB.me();return !!me&&(t.leader===me.id||DB.list('apps',a=>a.team_id===t.id&&a.uid===me.id&&a.status==='accepted').length>0)}
 function members(t){return DB.list('apps',a=>a.team_id===t.id&&a.status==='accepted')}
 function isMember(t,u){return !!u&&(t.leader===u.id||members(t).some(a=>a.uid===u.id))}
 function openRoles(t){return t.roles.filter(r=>(r.filled||0)<r.need)}
@@ -92,7 +94,7 @@ function teamCard(t){
   <p class="hp-team-contest">${h(n?n.title:t.notice_title)}</p>
   <h4>${h(t.title)}</h4>
   <p class="hp-team-roles">${t.roles.map(r=>`<span class="${(r.filled||0)>=r.need?'full':''}">${h(r.name)} ${r.filled||0}/${r.need}</span>`).join('')}</p>
-  <p class="hp-team-meta">${h(t.mode)} · 팀장 ${h(L.nickname)}${L.dept?' ('+h(L.dept)+')':''}</p>
+  <p class="hp-team-meta">${h(t.mode)} · ${leaderSeen(t)?'팀장 '+h(L.nickname)+(L.dept?' ('+h(L.dept)+')':''):'팀장 정보는 합류하면 공개'}</p>
  </span></button></li>`;
 }
 function seekerCard(s){
@@ -376,7 +378,7 @@ function joinByCode(code){
   if(isMember(t,u)){openTeam(t.id);return}
   if(!teamOpen(t)||!openRoles(t).length){HP.toast('모집이 끝난 팀이에요');openTeam(t.id);return}
   const L=leaderOf(t);
-  const d=HP.modal(`<form class="hp-form" id="jn-form"><span class="hp-eyebrow">초대 링크</span><h2>${h(L.nickname)}님의 팀에 합류할까요?</h2>
+  const d=HP.modal(`<form class="hp-form" id="jn-form"><span class="hp-eyebrow">초대 링크</span><h2>이 팀에 합류할까요?</h2>
    <p class="hp-sub"><b>${h(t.title)}</b><br>${h(t.notice_title)}</p>
    <div class="hp-field"><label for="jn-r">맡을 역할</label><select id="jn-r">${openRoles(t).map(r=>`<option>${h(r.name)}</option>`).join('')}</select></div>
    <p class="hp-hint">팀장이 보낸 링크로 들어오면 지원 없이 바로 합류해요. 합류하면 팀장 연락처가 보여요.</p>
@@ -411,7 +413,7 @@ function openTeam(id){
   <dl class="hp-team-info">
    <div><dt>구하는 역할</dt><dd class="hp-team-roles">${t.roles.map(r=>`<span class="${(r.filled||0)>=r.need?'full':''}">${h(r.name)} ${r.filled||0}/${r.need}</span>`).join('')}</dd></div>
    <div><dt>진행 방식</dt><dd>${h(t.mode)}${t.meet?' · '+h(t.meet):''}</dd></div>
-   <div><dt>팀장</dt><dd>${h(L.nickname)} ${L.verified?'<span class="hp-badge ok">부산대 인증</span>':''} <small>${h(userLine(L))}</small></dd></div>
+   <div><dt>팀장</dt><dd>${leaderSeen(t)?`${h(L.nickname)} ${L.verified?'<span class="hp-badge ok">부산대 인증</span>':''} <small>${h(userLine(L))}</small>`:'<small>이름·학과는 합류가 확정되면 공개돼요</small>'}</dd></div>
    <div><dt>팀원</dt><dd>${mem.length?mem.map(x=>h((DB.user(x.uid)||{}).nickname||'?')+` (${h(x.role)})`).join(', '):'아직 없음'}</dd></div>
   </dl>
   <h3>팀 소개</h3><p class="hp-team-intro">${h(t.intro)}</p>
