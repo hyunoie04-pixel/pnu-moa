@@ -30,7 +30,7 @@ do $$
 declare
   tid uuid; tid2 uuid; aid uuid; iid uuid; n int; v text; ok boolean; rid uuid; pid uuid; j jsonb;
   L constant int := 1; A constant int := 2; S constant int := 3; O constant int := 4; ADM constant int := 5;
-  procedure_dummy int;
+  ctx text;
 begin
   -- 1) 팀장 L: 팀 만들기
   perform pg_temp.as_user(L);
@@ -214,8 +214,9 @@ begin
   select count(*) into n from public.teams where leader_id='00000000-0000-0000-0000-0000000000a1';
   insert into public.zz_res (step, ok, info) values ('팀장 탈퇴하면 그 팀도 삭제', n=0, 'n='||n);
 exception when others then
+  get stacked diagnostics ctx = pg_exception_context;
   reset role;
-  insert into public.zz_res (step, ok, info) values ('!! 테스트 중단', false, sqlerrm);
+  insert into public.zz_res (step, ok, info) values ('!! 테스트 중단', false, sqlerrm||' @ '||replace(ctx,chr(10),' / '));
 end $$;
 
-select step, case when ok then 'PASS' else 'FAIL' end as r, left(info, 90) as info from public.zz_res order by n;
+select step, case when ok then 'PASS' else 'FAIL' end as r, left(info, 400) as info from public.zz_res order by n;
