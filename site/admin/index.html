@@ -1770,5 +1770,137 @@ $('v-system').onclick=async e=>{
  }
 })();
 </script>
+
+<!--hyoon-admin-plus-->
+<script>
+/* =====================================================================
+   효온 관리자 — 일별 분석 (하루 단위)
+   - 데이터: 운영은 rpc admin_daily(p_from,p_to) (docs/supabase-daily.sql 의 daily_stats), 시안(IS_MOCK)은 이 브라우저의 이용 기록(HPQ)으로 같은 모양을 계산
+   - 보여 주는 것: 어제 요약(전날 대비), 기간 추이 막대 그래프(지표 고르기), 일별 표, 하루를 눌러 세부(시간대·기기·유입·많이 본 공고·소속·결과 없는 검색어), CSV 내려받기
+   - 날짜는 모두 한국 시간. 오늘 줄은 집계 중이라 '진행 중'으로 표시
+   ===================================================================== */
+(function(){
+'use strict';
+const W=window;
+const METRICS=[
+ ['visitors','방문자','명'],['new_visitors','신규 방문자','명'],['returning_visitors','재방문자','명'],['sessions','세션','건'],
+ ['notice_views','공고 열람','회'],['notice_viewers','공고를 본 사람','명'],['outbound','원문 이동','회'],['outbound_rate','원문 이동률','%'],
+ ['searches','맞춤 검색','회'],['zero_searches','결과 없는 검색','회'],['saves','저장','회'],['shares','공유','회'],['calendar_adds','캘린더 담기','회'],
+ ['impressions','카드 노출','개'],['list_clicks','목록 클릭','회'],['ctr','카드 클릭률','%'],['avg_session_s','평균 머문 시간','초'],['avg_dwell_s','공고 평균 체류','초']
+];
+const M=Object.fromEntries(METRICS.map(m=>[m[0],m]));
+const pct=(a,b)=>b>0?Math.round(a/b*1000)/10:null;
+const val=(r,k)=>k==='outbound_rate'?pct(r.outbound_viewers,r.notice_viewers):k==='ctr'?pct(r.list_clicks,r.impressions):r[k];
+const fmtv=(v,k)=>v==null?'-':(M[k]&&M[k][2]==='%')?v+'%':(k==='avg_session_s'||k==='avg_dwell_s')?(v<60?Math.round(v)+'초':Math.floor(v/60)+'분 '+Math.round(v%60)+'초'):String(v);
+const today=()=>todayKST();
+const addDays=(d,n)=>{const t=new Date(d+'T00:00:00Z');t.setUTCDate(t.getUTCDate()+n);return t.toISOString().slice(0,10)};
+const obj2items=o=>Object.entries(o||{}).map(([k,n])=>({k,n})).sort((a,b)=>b.n-a.n);
+const L2={device:{mobile:'휴대폰',tablet:'태블릿',desktop:'컴퓨터','(없음)':'알 수 없음'},tab:{mine:'내게 맞는 공고',all:'전체 공고',feedback:'의견 보내기',detail:'공고 상세'}};
+
+let ROWS=[],STATE={days:14,metric:'visitors',pick:null,err:null,loading:false};
+
+/* ---------- 시안: 로컬 이용 기록으로 같은 모양 계산 ---------- */
+function localRows(from,to){
+ const ev=(W.HPQ?HPQ.read():[]).filter(e=>!e.internal);
+ const kst=t=>new Date(t).toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
+ const first={};ev.forEach(e=>{const d=kst(e.created_at);if(!first[e.visitor_id]||d<first[e.visitor_id])first[e.visitor_id]=d});
+ const by={};ev.forEach(e=>{const d=kst(e.created_at);if(d<from||d>to)return;(by[d]=by[d]||[]).push(e)});
+ return Object.keys(by).sort().map(day=>{
+  const a=by[day],cnt=t=>a.filter(e=>e.type===t).length,uniq=f=>new Set(a.filter(f).map(e=>e.visitor_id)).size;
+  const ends=a.filter(e=>e.type==='end'&&e.active_s>0).map(e=>e.active_s),dw=a.filter(e=>e.type==='dwell'&&e.active_s>0).map(e=>e.active_s);
+  const avg=x=>x.length?Math.round(x.reduce((s,v)=>s+v,0)/x.length*10)/10:null;
+  const vis=new Set(a.map(e=>e.visitor_id));
+  const tally=(f,key)=>{const o={};a.filter(f).forEach(e=>{const k=key(e);if(k!=null&&k!=='')o[k]=(o[k]||0)+1});return o};
+  const hourly=Array.from({length:24},(_,h)=>new Set(a.filter(e=>+new Date(e.created_at).toLocaleString('sv-SE',{timeZone:'Asia/Seoul'}).slice(11,13)===h).map(e=>e.visitor_id)).size);
+  const tn={};a.filter(e=>['notice','outbound','save'].includes(e.type)).forEach(e=>{const k=e.notice_key||e.notice_title;if(!k)return;const o=tn[k]=tn[k]||{key:k,title:e.notice_title||k,views:0,viewers:new Set(),outbound:0,saves:0};if(e.type==='notice'){o.views++;o.viewers.add(e.visitor_id)}else if(e.type==='outbound')o.outbound++;else o.saves++});
+  return {day,visitors:vis.size,new_visitors:[...vis].filter(v=>first[v]===day).length,returning_visitors:[...vis].filter(v=>first[v]<day).length,
+   sessions:new Set(a.map(e=>e.session_id)).size,visits:cnt('visit'),notice_views:cnt('notice'),notice_viewers:uniq(e=>e.type==='notice'),
+   outbound:cnt('outbound'),outbound_viewers:uniq(e=>e.type==='outbound'),searches:cnt('search'),keyword_searches:a.filter(e=>e.type==='filter'&&e.keyword).length,
+   zero_searches:cnt('search_zero'),saves:cnt('save'),unsaves:cnt('unsave'),shares:cnt('share'),calendar_adds:cnt('calendar_add'),
+   impressions:a.filter(e=>e.type==='impression').reduce((s,e)=>s+((e.extra&&e.extra.items)||e.items||[]).length,0),list_clicks:cnt('list_click'),
+   avg_session_s:avg(ends),median_session_s:null,avg_dwell_s:avg(dw),
+   breakdown:{hourly,device:tally(e=>true,e=>e.device),src:tally(e=>e.type==='visit',e=>e.src||'(없음)'),tab:tally(e=>e.type==='visit'||e.type==='tab',e=>e.tab),
+    college:tally(e=>e.type==='search',e=>e.college),course:tally(e=>e.type==='search',e=>e.course),grade:tally(e=>e.type==='search',e=>e.grade),list:tally(e=>e.type==='list_click',e=>e.list),
+    top_notices:Object.values(tn).sort((x,y)=>y.views-x.views).slice(0,10).map(o=>({key:o.key,title:o.title,views:o.views,viewers:o.viewers.size,outbound:o.outbound,saves:o.saves})),
+    zero_keywords:Object.keys(tally(e=>e.type==='search_zero',e=>e.keyword))}};
+ });
+}
+
+async function load(){
+ STATE.loading=true;STATE.err=null;draw();
+ const dv=+(($('days')||{}).value);if(dv>0)STATE.days=dv;
+ const to=today(),from=addDays(to,-(STATE.days-1));
+ try{
+  ROWS=IS_MOCK?localRows(from,to):await api('/rest/v1/rpc/admin_daily',{method:'POST',body:JSON.stringify({p_from:from,p_to:to})});
+ }catch(e){ROWS=[];STATE.err=e.message==='login'?'로그인이 필요해요':e.message;
+  if(/admin_daily|404|PGRST202/.test(String(e.message)))STATE.err='일별 집계 테이블이 아직 없어요. docs/supabase-daily.sql 을 먼저 적용해 주세요.'}
+ STATE.loading=false;draw();
+}
+
+/* ---------- 그리기 ---------- */
+function chart(list,key){
+ const W0=640,H=200,pl=36,pb=24,pt=8,ph=H-pb-pt,n=list.length,bw=(W0-pl)/Math.max(n,1),step=Math.ceil(n/8);
+ const vs=list.map(r=>val(r,key)),max=Math.max(4,...vs.map(v=>v||0));
+ let s=`<svg class="chart" viewBox="0 0 ${W0} ${H}" role="img" aria-label="${esc(M[key][1])} 일별 막대 그래프">`;
+ [0,max/2,max].forEach(v=>{const y=pt+ph-ph*v/max;s+=`<line x1="${pl}" x2="${W0}" y1="${y}" y2="${y}"/><text x="${pl-6}" y="${y+4}" text-anchor="end">${Math.round(v*10)/10}</text>`});
+ list.forEach((r,i)=>{const v=vs[i]||0,h=ph*v/max,x0=pl+i*bw+bw*.14,w=bw*.72,partial=r.day===today();
+  s+=`<g data-day="${r.day}" style="cursor:pointer"><title>${r.day} · ${esc(M[key][1])} ${esc(fmtv(vs[i],key))}${partial?' (오늘, 집계 중)':''}</title><rect class="b1" x="${x0}" y="${pt+ph-h}" width="${w}" height="${h}" rx="2" ${partial?'opacity=".45"':''}/>${i%step===0?`<text x="${x0+w/2}" y="${H-6}" text-anchor="middle">${r.day.slice(5).replace('-','/')}</text>`:''}</g>`});
+ return s+'</svg>';
+}
+function csv(list){
+ const cols=['day',...METRICS.map(m=>m[0])];
+ const head=['날짜',...METRICS.map(m=>m[1]+(m[2]==='%'?'(%)':''))];
+ const q=v=>{const t=v==null?'':String(v);return /[",\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t};
+ return '﻿'+[head.map(q).join(','),...list.map(r=>cols.map(c=>q(c==='day'?r.day:val(r,c))).join(','))].join('\r\n');
+}
+function detail(r){
+ const b=r.breakdown||{};
+ const hours=(b.hourly||[]).map((n,h)=>({h,n}));
+ const tn=b.top_notices||[];
+ return `<div class="card" style="margin-top:16px"><h3>${r.day} 세부${r.day===today()?' (집계 중)':''}</h3>
+ <div class="grid two"><div><h3 style="font-size:14px">시간대별 방문자 (한국 시간)</h3>${hourChart(hours)}</div>
+ <div><h3 style="font-size:14px">기기 (방문자)</h3>${hbars(obj2items(b.device),k=>L2.device[k]||k)}<h3 style="font-size:14px;margin-top:14px">유입 경로 (방문)</h3>${hbars(obj2items(b.src),k=>(L.src&&L.src[k])||k)}</div></div>
+ <div class="grid two" style="margin-top:12px"><div><h3 style="font-size:14px">많이 본 화면</h3>${hbars(obj2items(b.tab),k=>L2.tab[k]||k)}<h3 style="font-size:14px;margin-top:14px">어느 목록에서 눌렀나</h3>${hbars(obj2items(b.list))}</div>
+ <div><h3 style="font-size:14px">맞춤 검색한 사람 — 단과대학</h3>${hbars(obj2items(b.college))}<h3 style="font-size:14px;margin-top:14px">과정 · 학년</h3>${hbars(obj2items(b.course))}${hbars(obj2items(b.grade),k=>k+'학년')}</div></div>
+ <h3 style="font-size:14px;margin-top:14px">그날 많이 본 공고</h3>${tn.length?`<div class="tw"><table><thead><tr><th>공고</th><th class="n">열람</th><th class="n">사람</th><th class="n">원문 이동</th><th class="n">저장</th></tr></thead><tbody>${tn.map(x=>`<tr><td>${esc(String(x.title||x.key).slice(0,60))}</td><td class="n">${x.views}</td><td class="n">${x.viewers}</td><td class="n">${x.outbound}</td><td class="n">${x.saves}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">공고 열람 기록이 없어요.</div>'}
+ ${(b.zero_keywords||[]).length?`<h3 style="font-size:14px;margin-top:14px">결과 없는 검색어 (빠진 공고 신호)</h3><div class="note">${b.zero_keywords.map(esc).join(' · ')}</div>`:''}</div>`;
+}
+function draw(){
+ const el=$('v-daily');if(!el)return;
+ if(STATE.err){el.innerHTML=`<div class="card band"><div class="note">${esc(STATE.err)}</div><button class="btn sm ghost" id="dy-retry" type="button" style="margin-top:8px">다시 불러오기</button></div>`;$('dy-retry').onclick=load;return}
+ const t=today(),y=addDays(t,-1),list=ROWS.slice().sort((a,b)=>a.day<b.day?-1:1);
+ const ry=list.find(r=>r.day===y),rp=list.find(r=>r.day===addDays(t,-2));
+ const delta=(k)=>{if(!ry||!rp)return '';const a=val(ry,k),b=val(rp,k);if(a==null||b==null)return '';const d=Math.round((a-b)*10)/10;return `전날 ${d>0?'+':''}${d}`};
+ const sum=k=>list.reduce((s,r)=>s+(r[k]||0),0);
+ const kp=(k,l)=>kpi(ry?fmtv(val(ry,k),k):'-',l,delta(k));
+ el.innerHTML=`<div class="note" style="margin-bottom:12px">한국 시간 기준 <b>하루 단위</b> 요약이에요. 어제(${y.slice(5).replace('-','/')}) 숫자를 위에 크게 보여 주고, 오늘 줄은 아직 집계 중이라 흐리게 표시해요. 방문자는 브라우저 기준이라 같은 사람이 기기를 바꾸면 따로 세요.</div>
+ <div class="ap-head" style="margin-bottom:10px"><div class="ap-btns"><span class="muted">기간은 오른쪽 위 '기간'에서 바꿔요 (최근 ${STATE.days}일)</span>
+  <button class="btn sm ghost" id="dy-csv" type="button">CSV 내려받기</button><button class="btn sm ghost" id="dy-reload" type="button">새로고침</button></div></div>
+ ${STATE.loading?'<div class="empty">불러오는 중…</div>':!list.length?'<div class="empty">이 기간에 집계된 날이 없어요.</div>':`
+ <div class="grid kpis">${kp('visitors','어제 방문자')}${kp('notice_views','어제 공고 열람')}${kp('outbound_rate','어제 원문 이동률')}${kp('saves','어제 저장')}</div>
+ <div class="grid kpis" style="margin-top:12px">${kpi(sum('visitors'),'기간 방문자 합계','날마다 센 합계(중복 포함)')}${kpi(sum('notice_views'),'기간 공고 열람')}${kpi(sum('outbound'),'기간 원문 이동')}${kpi(sum('zero_searches'),'기간 결과 없는 검색')}</div>
+ <div class="card" style="margin-top:16px"><div class="ap-head"><h3>일별 추이</h3><div class="ap-btns"><select id="dy-metric" aria-label="지표">${METRICS.map(m=>`<option value="${m[0]}" ${m[0]===STATE.metric?'selected':''}>${m[1]}</option>`).join('')}</select></div></div>${chart(list,STATE.metric)}<div class="note">막대를 누르면 그날 세부가 아래에 나와요.</div></div>
+ <div class="card" style="margin-top:16px"><h3>일별 표</h3><div class="tw"><table><thead><tr><th>날짜</th><th class="n">방문자</th><th class="n">신규</th><th class="n">재방문</th><th class="n">열람</th><th class="n">원문 이동</th><th class="n">이동률</th><th class="n">저장</th><th class="n">검색</th><th class="n">결과 없음</th><th class="n">평균 머문 시간</th></tr></thead><tbody>
+ ${list.slice().reverse().map(r=>`<tr data-day="${r.day}" style="cursor:pointer${STATE.pick===r.day?';background:var(--panel)':''}${r.day===t?';opacity:.6':''}"><td class="mono">${r.day.slice(5)}${r.day===t?' <span class="pill">진행 중</span>':''}</td><td class="n">${r.visitors}</td><td class="n">${r.new_visitors}</td><td class="n">${r.returning_visitors}</td><td class="n">${r.notice_views}</td><td class="n">${r.outbound}</td><td class="n">${fmtv(val(r,'outbound_rate'),'outbound_rate')}</td><td class="n">${r.saves}</td><td class="n">${r.searches}</td><td class="n">${r.zero_searches}</td><td class="n">${fmtv(r.avg_session_s,'avg_session_s')}</td></tr>`).join('')}</tbody></table></div></div>
+ ${STATE.pick&&list.find(r=>r.day===STATE.pick)?detail(list.find(r=>r.day===STATE.pick)):''}`}`;
+ const mt=$('dy-metric');if(mt)mt.onchange=()=>{STATE.metric=mt.value;draw()};
+ const rl=$('dy-reload');if(rl)rl.onclick=load;
+ const cv=$('dy-csv');if(cv)cv.onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv(list)],{type:'text/csv;charset=utf-8'}));a.download=`hyoon-daily-${list[0]?list[0].day:''}_${list.length?list[list.length-1].day:''}.csv`;a.click()};
+ el.querySelectorAll('[data-day]').forEach(n=>n.addEventListener('click',()=>{STATE.pick=n.dataset.day;draw();const c=el.querySelector('.card:last-child');if(c)c.scrollIntoView({behavior:'smooth',block:'nearest'})}));
+}
+
+/* ---------- 메뉴 추가 ---------- */
+(function nav(){
+ TITLES.daily='일별 분석 (하루 단위)';
+ const b=document.createElement('button');b.setAttribute('role','tab');b.type='button';b.dataset.v='daily';b.setAttribute('aria-selected','false');b.innerHTML='<span>일별 분석</span>';
+ const ref=document.querySelector('#nav [data-v=visits]')||document.querySelector('#nav [data-v=analytics]');ref.after(b);
+ const sec=document.createElement('section');sec.id='v-daily';sec.hidden=true;$('v-system').before(sec);
+ $('nav').addEventListener('click',e=>{const x=e.target.closest('button');if(x&&x.dataset.v==='daily')load()});
+ const dd=$('days');if(dd)dd.addEventListener('change',()=>{if(view==='daily')load()});
+})();
+})();
+
+</script>
+<!--/hyoon-admin-plus-->
 </body>
 </html>
