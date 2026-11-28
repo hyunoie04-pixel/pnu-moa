@@ -83,7 +83,7 @@ begin
   select count(*) into n from public.teams where id=tid;
   insert into public.zz_res (step, ok, info) values ('제3자도 팀 글은 읽음', n=1, 'n='||n);
   select count(*) into n from public.member_cards where id='00000000-0000-0000-0000-0000000000a1';
-  insert into public.zz_res (step, ok, info) values ('팀장 카드는 보임', n=1, 'n='||n);
+  insert into public.zz_res (step, ok, info) values ('모집 글만 본 제3자에게 팀장 카드는 안 보임', n=0, 'n='||n);
   select count(*) into n from public.member_cards where id='00000000-0000-0000-0000-0000000000a2';
   insert into public.zz_res (step, ok, info) values ('지원자 카드는 제3자에게 안 보임', n=0, 'n='||n);
   update public.teams set status='hidden' where id=tid; get diagnostics n = row_count;
@@ -109,6 +109,8 @@ begin
   perform pg_temp.as_user(A);
   select public.team_contact(tid) into v;
   insert into public.zz_res (step, ok, info) values ('수락된 팀원은 연락처 확인', v='open.kakao.com/o/abc', coalesce(v,'null'));
+  select count(*) into n from public.member_cards where id='00000000-0000-0000-0000-0000000000a1';
+  insert into public.zz_res (step, ok, info) values ('합류한 팀원에게는 팀장 카드가 보임', n=1, 'n='||n);
   perform public.leave_team(tid);
   select (roles->0->>'filled')::int into n from public.teams where id=tid;
   insert into public.zz_res (step, ok, info) values ('나가면 filled=0', n=0, 'filled='||n);
