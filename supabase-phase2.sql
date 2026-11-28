@@ -419,6 +419,11 @@ create or replace function private.promo_guard() returns trigger
 language plpgsql security definer set search_path = '' as $$
 begin
   if coalesce(current_setting('hyoon.internal', true), '') = '1' then return new; end if;   -- promo_hit 같은 내부 함수
+  -- 탈퇴로 requester가 null이 되는 외래키 처리(다른 칸은 그대로)는 허용
+  if tg_op = 'UPDATE' and old.requester is not null and new.requester is null
+     and (to_jsonb(new) - 'requester' - 'updated_at') = (to_jsonb(old) - 'requester' - 'updated_at') then
+    return new;
+  end if;
   if public.is_hyoon_admin() then
     if tg_op = 'UPDATE' and new.state = 'published' and old.state <> 'published' then new.approved_at := now(); end if;
     if tg_op = 'INSERT' and new.source = 'admin' and new.state = 'published' then new.approved_at := now(); end if;
