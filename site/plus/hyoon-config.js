@@ -2,7 +2,7 @@
 window.HYOON_SB={
  url:'https://ykpobrafcugzsjusuhny.supabase.co',
  key:'sb_publishable_5QCXyy75eYyc_DzNGcx9Og_hsqACKN5',
- providers:['google']
+ providers:['google','kakao']
 };
 /* 1차 출시 범위: 팀원 모집·홍보 게시판·부산대 인증·포트폴리오(탭은 "준비중" 표시)·공개 포트폴리오·집계 숫자(저장/조회)는 꺼 두고, 아직 없는 기능(이용 기록 분석·맞춤 추천·알림 메일)의 선택 동의는 받지 않는다. */
 window.HYOON_FLAGS={pnu:false,teams:false,promo:false,signals:false,demoStats:false,publicPf:false,portfolio:false,consentKinds:[]};
