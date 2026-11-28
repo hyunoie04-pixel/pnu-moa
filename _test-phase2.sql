@@ -5,6 +5,7 @@ truncate public.zz_res restart identity;
 grant all on public.zz_res to authenticated, anon;
 grant usage, select on sequence public.zz_res_n_seq to authenticated, anon;
 
+delete from public.promo_posts;
 delete from auth.users where id::text like '00000000-0000-0000-0000-0000000000a%';
 insert into auth.users (id, email, aud, role) values
  ('00000000-0000-0000-0000-0000000000a1','l@test.dev','authenticated','authenticated'),
