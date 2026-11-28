@@ -60,8 +60,8 @@ function openPost(id){
   <p class="hp-sub">${h(p.summary)}</p>
   <dl class="hp-promo-dl"><div><dt>기간</dt><dd>${h(period)} ${p.end?`<b>${h(HP.ddayText(p.end))}</b>`:''}</dd></div></dl>
   ${p.body?`<div class="hp-promo-body">${h(p.body).replace(/\n/g,'<br>')}</div>`:''}
-  ${p.link&&!okUrl(p.link)?`<div class="hp-promo-contact" data-promo-contact><b>신청·문의</b> ${HP.contactHtml(p.link)}</div>`:''}
-  <div class="hp-actions">${okUrl(p.link)?`<a class="btn-fill" href="${h(p.link)}" target="_blank" rel="noopener noreferrer" data-promo-link>신청·문의 열기</a>`:'<span></span>'}<button type="button" class="btn-outline" data-close>닫기</button></div>
+  ${p.link?`<div class="hp-promo-contact" data-promo-contact><b>신청·문의</b> ${HP.contactHtml(p.link)}${okUrl(p.link)?` <button type="button" class="hp-link" data-copy="${h(p.link)}">복사</button>`:''}</div>`:''}
+  <div class="hp-actions"><span></span><button type="button" class="btn-outline" data-close>닫기</button></div>
   <p class="hp-fine">${p.sponsored?'광고·제휴 게시물이에요. 일반 공고의 추천·인기 순위와 따로 보여 드려요. ':'효온이 확인해 올린 학생 단체 홍보예요. '}신청 전에 링크 내용을 꼭 확인해 주세요.</p></div>`,{wide:true});
  const a=d.querySelector('[data-promo-link]');if(a)a.addEventListener('click',()=>{bump(id,'clicks');HP.log('promo_click',{list:'promo',status:p.kind,extra:{promo_id:id}})});
  const ct=d.querySelector('[data-promo-contact]');if(ct)ct.addEventListener('click',e=>{if(e.target.closest('a,[data-copy]')){bump(id,'clicks');HP.log('promo_click',{list:'promo',status:p.kind,extra:{promo_id:id}})}});
