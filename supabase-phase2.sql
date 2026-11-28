@@ -488,6 +488,19 @@ begin
   return r;
 end $$;
 
+-- 관리자 "수집 데이터": 최근 n일 이벤트 종류별 건수·방문자·마지막 시각
+create or replace function public.admin_event_counts(p_days int default 7)
+returns table (type text, n bigint, visitors bigint, last_at timestamptz)
+language plpgsql stable security definer set search_path = '' as $$
+begin
+  if not public.is_hyoon_admin() then raise exception 'admin_only'; end if;
+  return query
+    select e.type, count(*), count(distinct e.visitor_id), max(e.created_at)
+      from public.events e
+     where e.created_at > now() - make_interval(days => greatest(p_days, 1))
+     group by e.type order by 2 desc;
+end $$;
+
 -- ---------------------------------------------------------------------
 -- RLS · 권한
 -- ---------------------------------------------------------------------
@@ -581,13 +594,13 @@ revoke execute on function
   public.apply_team(uuid, text, text), public.withdraw_application(uuid), public.leave_team(uuid),
   public.decide_application(uuid, text), public.invite_member(uuid, uuid, text, text), public.cancel_invite(uuid),
   public.answer_invite(uuid, boolean), public.join_team_by_code(text, text), public.team_invite_code(uuid, boolean),
-  public.team_contact(uuid), public.admin_members_overview()
+  public.team_contact(uuid), public.admin_members_overview(), public.admin_event_counts(int)
   from public, anon;
 grant execute on function
   public.apply_team(uuid, text, text), public.withdraw_application(uuid), public.leave_team(uuid),
   public.decide_application(uuid, text), public.invite_member(uuid, uuid, text, text), public.cancel_invite(uuid),
   public.answer_invite(uuid, boolean), public.join_team_by_code(text, text), public.team_invite_code(uuid, boolean),
-  public.team_contact(uuid), public.admin_members_overview()
+  public.team_contact(uuid), public.admin_members_overview(), public.admin_event_counts(int)
   to authenticated;
 revoke execute on function public.team_by_code(text) from public;
 grant execute on function public.team_by_code(text) to anon, authenticated;
