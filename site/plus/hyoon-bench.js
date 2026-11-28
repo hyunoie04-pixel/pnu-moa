@@ -39,13 +39,47 @@ if(typeof _card==='function'){
  };
 }
 
-/* ---------- 2) 홈: 부산대 이번 주 인기 ---------- */
+/* ---------- 2) 홈: 부산대 이번 주 인기 ----------
+   운영(demoStats 꺼짐): 서버 함수 weekly_popular(최근 7일 본 사람·저장·원문 이동, 2명 미만 제외)로 실제 순위.
+   시안(demoStats 켜짐): 예시 수치. */
+const POP_KEY='hyp-weekly-pop',POP_TTL=10*60*1000;
+let POP=null,popBusy=false;
+function popCached(){try{const c=JSON.parse(sessionStorage.getItem(POP_KEY)||'null');if(c&&Date.now()-c.at<POP_TTL&&Array.isArray(c.rows))return c.rows}catch(e){}return null}
+async function loadWeeklyPop(){
+ if(POP||popBusy)return;
+ const c=popCached();if(c){POP=c;return}
+ const cfg=W.HYOON_SB;if(!cfg)return;
+ popBusy=true;
+ try{
+  const r=await fetch(cfg.url+'/rest/v1/rpc/weekly_popular',{method:'POST',headers:{apikey:cfg.key,'Content-Type':'application/json'},body:JSON.stringify({p_days:7,p_limit:20,p_min:2})});
+  if(!r.ok)return;
+  const d=await r.json();if(!Array.isArray(d))return;
+  POP=d.filter(x=>x&&typeof x.notice_key==='string').map(x=>({k:x.notice_key,v:+x.viewers||0,s:+x.savers||0,o:+x.outbound||0}));
+  try{sessionStorage.setItem(POP_KEY,JSON.stringify({at:Date.now(),rows:POP}))}catch(e){}
+  if(typeof W.renderMine==='function')W.renderMine();
+ }catch(e){}finally{popBusy=false}
+}
+function realPopItems(){
+ if(!POP)return [];
+ const byKey=new Map();A.filter(active).forEach(a=>{const k=noticeKey(a);if(k&&!byKey.has(k))byKey.set(k,a);if(a.link&&!byKey.has(a.link))byKey.set(a.link,a)});
+ const seen=new Set(),out=[];
+ POP.forEach(p=>{const a=byKey.get(p.k);if(a&&!seen.has(a.id)){seen.add(a.id);out.push(a)}});
+ return out.slice(0,12);
+}
 const _renderMine=W.renderMine;
 W.renderMine=function(){
  _renderMine.apply(this,arguments);
  T(()=>{
-  if(!HP.flags.demoStats)return;
   const out=document.getElementById('mine-out');if(!out||out.querySelector('#rail-weekly'))return;
+  if(!HP.flags.demoStats){
+   if(!POP){loadWeeklyPop();return}
+   const items=realPopItems();if(items.length<3)return;   /* 실제 기록이 적으면 레일을 숨긴다 */
+   const inside=items.filter(a=>a.origin&&a.origin.label==='교내').length;
+   const html=railSection('부산대 이번 주 인기',`최근 7일 본 사람·저장·원문 이동 기준${inside?' · 교내 공고 '+inside+'건 포함':''}`,items,false,'','rail-weekly','',false);
+   if(html)out.insertAdjacentHTML('afterbegin',html);
+   if(typeof observeReveals==='function')observeReveals();
+   return;
+  }
   const items=A.filter(active).map(a=>({a,s:statsOf(a)})).sort((x,y)=>y.s.score-x.s.score).slice(0,12).map(x=>x.a);
   if(items.length<4)return;
   const inside=items.filter(a=>a.origin&&a.origin.label==='교내').length;
